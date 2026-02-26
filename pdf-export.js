@@ -200,7 +200,9 @@
       vacationDays: 0,
       sickDays: 0,
       holidayDays: 0,
-      otherDays: 0
+      otherDays: 0,
+      overtimeDeltaMin: 0,
+      normDayMin: null
     };
 
     // count unique days for non-work types
@@ -228,6 +230,35 @@
     return totals;
   }
 
+  function computeOvertimeDeltaMin(state, entries){
+    // Month delta (not global saldo):
+    // For each unique day in this selection:
+    //   if has work -> + (workNet - normDay)
+    //   for each recup entry -> -normDay
+    // Uses same principle as overtimeSaldoMin() in your main app.
+    const normDay = state?.settings?.normDayMin;
+    if(typeof normDay !== "number"){
+      return { overtimeDeltaMin: 0, normDayMin: null };
+    }
+
+    const days = [...new Set(entries.map(e => e.date))].sort();
+    let sum = 0;
+    for(const day of days){
+      const hasWork = entries.some(e => e.date === day && (e.type||"") === "Werk");
+      if(hasWork){
+        const workNet = entries
+          .filter(e => e.date === day && (e.type||"") === "Werk")
+          .reduce((a,e)=>a + (e.netMin||0), 0);
+        sum += (workNet - normDay);
+      }
+
+      const recups = entries.filter(e => e.date === day && (e.type||"") === "Recup").length;
+      if(recups > 0) sum += (-normDay * recups);
+    }
+
+    return { overtimeDeltaMin: sum, normDayMin: normDay };
+  }
+
   function ensureJsPDF(){
     const api = window.jspdf;
     if(!api || !api.jsPDF) return null;
@@ -244,7 +275,33 @@
     doc.text(lines, x, y);
   }
 
-  function addMonthSummaryPage(doc, ym, monthEntries){
+  function pageWidth(doc){
+    return doc.internal?.pageSize?.getWidth ? doc.internal.pageSize.getWidth() : 595;
+  }
+
+  function drawTableGrid(doc, x, yTop, colWs, rowHs){
+    const w = colWs.reduce((a,b)=>a+b,0);
+    const h = rowHs.reduce((a,b)=>a+b,0);
+
+    // outer
+    doc.rect(x, yTop, w, h);
+
+    // verticals
+    let cx = x;
+    for(let i=0;i<colWs.length-1;i++){
+      cx += colWs[i];
+      doc.line(cx, yTop, cx, yTop + h);
+    }
+
+    // horizontals
+    let cy = yTop;
+    for(let i=0;i<rowHs.length-1;i++){
+      cy += rowHs[i];
+      doc.line(x, cy, x + w, cy);
+    }
+  }
+
+  function addMonthSummaryPage(doc, state, ym, monthEntries){
     const left = 40;
     let y = 54;
 
@@ -261,30 +318,34 @@
 
     y += 18;
 
-    // Table headers
-    const colDateW = 110;
-    const colHoursW = 90;
-    const colTypeW = 120;
-    const tableW = colDateW + colHoursW + colTypeW;
-
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(10);
-    doc.text("Datum", left, y);
-    doc.text("Uren", left + colDateW, y);
-    doc.text("Type", left + colDateW + colHoursW, y);
-    y += 6;
-    doc.line(left, y, left + tableW, y);
-    y += 14;
-
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(9);
-
+    // === GRID TABLE (centered + bigger) ===
     const dayRows = buildMonthDayRows(ym, monthEntries);
-    for(const r of dayRows){
-      if(y > 740){
-        doc.addPage();
-        y = 54;
-      }
+
+    const colWs = [120, 90, 200]; // Datum, Uren, Type
+    const tableW = colWs.reduce((a,b)=>a+b,0);
+    const x = Math.max(30, (pageWidth(doc) - tableW) / 2);
+
+    const headerH = 22;
+    const baseRowH = 18;
+    const rowHs = [headerH, ...dayRows.map(()=>baseRowH)];
+
+    drawTableGrid(doc, x, y, colWs, rowHs);
+
+    // header text
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    const hy = y + 15;
+    doc.text("Datum", x + 6, hy);
+    doc.text("Uren", x + colWs[0] + 6, hy);
+    doc.text("Type", x + colWs[0] + colWs[1] + 6, hy);
+
+    // body text
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(10);
+    let cy = y + headerH;
+    for(let i=0;i<dayRows.length;i++){
+      const r = dayRows[i];
+      const ty = cy + 13;
 
       const dateTxt = ymdToDmy(r.dateYMD);
       let hoursTxt = "";
@@ -293,7 +354,6 @@
       if(r.workNetMin > 0){
         hoursTxt = formatHM(r.workNetMin);
       }else{
-        // show a clean label if it's a non-work day with a known type
         const types = Array.from(r.types).filter(Boolean);
         if(types.length === 1 && types[0] !== "Werk"){
           typeTxt = types[0].toUpperCase();
@@ -302,35 +362,57 @@
         }
       }
 
-      doc.text(dateTxt, left, y);
-      doc.text(hoursTxt, left + colDateW, y);
-      doc.text(typeTxt, left + colDateW + colHoursW, y);
-      y += 14;
+      doc.text(dateTxt, x + 6, ty);
+      doc.text(hoursTxt, x + colWs[0] + 6, ty);
+      doc.text(typeTxt, x + colWs[0] + colWs[1] + 6, ty);
+
+      cy += baseRowH;
     }
 
-    // Totals block
+    y += rowHs.reduce((a,b)=>a+b,0);
+
+    // Totals block (boxed, centered)
     const totals = computeTotals(monthEntries);
-    y += 10;
-    doc.line(left, y, left + tableW, y);
+    const ot = computeOvertimeDeltaMin(state, monthEntries);
+    totals.overtimeDeltaMin = ot.overtimeDeltaMin;
+    totals.normDayMin = ot.normDayMin;
+
     y += 18;
 
     doc.setFont("helvetica","bold");
+    doc.setFontSize(13);
+    doc.text("Totalen", x, y);
+    y += 10;
+
+    const boxX = x;
+    const boxW = tableW;
+    const boxPad = 10;
+    const lineH = 15;
+    const lines = [
+      `Gewerkte uren: ${formatHM(totals.workNetMin)}`,
+      `Pauze: ${formatHM(totals.workPauseMin)}`,
+      `Aantal werkshiften: ${totals.workShifts}`,
+      `Vakantie: ${totals.vacationDays}   Ziekte: ${totals.sickDays}   Recup: ${totals.recupDays}   Feestdag: ${totals.holidayDays}`,
+      `Overuren (maand): ${formatHM(totals.overtimeDeltaMin)}${totals.normDayMin!=null ? `   (Norm/dag: ${formatHM(totals.normDayMin)})` : ""}`
+    ];
+    const boxH = boxPad*2 + lines.length*lineH;
+
+    doc.rect(boxX, y, boxW, boxH);
+
+    let ty = y + boxPad + 12;
+    doc.setFont("helvetica","bold");
     doc.setFontSize(12);
-    doc.text("Totalen", left, y);
-    y += 18;
+    doc.text(lines[0], boxX + boxPad, ty);
 
-    doc.setFontSize(11);
-    doc.text(`Gewerkte uren: ${formatHM(totals.workNetMin)}`, left, y); y += 16;
-    doc.text(`Pauze: ${formatHM(totals.workPauseMin)}`, left, y); y += 16;
-    doc.text(`Aantal werkshiften: ${totals.workShifts}`, left, y); y += 16;
-
-    // smaller extras
     doc.setFont("helvetica","normal");
-    doc.setFontSize(10);
-    doc.text(`Recup-dagen: ${totals.recupDays}   Vakantie: ${totals.vacationDays}   Ziekte: ${totals.sickDays}   Feestdag: ${totals.holidayDays}`, left, y);
+    doc.setFontSize(11);
+    for(let i=1;i<lines.length;i++){
+      ty += lineH;
+      doc.text(lines[i], boxX + boxPad, ty);
+    }
   }
 
-  function addMonthDetailPage(doc, ym, monthEntries){
+  function addMonthDetailPage(doc, state, ym, monthEntries){
     doc.addPage();
 
     const left = 40;
@@ -341,66 +423,71 @@
     doc.text(`Detaillijst (met Opmerkingen) — ${monthLabel(ym)}`, left, y);
     y += 16;
 
+    // Extra info (counts + overtime)
+    const totals = computeTotals(monthEntries);
+    const ot = computeOvertimeDeltaMin(state, monthEntries);
+    totals.overtimeDeltaMin = ot.overtimeDeltaMin;
+    totals.normDayMin = ot.normDayMin;
+
+    doc.setFontSize(11);
+    doc.text(`Vakantie: ${totals.vacationDays}   Ziekte: ${totals.sickDays}   Recup: ${totals.recupDays}   Feestdag: ${totals.holidayDays}`, left, y);
+    y += 14;
+    doc.text(`Overuren (maand): ${formatHM(totals.overtimeDeltaMin)}${totals.normDayMin!=null ? `   (Norm/dag: ${formatHM(totals.normDayMin)})` : ""}`, left, y);
+    y += 18;
+
     doc.setFont("helvetica","normal");
     doc.setFontSize(9);
 
-    // Column widths (A4 portrait ~ 595pt wide, margins)
-    const colW = {
-      date: 70,
-      type: 60,
-      start: 40,
-      end: 40,
-      pause: 40,
-      net: 45,
-      note: 240
-    };
-
+    // Bigger + centered grid table
     const headers = ["Datum","Type","Start","Einde","Pauze","Netto","Opmerkingen"];
-    const xs = [left];
-    xs.push(xs[xs.length-1] + colW.date);
-    xs.push(xs[xs.length-1] + colW.type);
-    xs.push(xs[xs.length-1] + colW.start);
-    xs.push(xs[xs.length-1] + colW.end);
-    xs.push(xs[xs.length-1] + colW.pause);
-    xs.push(xs[xs.length-1] + colW.net);
+    const colWs = [80, 70, 45, 45, 45, 55, 210];
+    const tableW = colWs.reduce((a,b)=>a+b,0);
+    const x = Math.max(22, (pageWidth(doc) - tableW) / 2);
+    const xs = [x];
+    for(let i=0;i<colWs.length-1;i++) xs.push(xs[xs.length-1] + colWs[i]);
 
-    // header row
-    doc.setFont("helvetica","bold");
-    doc.text(headers[0], xs[0], y);
-    doc.text(headers[1], xs[1], y);
-    doc.text(headers[2], xs[2], y);
-    doc.text(headers[3], xs[3], y);
-    doc.text(headers[4], xs[4], y);
-    doc.text(headers[5], xs[5], y);
-    doc.text(headers[6], xs[6], y);
-    y += 6;
-    doc.line(left, y, left + colW.date+colW.type+colW.start+colW.end+colW.pause+colW.net+colW.note, y);
-    y += 14;
+    const headerH = 22;
+    const baseRowH = 18;
 
-    doc.setFont("helvetica","normal");
+    function drawHeader(){
+      drawTableGrid(doc, x, y, colWs, [headerH]);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(10);
+      const hy = y + 15;
+      for(let i=0;i<headers.length;i++) doc.text(headers[i], xs[i] + 5, hy);
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9);
+      y += headerH;
+    }
 
-    // Sort by date then createdAt
+    drawHeader();
+
     const list = monthEntries.slice().sort((a,b)=> (a.date||"").localeCompare(b.date||"") || (a.createdAt||0)-(b.createdAt||0));
 
-    const rowGap = 4;
-
     for(const e of list){
-      if(y > 760){
+      const noteTxt = (e.note || "").replace(/\s+/g," ").trim();
+      const noteLines = doc.splitTextToSize(noteTxt, colWs[6] - 10);
+      const lineH = 11;
+      const needH = Math.max(baseRowH, Math.max(1, noteLines.length) * lineH + 6);
+
+      if(y + needH > 800){
         doc.addPage();
         y = 54;
         doc.setFont("helvetica","bold");
-        doc.text(headers[0], xs[0], y);
-        doc.text(headers[1], xs[1], y);
-        doc.text(headers[2], xs[2], y);
-        doc.text(headers[3], xs[3], y);
-        doc.text(headers[4], xs[4], y);
-        doc.text(headers[5], xs[5], y);
-        doc.text(headers[6], xs[6], y);
-        y += 6;
-        doc.line(left, y, left + colW.date+colW.type+colW.start+colW.end+colW.pause+colW.net+colW.note, y);
+        doc.setFontSize(16);
+        doc.text(`Detaillijst (met Opmerkingen) — ${monthLabel(ym)}`, left, y);
+        y += 16;
+        doc.setFontSize(11);
+        doc.text(`Vakantie: ${totals.vacationDays}   Ziekte: ${totals.sickDays}   Recup: ${totals.recupDays}   Feestdag: ${totals.holidayDays}`, left, y);
         y += 14;
+        doc.text(`Overuren (maand): ${formatHM(totals.overtimeDeltaMin)}${totals.normDayMin!=null ? `   (Norm/dag: ${formatHM(totals.normDayMin)})` : ""}`, left, y);
+        y += 18;
         doc.setFont("helvetica","normal");
+        doc.setFontSize(9);
+        drawHeader();
       }
+
+      drawTableGrid(doc, x, y, colWs, [needH]);
 
       const dateTxt = ymdToDmy(e.date);
       const typeTxt = (e.type || "");
@@ -408,28 +495,21 @@
       const endTxt = e.end || "";
       const pauseTxt = (e.pauseMin ? `${e.pauseMin}m` : "");
       const netTxt = (typeof e.netMin === "number") ? formatHM(e.netMin) : "";
-      const noteTxt = (e.note || "").replace(/\s+/g," ").trim();
 
-      // note can wrap -> compute height
-      const noteLines = doc.splitTextToSize(noteTxt, colW.note);
-      const lineH = 11;
-      const rowH = Math.max(lineH, noteLines.length * lineH);
+      const ty = y + 13;
+      doc.text(dateTxt, xs[0] + 5, ty);
+      doc.text(typeTxt, xs[1] + 5, ty);
+      doc.text(startTxt, xs[2] + 5, ty);
+      doc.text(endTxt, xs[3] + 5, ty);
+      doc.text(pauseTxt, xs[4] + 5, ty);
+      doc.text(netTxt, xs[5] + 5, ty);
+      if(noteLines.length) doc.text(noteLines, xs[6] + 5, ty);
 
-      doc.text(dateTxt, xs[0], y);
-      doc.text(typeTxt, xs[1], y);
-      doc.text(startTxt, xs[2], y);
-      doc.text(endTxt, xs[3], y);
-      doc.text(pauseTxt, xs[4], y);
-      doc.text(netTxt, xs[5], y);
-      if(noteLines.length){
-        doc.text(noteLines, xs[6], y);
-      }
-
-      y += rowH + rowGap;
+      y += needH;
     }
   }
 
-  function makePdfForSelection(filteredEntries){
+  function makePdfForSelection(state, filteredEntries){
     const JsPDF = ensureJsPDF();
     if(!JsPDF){
       alert("jsPDF niet gevonden. Zet 'jspdf.umd.min.js' naast je HTML en laad het mee.");
@@ -454,8 +534,8 @@
       }
       // When we addPage here, we need to be careful: summary draws on current page.
       // For the very first month, doc already has page 1.
-      addMonthSummaryPage(doc, ym, monthEntries);
-      addMonthDetailPage(doc, ym, monthEntries);
+      addMonthSummaryPage(doc, state, ym, monthEntries);
+      addMonthDetailPage(doc, state, ym, monthEntries);
       firstMonth = false;
     }
 
@@ -486,7 +566,7 @@
     }
 
     closeDialog();
-    makePdfForSelection(filtered);
+    makePdfForSelection(state, filtered);
   }
 
   function wire(){
