@@ -16,7 +16,7 @@
   // ---------- i18n (minimal, extend as you like) ----------
   const I18N = {
     nl: {
-      title: (period) => `Shift‑Tap – Urenregistratie – ${period}`,
+      title: (period) => `Shift-Tap - Urenregistratie - ${period}`,
       employer: "Werkgever",
       employee: "Werknemer",
       normDay: "Norm dag",
@@ -31,13 +31,13 @@
       dates: "Datums",
       from: "Van",
       to: "Tot",
-      cols: ["Datum", "Starttijd", "Eindtijd", "Netto uren", "+/‑ uren", "Info", "Opmerkingen"],
+      cols: ["Datum", "Starttijd", "Eindtijd", "Netto", "+/‑", "Info", "Opmerkingen"],
       types: { Werk:"Werk", Vakantie:"Vakantie", Ziekte:"Ziekte", Recup:"Recup", Feestdag:"Feestdag" },
       infoByType: { Werk:"", Vakantie:"Vakantiedag", Ziekte:"Ziekte", Recup:"Recupdag", Feestdag:"Feestdag" },
       unitsH: "u",
     },
     en: {
-      title: (period) => `Shift‑Tap – Timesheet – ${period}`,
+      title: (period) => `Shift-Tap - Timesheet - ${period}`,
       employer: "Employer",
       employee: "Employee",
       normDay: "Standard day",
@@ -52,13 +52,13 @@
       dates: "Dates",
       from: "From",
       to: "To",
-      cols: ["Date", "Start", "End", "Net hours", "+/‑", "Info", "Remarks"],
+      cols: ["Date", "Start", "End", "Net", "+/‑", "Info", "Remarks"],
       types: { Werk:"Work", Vakantie:"Vacation", Ziekte:"Sick", Recup:"Recup", Feestdag:"Holiday" },
       infoByType: { Werk:"", Vakantie:"Vacation day", Ziekte:"Sick day", Recup:"Recup day", Feestdag:"Holiday" },
       unitsH: "h",
     },
     fr: {
-      title: (period) => `Shift‑Tap – Relevé d’heures – ${period}`,
+      title: (period) => `Shift-Tap - Releve d'heures - ${period}`,
       employer: "Employeur",
       employee: "Employé",
       normDay: "Journée normale",
@@ -73,7 +73,7 @@
       dates: "Dates",
       from: "De",
       to: "À",
-      cols: ["Date", "Début", "Fin", "Heures nettes", "+/‑", "Info", "Remarques"],
+      cols: ["Date", "Début", "Fin", "H nettes", "+/‑", "Info", "Remarques"],
       types: { Werk:"Travail", Vakantie:"Congé", Ziekte:"Maladie", Recup:"Récup", Feestdag:"Férié" },
       infoByType: { Werk:"", Vakantie:"Jour de congé", Ziekte:"Jour maladie", Recup:"Jour récup", Feestdag:"Jour férié" },
       unitsH: "h",
@@ -291,7 +291,7 @@
 
   function formatPlusMinus(min, unitH){
     const v = Math.round(min||0);
-    const sign = v>=0 ? "+" : "−"; // use minus sign
+    const sign = v>=0 ? "+" : "-"; // ASCII minus
     const a = Math.abs(v);
     const h = Math.floor(a/60);
     const m = a%60;
@@ -471,10 +471,11 @@
     doc.setFontSize(9);
 
     const headers = L.cols;
-    // column widths (mm) sum ~ (pageW - 2*margin)
-    const availW = pageW - margin*2;
-    const colW = [24, 18, 18, 22, 18, 34, availW - (24+18+18+22+18+34)];
-    const rowH = 6.5;
+
+// BETERE widths: meer ruimte voor Netto en +/-
+// Datum  | Start | Eind | Netto | +/- | Info | Opmerkingen
+const colW = [24, 18, 18, 24, 22, 28, availW - (24+18+18+24+22+28)];
+const rowH = 7;
 
     y = drawTable(doc, margin, y, colW, rowH, headers, rows);
 
