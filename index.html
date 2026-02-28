@@ -3115,6 +3115,53 @@ init();
   </div>
 </div>
 <!-- ===== TOEVOEGING CONFIRM MODAL END ===== -->
+<!-- ===== PDF EXPORT DIALOG ===== -->
+<dialog id="pdfDialog" class="pdfDialog">
+  <div class="pdfBox">
+    <h3 data-i18n="pdf_title">PDF export</h3>
+
+    <div class="sp"></div>
+
+    <label class="radioLine">
+      <input type="radio" name="pdfMode" value="range" checked>
+      <span data-i18n="pdf_month">Maand</span>
+    </label>
+
+    <label class="radioLine" style="margin-top:10px;">
+      <input type="radio" name="pdfMode" value="dates">
+      <span data-i18n="pdf_dates">Datums</span>
+    </label>
+
+    <div class="sp"></div>
+
+    <div id="pdfMonthWrap">
+      <select id="pdfMonthSelect"></select>
+    </div>
+
+    <div id="pdfRangeWrap" style="display:none; margin-top:10px;">
+      <div class="row3">
+        <div>
+          <label for="pdfFrom" data-i18n="pdf_from">Van</label>
+          <input id="pdfFrom" type="date">
+        </div>
+        <div>
+          <label for="pdfTo" data-i18n="pdf_to">Tot</label>
+          <input id="pdfTo" type="date">
+        </div>
+      </div>
+    </div>
+
+    <div class="sp"></div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btnSmall" id="pdfCancel" type="button" data-i18n="cancel">Annuleren</button>
+      <button class="btnSmall" id="pdfConfirm" type="button" data-i18n="make_pdf">Maak PDF</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="jspdf.umd.min.js"></script>
+<script src="pdf-export.js"></script>
 
 
 </body>
