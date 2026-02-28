@@ -1801,7 +1801,24 @@ verrekenInput?.addEventListener("input", (e) => {
   let state = loadState();
   let meta  = loadMeta();
 
-  function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+let cloudPushTimeout = null;
+
+function scheduleCloudPush(){
+  if(!fbAuth || !fbAuth.currentUser) return;
+
+  if(cloudPushTimeout){
+    clearTimeout(cloudPushTimeout);
+  }
+
+  cloudPushTimeout = setTimeout(()=>{
+    cloudPush().catch(console.error);
+  }, 5000);
+}
+
+  function saveState(){ 
+  localStorage.setItem(STORE_KEY, JSON.stringify(state)); 
+  scheduleCloudPush();
+}
   function saveMeta(){ localStorage.setItem(META_KEY, JSON.stringify(meta)); }
 
   /* =========================
