@@ -1882,10 +1882,75 @@ document.getElementById("btnCloseVerreken")?.addEventListener("click", () => {
 verrekenModal?.addEventListener("click", (e) => {
   if(e.target === verrekenModal) verrekenModal.style.display = "none";
 });
-document.getElementById("btnLangOpen")?.addEventListener("click", () => {
-  alert("klik werkt");
-});
 
+function getLangName(code){
+  if(code === "nl") return "Nederlands";
+  if(code === "en") return "English";
+  return "Français";
+}
+
+function setLang(code){
+  window.currentLang = code;
+  localStorage.setItem("lang", code);
+
+  // jouw app gebruikt applyLang()
+  if (typeof applyLang === "function") applyLang();
+
+  const lbl = document.getElementById("langCurrentLabel");
+  if (lbl) lbl.textContent = getLangName(code);
+}
+
+function openLangModal(){
+  const overlay = document.getElementById("appModalOverlay");
+  const body    = document.getElementById("appModalBody");
+  const btnCancel = document.getElementById("appModalCancel");
+  const btnOk     = document.getElementById("appModalOk");
+
+  if(!overlay || !body){
+    alert("Modal ontbreekt: appModalOverlay/appModalBody");
+    return;
+  }
+
+  const current = localStorage.getItem("lang") || window.currentLang || "nl";
+
+  body.innerHTML = `
+    <div style="font-size:26px;font-weight:800;margin-bottom:12px;">Taal</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${["nl","en","fr"].map(code => `
+        <button type="button" class="btnSmall" data-langpick="${code}"
+          style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+          <span>${getLangName(code)}</span>
+          <span style="opacity:${code===current?1:0.2};font-weight:900;">●</span>
+        </button>
+      `).join("")}
+    </div>
+  `;
+
+  if(btnOk) btnOk.style.display = "none";
+
+  if(btnCancel){
+    btnCancel.style.display = "inline-flex";
+    btnCancel.onclick = () => {
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden","true");
+      if(btnOk) btnOk.style.display = "inline-flex";
+    };
+  }
+
+  body.querySelectorAll("[data-langpick]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      setLang(b.getAttribute("data-langpick"));
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden","true");
+      if(btnOk) btnOk.style.display = "inline-flex";
+    });
+  });
+
+  overlay.style.display = "flex";
+  overlay.setAttribute("aria-hidden","false");
+}
+
+document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal)
   document.getElementById("btnOpenHistory")?.addEventListener("click", () => showTab("tab2"));
   document.getElementById("btnHome")?.addEventListener("click", () => showTab("tab1"));
   document.getElementById("btnOpenSettings")?.addEventListener("click", () => showTab("tab4"));
