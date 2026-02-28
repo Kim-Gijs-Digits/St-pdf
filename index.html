@@ -885,9 +885,17 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
     <div class="h2Row">
       <h2 data-i18n="history_title">Historiek</h2>
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btnSmall" id="btnAddManual" data-i18n="manual" type="button">+ Handmatig</button>
-      </div>
+<div style="display:flex; gap:10px; flex-wrap:wrap;">
+  <button class="btnSmall" id="btnAddManual" data-i18n="manual" type="button">+ Handmatig</button>
+
+  <button class="btnSmall" id="btnExportPdf"
+          data-i18n="pdf_export_btn"
+          data-i18n-aria="pdf_export_btn_aria"
+          aria-label="PDF export"
+          type="button">
+    PDF
+  </button>
+</div>
     </div>
 
     <div class="muted" data-i18n="history_hint" data-i18n-html="1">
@@ -1273,6 +1281,8 @@ let calMonth = new Date().getMonth();
       cloud_download: "Backup downl",
       cloud_upload: " Maak Backup",
       settle_hint: "Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.",
+      pdf_export_btn: "📄 PDF",
+pdf_export_btn_aria: "PDF export",
 
       today_work: "Vandaag (werk)",
       week_work: "Deze week (werk)",
@@ -1334,6 +1344,8 @@ hours_amount_hhmm: "Aantal uren (HH:MM)",
       lbl_pause: "Break (min)",
       lbl_note: "Note (optional)",
       ph_note: "e.g. Garage after route, traffic, waiting for customer...",
+      pdf_export_btn: "📄 PDF",
+pdf_export_btn_aria: "Export PDF",
 
       err_choose_date: "Choose a date.",
       err_fill_times: "Fill in start and end (or choose Comp Day).",
@@ -1427,6 +1439,8 @@ cloud_login_error: "Erreur de connexion Google",
       lbl_pause: "Pause (min)",
       lbl_note: "Remarque (optionnel)",
       ph_note: "ex. Garage après tournée, embouteillage, attente client...",
+      pdf_export_btn: "📄 PDF",
+pdf_export_btn_aria: "Exporter PDF",
 
       err_choose_date: "Choisis une date.",
       err_fill_times: "Remplis début et fin (ou choisis Jour de récup).",
