@@ -1362,6 +1362,7 @@ verrek_none: "Geen verrekening gevonden op die dag.",
   settle: "Verrekenen",
   overtime_settled: "Overuren verrekend",
 hours_amount_hhmm: "Aantal uren (HH:MM)",
+day_no_entry: "Geen entry op deze dag.",
 
       err_start_saldo_format: "Start saldo moet in formaat u:min zijn, bv 60:00",
       err_normday_format: "Norm dag moet in formaat u:min zijn, bv 7:30",
@@ -1433,6 +1434,7 @@ cloud_download: "Restore backup",
       cloud_logged_in: "Logged in:",
 cloud_not_logged: "Not logged in.",
 cloud_login_error: "Google login error",
+day_no_entry: "No entry on this day.",
 
       today_work: "Today (work)",
       week_work: "This week (work)",
@@ -1559,6 +1561,7 @@ verrek_none: "Aucune régularisation trouvée ce jour-là.",
   settle: "Compenser",
   overtime_settled: "Heures supplémentaires réglées",
 hours_amount_hhmm: "Nombre d'heures (HH:MM)",
+day_no_entry: "Aucune entrée ce jour-là.",
 
       status_busy: "En cours...",
       status_paused: "En pause",
@@ -2203,7 +2206,7 @@ function openDayDetail(ymdStr){
             <button type="button" class="btnGhostSmall" id="btnUndoVerrek">Verrekening verwijderen</button>
           </div>
         `
-        : "Geen entry op deze dag.";
+: t("day_no_entry");
     }
     if(dayEdit) dayEdit.style.display = "none";
     if(dayOverlay) dayOverlay.style.display = "flex";
