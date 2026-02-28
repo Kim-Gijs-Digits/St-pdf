@@ -1890,10 +1890,17 @@ function getLangName(code){
 }
 
 function setLang(code){
-  window.currentLang = code;
+  currentLang = code;
+
   localStorage.setItem("lang", code);
 
-  // jouw app gebruikt applyLang()
+  try {
+    if (window.state?.settings) {
+      state.settings.lang = code;
+      if (typeof saveState === "function") saveState();
+    }
+  } catch(e){}
+
   if (typeof applyLang === "function") applyLang();
 
   const lbl = document.getElementById("langCurrentLabel");
