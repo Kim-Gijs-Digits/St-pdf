@@ -447,31 +447,6 @@ select option{ background:#1b0b10; color:#fff; }
 input[type="date"], input[type="time"], select{ color-scheme: dark; }
 input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
-/* =========================
-   PDF export dialog (zodat inputs/knoppen zichtbaar zijn)
-   ========================= */
-.pdfDialog::backdrop{
-  background: rgba(0,0,0,.55);
-}
-.pdfDialog{
-  border: 0;
-  padding: 0;
-  background: transparent;
-}
-.pdfDialog .pdfBox{
-  width: min(92vw, 520px);
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  background: #1a0a10;
-  color: var(--text);
-  box-shadow: 0 20px 70px rgba(0,0,0,.6);
-  padding: 16px;
-}
-.pdfDialog h3{ margin: 0; font-weight: 950; font-size: 22px; }
-.pdfDialog .radioLine{ display:flex; align-items:center; gap:10px; font-weight: 900; }
-.pdfDialog .row3{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.pdfDialog .btnSmall{ height: 44px; padding: 0 14px; border-radius: 14px; }
-
 
 /* Modal save knop (groen pill, rechts) */
 #btnSaveModal,
@@ -912,12 +887,6 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btnSmall" id="btnAddManual" data-i18n="manual" type="button">+ Handmatig</button>
-
-        <button class="btnSmall" id="btnExportPdf"
-          data-i18n="pdf_export_btn"
-          data-i18n-aria="pdf_export_btn_aria"
-          aria-label=""
-          type="button">📄 PDF</button>
       </div>
     </div>
 
@@ -987,13 +956,12 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
 
     <!-- Taal -->
-  <!-- Taal -->
-<label for="btnLangOpen" data-i18n="language">Taal</label>
-
-<button id="btnLangOpen" type="button" class="btnSmall" style="width:100%; text-align:left; display:flex; justify-content:space-between; align-items:center;">
-  <span id="langCurrentLabel">Nederlands</span>
-  <span style="opacity:.8;">▼</span>
-</button>
+    <label for="langSelect" data-i18n="language">Taal</label>
+    <select id="langSelect">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+      <option value="fr">Français</option>
+    </select>
 
     <div class="sp"></div>
 
@@ -1174,9 +1142,6 @@ const APP_VERSION = "2.0.0";
 const STORE_KEY = `${APP_ID}_state_${APP_CHANNEL}`;
 const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
 
-// Expose for extra modules (bv. pdf-export.js)
-window.SHIFTTAP_STORE_KEY = STORE_KEY;
-
 const NORM_MIN  = 7 * 60 + 30;
 const RECUP_MIN = 7 * 60 + 30;
 
@@ -1294,19 +1259,6 @@ let calMonth = new Date().getMonth();
       pause_stop: "Stop",
       save: "Opslaan",
       manual: "+ Handmatig",
-
-      // --- PDF export ---
-      pdf_export_btn: "📄 PDF",
-      pdf_export_btn_aria: "PDF export",
-      pdf_title: "PDF export",
-      pdf_month: "Maand",
-      pdf_dates: "Datums",
-      pdf_from: "Van",
-      pdf_to: "Tot",
-      make_pdf: "Maak PDF",
-      cancel: "Annuleren",
-      ok: "OK",
-
       backup: "Backup",
       import_json: "Import JSON",
       backup_tip: "Tip: Maak regelmatig backup.",
@@ -1396,19 +1348,6 @@ hours_amount_hhmm: "Aantal uren (HH:MM)",
       pause_stop: "Stop",
       save: "Save",
       manual: "+ Manual",
-
-      // --- PDF export ---
-      pdf_export_btn: "📄 PDF",
-      pdf_export_btn_aria: "Export PDF",
-      pdf_title: "PDF export",
-      pdf_month: "Month",
-      pdf_dates: "Dates",
-      pdf_from: "From",
-      pdf_to: "To",
-      make_pdf: "Make PDF",
-      cancel: "Cancel",
-      ok: "OK",
-
       backup: "Backup",
       import_json: "Import JSON",
       backup_tip: "Tip: Make regular backups.",
@@ -1502,19 +1441,6 @@ cloud_login_error: "Erreur de connexion Google",
       pause_stop: "Arrêter",
       save: "Enregistrer",
       manual: "+ Manuel",
-
-      // --- PDF export ---
-      pdf_export_btn: "📄 PDF",
-      pdf_export_btn_aria: "Exporter PDF",
-      pdf_title: "Export PDF",
-      pdf_month: "Mois",
-      pdf_dates: "Dates",
-      pdf_from: "De",
-      pdf_to: "À",
-      make_pdf: "Créer PDF",
-      cancel: "Annuler",
-      ok: "OK",
-
       backup: "Sauvegarde",
       import_json: "Importer JSON",
       backup_tip: "Astuce : faites régulièrement une sauvegarde.",
@@ -1602,9 +1528,83 @@ hours_amount_hhmm: "Nombre d'heures (HH:MM)",
     const key = el.dataset.i18nAria;
     el.setAttribute("aria-label", t(key));
   });
-
- 
 }
+
+
+applyLang();
+
+// =====================
+// Language modal (custom, no native select popup)
+// =====================
+function getLangName(code){
+  return code === "nl" ? "Nederlands" : code === "en" ? "English" : "Français";
+}
+
+function closeAppModal(){
+  const overlay = document.getElementById("appModalOverlay");
+  if(!overlay) return;
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden","true");
+}
+
+function openLangModal(){
+  const overlay = document.getElementById("appModalOverlay");
+  const body = document.getElementById("appModalBody");
+  const btnCancel = document.getElementById("appModalCancel");
+  const btnOk = document.getElementById("appModalOk");
+
+  if(!overlay || !body || !btnCancel || !btnOk) return;
+
+  // Content
+  body.innerHTML = `
+    <div class="modalTitle" data-i18n="language">${t ? t("language") : "Taal"}</div>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+      ${["nl","en","fr"].map(code => `
+        <button type="button" class="btnSmall" data-langpick="${code}"
+          style="display:flex; justify-content:space-between; align-items:center; padding:14px 16px;">
+          <span>${getLangName(code)}</span>
+          <span style="opacity:${code===currentLang?1:0.2}; font-weight:900;">●</span>
+        </button>
+      `).join("")}
+    </div>
+  `;
+
+  // Buttons: only cancel visible
+  btnCancel.setAttribute("data-i18n","cancel");
+  btnOk.style.display = "none";
+
+  btnCancel.onclick = closeAppModal;
+
+  body.querySelectorAll("[data-langpick]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const code = b.getAttribute("data-langpick");
+      currentLang = code;
+      localStorage.setItem("lang", currentLang);
+      // keep state in sync if it exists
+      if (window.state?.settings) {
+        state.settings.lang = currentLang;
+        if (typeof saveState === "function") saveState();
+      }
+      if (typeof applyLang === "function") applyLang();
+
+      const lbl = document.getElementById("langCurrentLabel");
+      if (lbl) lbl.textContent = getLangName(currentLang);
+
+      closeAppModal();
+    });
+  });
+
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+}
+
+// Wire button + initial label
+document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal);
+document.addEventListener("DOMContentLoaded", ()=>{
+  const lbl = document.getElementById("langCurrentLabel");
+  if (lbl) lbl.textContent = getLangName(currentLang || "nl");
+});
+
 const verrekenInput = document.getElementById("verrekenAmount");
 
 verrekenInput?.addEventListener("input", (e) => {
@@ -1761,9 +1761,6 @@ const elVacTaken = document.getElementById("vacTaken");
   const mEnd              = document.getElementById("mEnd");
   const mPause            = document.getElementById("mPause");
   const mNote             = document.getElementById("mNote");
-
-  
-  
   const elCalGrid  = document.getElementById("calGrid");
   const elCalLabel = document.getElementById("calLabel");
   const btnCalPrev = document.getElementById("calPrev");
@@ -1773,8 +1770,6 @@ const elVacTaken = document.getElementById("vacTaken");
      Boot lang from settings
      ========================= */
   currentLang = state.settings?.lang || currentLang || "nl";
-  if(langSelect) langSelect.value = currentLang;
-
   /* =========================
      Tabs navigation
      ========================= */
@@ -1819,17 +1814,6 @@ verrekenModal?.addEventListener("click", (e) => {
 document.getElementById("btnNavCalendar")?.addEventListener("click", () => {
   showTab("tab3");
   renderCalendar();
-});
-document.getElementById("btnLangOpen")?.addEventListener("click", () => {
-  if(currentLang === "nl") currentLang = "en";
-  else if(currentLang === "en") currentLang = "fr";
-  else currentLang = "nl";
-
-  localStorage.setItem("lang", currentLang);
-  state.settings.lang = currentLang;
-  saveState();
-
-  applyLang();
 });
   btnCalPrev?.addEventListener("click", ()=>{
   calMonth--;
@@ -3178,58 +3162,6 @@ init();
   </div>
 </div>
 <!-- ===== TOEVOEGING CONFIRM MODAL END ===== -->
-
-
-<!-- ===== PDF EXPORT DIALOG ===== -->
-<dialog id="pdfDialog" class="pdfDialog">
-  <div class="pdfBox">
-    <h3 data-i18n="pdf_title">PDF export</h3>
-
-    <div class="sp"></div>
-
-    <label class="radioLine">
-      <input type="radio" name="pdfMode" value="month" checked>
-      <span data-i18n="pdf_month">Maand</span>
-    </label>
-
-    <label class="radioLine" style="margin-top:10px;">
-      <input type="radio" name="pdfMode" value="dates">
-      <span data-i18n="pdf_dates">Datums</span>
-    </label>
-
-    <div class="sp"></div>
-
-    <!-- Maand select -->
-    <div id="pdfMonthWrap">
-      <select id="pdfMonthSelect"></select>
-    </div>
-
-    <!-- Van/Tot -->
-    <div id="pdfRangeWrap" style="display:none; margin-top:10px;">
-      <div class="row3">
-        <div>
-          <label for="pdfFrom" data-i18n="pdf_from">Van</label>
-          <input id="pdfFrom" type="date">
-        </div>
-        <div>
-          <label for="pdfTo" data-i18n="pdf_to">Tot</label>
-          <input id="pdfTo" type="date">
-        </div>
-      </div>
-    </div>
-
-    <div class="sp"></div>
-
-    <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
-      <button class="btnSmall" id="pdfCancel" type="button" data-i18n="cancel">Annuleren</button>
-      <button class="btnSmall" id="pdfConfirm" type="button" data-i18n="make_pdf">Maak PDF</button>
-    </div>
-  </div>
-</dialog>
-
-<!-- libs for PDF export -->
-<script src="jspdf.umd.min.js"></script>
-<script src="pdf-export.js"></script>
 
 
 </body>
