@@ -1363,6 +1363,8 @@ verrek_none: "Geen verrekening gevonden op die dag.",
   overtime_settled: "Overuren verrekend",
 hours_amount_hhmm: "Aantal uren (HH:MM)",
 day_no_entry: "Geen entry op deze dag.",
+reconciled: "Verrekend",
+reconciled_remove: "Verrekening verwijderen",
 
       err_start_saldo_format: "Start saldo moet in formaat u:min zijn, bv 60:00",
       err_normday_format: "Norm dag moet in formaat u:min zijn, bv 7:30",
@@ -1435,6 +1437,9 @@ cloud_download: "Restore backup",
 cloud_not_logged: "Not logged in.",
 cloud_login_error: "Google login error",
 day_no_entry: "No entry on this day.",
+reconciled: "Reconciled",
+reconciled_remove: "Remove reconciliation",
+
 
       today_work: "Today (work)",
       week_work: "This week (work)",
@@ -1562,6 +1567,8 @@ verrek_none: "Aucune régularisation trouvée ce jour-là.",
   overtime_settled: "Heures supplémentaires réglées",
 hours_amount_hhmm: "Nombre d'heures (HH:MM)",
 day_no_entry: "Aucune entrée ce jour-là.",
+reconciled: "Régularisé",
+reconciled_remove: "Supprimer la régularisation",
 
       status_busy: "En cours...",
       status_paused: "En pause",
@@ -2123,7 +2130,9 @@ function renderCalendar(){
       .filter(v => !v.deletedAt && v.date === dateStr)
       .reduce((s,x)=> s + (x.minutes||0), 0);
 
-    const dot = vMins > 0 ? `<span class="calDotVerrek" title="Verrekend: ${formatHM(vMins)}"></span>` : "";
+    const dot = vMins > 0
+  ? `<span class="calDotVerrek" title="${t("reconciled")}: ${formatHM(vMins)}"></span>`
+  : "";
 
     cell.innerHTML = `
       ${pill}
@@ -2200,12 +2209,14 @@ function openDayDetail(ymdStr){
   if(!e){
     if(dayBody){
       dayBody.innerHTML = (vMins > 0)
-        ? `
-          <b>Verrekend</b><br>${formatHM(vMins)}
-          <div style="margin-top:12px;">
-            <button type="button" class="btnGhostSmall" id="btnUndoVerrek">Verrekening verwijderen</button>
-          </div>
-        `
+   ? `
+  <b>${t("reconciled")}</b><br>${formatHM(vMins)}
+  <div style="margin-top:12px;">
+    <button type="button" class="btnGhostSmall" id="btnUndoVerrek">
+      ${t("reconciled_remove")}
+    </button>
+  </div>
+`
 : t("day_no_entry");
     }
     if(dayEdit) dayEdit.style.display = "none";
@@ -2279,21 +2290,20 @@ if(dayOverlay) dayOverlay.style.display = "none";
        ${noteLine}`;
   }
 
-  // ===== VERREKEND TONEN + UNDO =====
-  if(vMins > 0 && dayBody){
-    dayBody.innerHTML += `
-      <hr>
-      <div class="verrekRow">
-        <div><b>Verrekend</b><br>${formatHM(vMins)}</div>
-        <button type="button" class="btnGhostSmall" id="btnUndoVerrek">Verrekening verwijderen</button>
-      </div>
-    `;
-    document.getElementById("btnUndoVerrek")?.addEventListener("click", () => undoVerrekeningForDate(ymdStr));
-  }
-
-  if(dayOverlay) dayOverlay.style.display = "flex";
+// ===== VERREKEND TONEN + UNDO =====
+if(vMins > 0 && dayBody){
+  dayBody.innerHTML += `
+    <hr>
+    <div class="verrekRow">
+      <div><b>${t("reconciled")}</b><br>${formatHM(vMins)}</div>
+      <button type="button" class="btnGhostSmall" id="btnUndoVerrek">${t("reconciled_remove")}</button>
+    </div>
+  `;
+  document.getElementById("btnUndoVerrek")?.addEventListener("click", () => undoVerrekeningForDate(ymdStr));
 }
 
+if(dayOverlay) dayOverlay.style.display = "flex";
+}
 
 // =========================
 // HELPERS
