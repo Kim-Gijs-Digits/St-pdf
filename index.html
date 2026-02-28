@@ -987,12 +987,13 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
 
     <!-- Taal -->
-    <label for="langSelect" data-i18n="language">Taal</label>
-    <select id="langSelect">
-      <option value="nl">Nederlands</option>
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-    </select>
+  <!-- Taal -->
+<label for="btnLangOpen" data-i18n="language">Taal</label>
+
+<button id="btnLangOpen" type="button" class="btnSmall" style="width:100%; text-align:left; display:flex; justify-content:space-between; align-items:center;">
+  <span id="langCurrentLabel">Nederlands</span>
+  <span style="opacity:.8;">▼</span>
+</button>
 
     <div class="sp"></div>
 
@@ -1602,16 +1603,7 @@ hours_amount_hhmm: "Nombre d'heures (HH:MM)",
     el.setAttribute("aria-label", t(key));
   });
 
-  const sel = document.getElementById("langSelect");
-  if(sel) sel.value = currentLang;
-}
-
-
-document.getElementById("langSelect")?.addEventListener("change", e=>{
-  currentLang = e.target.value;
-  localStorage.setItem("lang", currentLang);
-  applyLang();
-});
+ 
 const verrekenInput = document.getElementById("verrekenAmount");
 
 verrekenInput?.addEventListener("input", (e) => {
@@ -1769,7 +1761,7 @@ const elVacTaken = document.getElementById("vacTaken");
   const mPause            = document.getElementById("mPause");
   const mNote             = document.getElementById("mNote");
 
-  const langSelect        = document.getElementById("langSelect");
+  
   
   const elCalGrid  = document.getElementById("calGrid");
   const elCalLabel = document.getElementById("calLabel");
@@ -1826,6 +1818,17 @@ verrekenModal?.addEventListener("click", (e) => {
 document.getElementById("btnNavCalendar")?.addEventListener("click", () => {
   showTab("tab3");
   renderCalendar();
+});
+document.getElementById("btnLangOpen")?.addEventListener("click", () => {
+  if(currentLang === "nl") currentLang = "en";
+  else if(currentLang === "en") currentLang = "fr";
+  else currentLang = "nl";
+
+  localStorage.setItem("lang", currentLang);
+  state.settings.lang = currentLang;
+  saveState();
+
+  applyLang();
 });
   btnCalPrev?.addEventListener("click", ()=>{
   calMonth--;
