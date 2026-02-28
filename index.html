@@ -1136,7 +1136,16 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
 </div>  <!-- einde van je wrap / tabs -->
 
-<!-- HIER PLAKKEN -->
+<!-- App modal overlay -->
+<div id="appModalOverlay" class="appModalOverlay" aria-hidden="true">
+  <div class="appModal">
+    <div id="appModalBody" class="appModalBody"></div>
+    <div class="appModalActions">
+      <button id="appModalCancel" class="btnSmall" data-i18n="cancel">Annuleren</button>
+      <button id="appModalOk" class="btnSmall" data-i18n="ok">OK</button>
+    </div>
+  </div>
+</div>
 <!-- Toast -->
 <div id="toast" class="toast"></div>
 
