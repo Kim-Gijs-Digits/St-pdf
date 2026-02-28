@@ -8,8 +8,19 @@
 (() => {
   "use strict";
 
-  // Must match the app
-  const STORE_KEY = "shifttap_state_try_outv1";
+  // Must match the app (try to pick it up from index.html)
+  const STORE_KEY = (() => {
+    if (window.SHIFTTAP_STORE_KEY) return String(window.SHIFTTAP_STORE_KEY);
+    // fallback: find any key that looks like Shift-Tap state
+    try{
+      const keys = Object.keys(localStorage || {}).filter(k => /^shifttap_state_/i.test(k));
+      // pick the longest (usually contains channel) or the first
+      keys.sort((a,b)=>b.length-a.length);
+      return keys[0] || "shifttap_state_try_outv1";
+    }catch(_e){
+      return "shifttap_state_try_outv1";
+    }
+  })();
 
   const $ = (id) => document.getElementById(id);
 
@@ -162,6 +173,8 @@
   // ---------- DOM wiring ----------
   const btnExportPdf = $("btnExportPdf");
   const dlg          = $("pdfDialog");
+  const monthWrap    = $("pdfMonthWrap");
+  const rangeWrap    = $("pdfRangeWrap");
   const monthSelect  = $("pdfMonthSelect");
   const fromInput    = $("pdfFrom");
   const toInput      = $("pdfTo");
@@ -169,6 +182,17 @@
   const btnConfirm   = $("pdfConfirm");
 
   if(!btnExportPdf || !dlg || !monthSelect || !fromInput || !toInput || !btnConfirm) return;
+
+  function getMode(){
+    return (dlg.querySelector('input[name="pdfMode"]:checked')?.value) || "month";
+  }
+
+  function syncModeUI(){
+    const mode = getMode();
+    const isDates = (mode === "dates");
+    if(monthWrap) monthWrap.style.display = isDates ? "none" : "block";
+    if(rangeWrap) rangeWrap.style.display = isDates ? "block" : "none";
+  }
 
   function fillMonthSelect(state){
     const entries = (state?.entries || []).filter(e=>!e.deletedAt && e.date);
@@ -187,6 +211,14 @@
     const cur = `${now.getFullYear()}-${pad2(now.getMonth()+1)}`;
     if(sorted.includes(cur)) monthSelect.value = cur;
     else if(sorted.length) monthSelect.value = sorted[sorted.length-1];
+    else {
+      // no data yet: still offer current month
+      const opt = document.createElement("option");
+      opt.value = cur;
+      opt.textContent = `${pad2(now.getMonth()+1)}/${now.getFullYear()}`;
+      monthSelect.appendChild(opt);
+      monthSelect.value = cur;
+    }
   }
 
   function defaultRangeToMonth(ym){
@@ -203,11 +235,13 @@
     const state = loadState();
     fillMonthSelect(state);
 
-    // Default: range mode (A) → select current month range
+    // default = month mode
     const radios = [...dlg.querySelectorAll('input[name="pdfMode"]')];
-    const rRange = radios.find(r=>r.value==="range");
-    if(rRange) rRange.checked = true;
+    const rMonth = radios.find(r=>r.value==="month");
+    if(rMonth) rMonth.checked = true;
+    syncModeUI();
 
+    // convenience: set range to selected month too
     defaultRangeToMonth(monthSelect.value || "");
     dlg.showModal();
   });
@@ -217,6 +251,11 @@
   monthSelect.addEventListener("change", () => {
     // If user flips month, update range to that month for convenience
     defaultRangeToMonth(monthSelect.value || "");
+  });
+
+  // radio switch month/dates
+  [...dlg.querySelectorAll('input[name="pdfMode"]')].forEach(r => {
+    r.addEventListener("change", () => syncModeUI());
   });
 
   // ---------- PDF generation ----------
@@ -324,8 +363,8 @@
     const employer = (state?.settings?.employerName || "").trim();
     const employee = (state?.settings?.employeeName || "").trim();
 
-    // Mode: range (A) by default
-    const mode = (dlg.querySelector('input[name="pdfMode"]:checked')?.value) || "range";
+    // Mode: month / dates
+    const mode = (dlg.querySelector('input[name="pdfMode"]:checked')?.value) || "month";
 
     let fromYmd = fromInput.value;
     let toYmd   = toInput.value;
@@ -472,10 +511,11 @@
 
     const headers = L.cols;
 
-// BETERE widths: meer ruimte voor Netto en +/-
-// Datum  | Start | Eind | Netto | +/- | Info | Opmerkingen
-const colW = [24, 18, 18, 24, 22, 28, availW - (24+18+18+24+22+28)];
-const rowH = 7;
+    // BETERE widths: meer ruimte voor Netto en +/-
+    // Datum  | Start | Eind | Netto | +/- | Info | Opmerkingen
+    const availW = pageW - margin*2;
+    const colW = [24, 18, 18, 24, 22, 28, Math.max(24, availW - (24+18+18+24+22+28))];
+    const rowH = 7;
 
     y = drawTable(doc, margin, y, colW, rowH, headers, rows);
 

@@ -447,6 +447,31 @@ select option{ background:#1b0b10; color:#fff; }
 input[type="date"], input[type="time"], select{ color-scheme: dark; }
 input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
+/* =========================
+   PDF export dialog (zodat inputs/knoppen zichtbaar zijn)
+   ========================= */
+.pdfDialog::backdrop{
+  background: rgba(0,0,0,.55);
+}
+.pdfDialog{
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.pdfDialog .pdfBox{
+  width: min(92vw, 520px);
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: #1a0a10;
+  color: var(--text);
+  box-shadow: 0 20px 70px rgba(0,0,0,.6);
+  padding: 16px;
+}
+.pdfDialog h3{ margin: 0; font-weight: 950; font-size: 22px; }
+.pdfDialog .radioLine{ display:flex; align-items:center; gap:10px; font-weight: 900; }
+.pdfDialog .row3{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pdfDialog .btnSmall{ height: 44px; padding: 0 14px; border-radius: 14px; }
+
 
 /* Modal save knop (groen pill, rechts) */
 #btnSaveModal,
@@ -885,17 +910,15 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
     <div class="h2Row">
       <h2 data-i18n="history_title">Historiek</h2>
 
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
-  <button class="btnSmall" id="btnAddManual" data-i18n="manual" type="button">+ Handmatig</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btnSmall" id="btnAddManual" data-i18n="manual" type="button">+ Handmatig</button>
 
-<button class="btnSmall" id="btnExportPdf"
-  onclick="alert('PDF klik werkt ✅')"
-  data-i18n="pdf_export_btn"
-  data-i18n-aria="pdf_export_btn_aria"
-  type="button">
-  PDF
-</button>
-</div>
+        <button class="btnSmall" id="btnExportPdf"
+          data-i18n="pdf_export_btn"
+          data-i18n-aria="pdf_export_btn_aria"
+          aria-label=""
+          type="button">📄 PDF</button>
+      </div>
     </div>
 
     <div class="muted" data-i18n="history_hint" data-i18n-html="1">
@@ -1150,6 +1173,9 @@ const APP_VERSION = "2.0.0";
 const STORE_KEY = `${APP_ID}_state_${APP_CHANNEL}`;
 const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
 
+// Expose for extra modules (bv. pdf-export.js)
+window.SHIFTTAP_STORE_KEY = STORE_KEY;
+
 const NORM_MIN  = 7 * 60 + 30;
 const RECUP_MIN = 7 * 60 + 30;
 
@@ -1267,6 +1293,19 @@ let calMonth = new Date().getMonth();
       pause_stop: "Stop",
       save: "Opslaan",
       manual: "+ Handmatig",
+
+      // --- PDF export ---
+      pdf_export_btn: "📄 PDF",
+      pdf_export_btn_aria: "PDF export",
+      pdf_title: "PDF export",
+      pdf_month: "Maand",
+      pdf_dates: "Datums",
+      pdf_from: "Van",
+      pdf_to: "Tot",
+      make_pdf: "Maak PDF",
+      cancel: "Annuleren",
+      ok: "OK",
+
       backup: "Backup",
       import_json: "Import JSON",
       backup_tip: "Tip: Maak regelmatig backup.",
@@ -1281,15 +1320,6 @@ let calMonth = new Date().getMonth();
       cloud_download: "Backup downl",
       cloud_upload: " Maak Backup",
       settle_hint: "Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.",
-      pdf_export_btn: "📄 PDF",
-pdf_export_btn_aria: "PDF export",
-pdf_title: "PDF export",
-pdf_month: "Maand",
-pdf_dates: "Datums",
-pdf_from: "Van",
-pdf_to: "Tot",
-make_pdf: "Maak PDF",
-cancel: "Annuleren",
 
       today_work: "Vandaag (werk)",
       week_work: "Deze week (werk)",
@@ -1351,15 +1381,6 @@ hours_amount_hhmm: "Aantal uren (HH:MM)",
       lbl_pause: "Break (min)",
       lbl_note: "Note (optional)",
       ph_note: "e.g. Garage after route, traffic, waiting for customer...",
-      pdf_export_btn: "📄 PDF",
-pdf_export_btn_aria: "Export PDF",
-pdf_title: "PDF export",
-pdf_month: "Month",
-pdf_dates: "Dates",
-pdf_from: "From",
-pdf_to: "To",
-make_pdf: "Create PDF",
-cancel: "Cancel",
 
       err_choose_date: "Choose a date.",
       err_fill_times: "Fill in start and end (or choose Comp Day).",
@@ -1374,6 +1395,19 @@ cancel: "Cancel",
       pause_stop: "Stop",
       save: "Save",
       manual: "+ Manual",
+
+      // --- PDF export ---
+      pdf_export_btn: "📄 PDF",
+      pdf_export_btn_aria: "Export PDF",
+      pdf_title: "PDF export",
+      pdf_month: "Month",
+      pdf_dates: "Dates",
+      pdf_from: "From",
+      pdf_to: "To",
+      make_pdf: "Make PDF",
+      cancel: "Cancel",
+      ok: "OK",
+
       backup: "Backup",
       import_json: "Import JSON",
       backup_tip: "Tip: Make regular backups.",
@@ -1453,15 +1487,6 @@ cloud_login_error: "Erreur de connexion Google",
       lbl_pause: "Pause (min)",
       lbl_note: "Remarque (optionnel)",
       ph_note: "ex. Garage après tournée, embouteillage, attente client...",
-      pdf_export_btn: "📄 PDF",
-pdf_export_btn_aria: "Exporter PDF",
-pdf_title: "Export PDF",
-pdf_month: "Mois",
-pdf_dates: "Dates",
-pdf_from: "De",
-pdf_to: "À",
-make_pdf: "Créer PDF",
-cancel: "Annuler",
 
       err_choose_date: "Choisis une date.",
       err_fill_times: "Remplis début et fin (ou choisis Jour de récup).",
@@ -1476,6 +1501,19 @@ cancel: "Annuler",
       pause_stop: "Arrêter",
       save: "Enregistrer",
       manual: "+ Manuel",
+
+      // --- PDF export ---
+      pdf_export_btn: "📄 PDF",
+      pdf_export_btn_aria: "Exporter PDF",
+      pdf_title: "Export PDF",
+      pdf_month: "Mois",
+      pdf_dates: "Dates",
+      pdf_from: "De",
+      pdf_to: "À",
+      make_pdf: "Créer PDF",
+      cancel: "Annuler",
+      ok: "OK",
+
       backup: "Sauvegarde",
       import_json: "Importer JSON",
       backup_tip: "Astuce : faites régulièrement une sauvegarde.",
@@ -3136,6 +3174,8 @@ init();
   </div>
 </div>
 <!-- ===== TOEVOEGING CONFIRM MODAL END ===== -->
+
+
 <!-- ===== PDF EXPORT DIALOG ===== -->
 <dialog id="pdfDialog" class="pdfDialog">
   <div class="pdfBox">
@@ -3144,7 +3184,7 @@ init();
     <div class="sp"></div>
 
     <label class="radioLine">
-      <input type="radio" name="pdfMode" value="range" checked>
+      <input type="radio" name="pdfMode" value="month" checked>
       <span data-i18n="pdf_month">Maand</span>
     </label>
 
@@ -3155,10 +3195,12 @@ init();
 
     <div class="sp"></div>
 
+    <!-- Maand select -->
     <div id="pdfMonthWrap">
       <select id="pdfMonthSelect"></select>
     </div>
 
+    <!-- Van/Tot -->
     <div id="pdfRangeWrap" style="display:none; margin-top:10px;">
       <div class="row3">
         <div>
@@ -3174,13 +3216,14 @@ init();
 
     <div class="sp"></div>
 
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
+    <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
       <button class="btnSmall" id="pdfCancel" type="button" data-i18n="cancel">Annuleren</button>
       <button class="btnSmall" id="pdfConfirm" type="button" data-i18n="make_pdf">Maak PDF</button>
     </div>
   </div>
 </dialog>
 
+<!-- libs for PDF export -->
 <script src="jspdf.umd.min.js"></script>
 <script src="pdf-export.js"></script>
 
