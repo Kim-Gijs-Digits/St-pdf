@@ -778,19 +778,6 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
   box-shadow: 0 0 0 2px rgba(0,0,0,.25);
 }
 
-
-/* --- PDF dialog --- */
-.pdfDialog{ border:none; border-radius:16px; width:min(560px, 92vw); padding:0; }
-.pdfDialog::backdrop{ background: rgba(0,0,0,.45); }
-.pdfDialogInner{ padding:14px 14px 12px; }
-.pdfDialogHeader{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.pdfDialogTitle{ font-weight:800; font-size:16px; }
-.pdfDialogSection{ margin-top:12px; padding:10px; border:1px solid rgba(255,255,255,.12); border-radius:14px; }
-.pdfRadioRow{ display:flex; align-items:center; gap:10px; }
-.pdfRangeRow{ display:flex; gap:10px; margin-top:10px; }
-.pdfRangeRow > div{ flex:1; }
-.pdfDialogFooter{ display:flex; justify-content:flex-end; gap:10px; margin-top:14px; }
-
 </style>
 </head>
 
@@ -805,7 +792,7 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
             <img src="ST-logo.png" alt="Shift Tap logo" class="app-logo">
             <div class="app-title-wrap">
               <h1>Shift-Tap</h1>
-              <div class="sub">Made by Kim Gijs V1.2.01/2026</div>
+              <div class="sub">v2.0.0</div>
             </div>
           </div>
 
@@ -898,9 +885,8 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
     <div class="h2Row">
       <h2 data-i18n="history_title">Historiek</h2>
 
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-wrap:wrap;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btnSmall" id="btnAddManual" data-i18n="manual" type="button">+ Handmatig</button>
-        <button class="btnSmall" id="btnExportPdf" type="button">📄 PDF</button>
       </div>
     </div>
 
@@ -908,52 +894,7 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
       Vergeten uit te tikken?<br>Voeg handmatig toe.
     </div>
 
-    
-    <!-- PDF export dialog -->
-    <dialog id="pdfDialog" class="pdfDialog">
-      <form method="dialog" class="pdfDialogInner">
-        <div class="pdfDialogHeader">
-          <div class="pdfDialogTitle">PDF export</div>
-          <button class="btnIcon" value="cancel" aria-label="Sluiten">✕</button>
-        </div>
-
-        <div class="muted" style="margin-top:6px;">
-          Welke maand(en) en/of welke data wil je exporteren?
-        </div>
-
-        <div class="pdfDialogSection">
-          <label class="pdfRadioRow">
-            <input type="radio" name="pdfMode" value="month" checked>
-            <span>Maand</span>
-          </label>
-          <select id="pdfMonthSelect" class="input"></select>
-        </div>
-
-        <div class="pdfDialogSection">
-          <label class="pdfRadioRow">
-            <input type="radio" name="pdfMode" value="range">
-            <span>Datums</span>
-          </label>
-          <div class="pdfRangeRow">
-            <div>
-              <div class="muted" style="margin-bottom:4px;">Van</div>
-              <input id="pdfFrom" class="input" type="date">
-            </div>
-            <div>
-              <div class="muted" style="margin-bottom:4px;">Tot</div>
-              <input id="pdfTo" class="input" type="date">
-            </div>
-          </div>
-        </div>
-
-        <div class="pdfDialogFooter">
-          <button class="btnSmall" value="cancel" type="button" id="pdfCancel">Annuleren</button>
-          <button class="btnPrimary" value="ok" type="button" id="pdfConfirm">Maak PDF</button>
-        </div>
-      </form>
-    </dialog>
-
-<div class="list" id="historyList"></div>
+    <div class="list" id="historyList"></div>
   </div>
 </div>
 
@@ -1013,26 +954,6 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
     <div class="hr"></div>
 
-    <!-- Backups -->
-    <div class="h2Row">
-      <div>
-        <div class="muted" style="font-weight:950;" data-i18n="backup">Backup</div>
-<div class="muted2" id="lastBackupText"></div>
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btnSmall" id="btnBackupNow" data-i18n="backup">Backup</button>
-        <label class="btnSmall" style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
-          <span data-i18n="import_json">Import JSON</span>
-          <input id="fileImport2" type="file" accept="application/json" style="display:none;">
-        </label>
-      </div>
-    </div>
-
-    <div class="muted2" style="margin-top:10px; font-weight:900;" data-i18n="backup_tip">
-      Tip: Maak regelmatig backup.
-    </div>
-
-    <div class="hr"></div>
 
     <!-- Taal -->
     <label for="langSelect" data-i18n="language">Taal</label>
@@ -1080,8 +1001,7 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
         <div class="muted" style="font-weight:950;" data-i18n="cloud_title">
           Google login + Cloud sync
         </div>
-        <div class="muted2" id="loginNote" data-i18n="cloud_not_available">
-          Nog niet mogelijk.
+<div class="muted2" id="loginNote"></div>
         </div>
       </div>
     </div>
@@ -1094,6 +1014,7 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
         Uitloggen
       </button>
     </div>
+    <div class="muted2" id="loginNote"></div>
 
     <div class="sp"></div>
 
@@ -1105,6 +1026,7 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
         Toestel → cloud
       </button>
     </div>
+
 
     <div class="footer">
       Shift-Tap – Made by <b>Kim Gijs</b>
@@ -1211,14 +1133,92 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 <script>
 (() => {
   /* =========================
-     ShiftTap (Beta New Concept)
+     ShiftTap (try Gmail)
      ========================= */
-  const STORE_KEY = "shifttap_state_try_outv1";
-  const META_KEY  = "shifttap_meta_try_outv1";
+  const APP_ID = "shifttap";
+const APP_CHANNEL = "stable_try_gmailv1";
+const APP_VERSION = "2.0.0";
 
-  const NORM_MIN  = 7 * 60 + 30;
-  const RECUP_MIN = 7 * 60 + 30;
-  
+const STORE_KEY = `${APP_ID}_state_${APP_CHANNEL}`;
+const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
+
+const NORM_MIN  = 7 * 60 + 30;
+const RECUP_MIN = 7 * 60 + 30;
+
+// =========================
+// Cloud sync (Google login) via Firebase
+// Setup (phone-friendly):
+// - Create Firebase project
+// - Enable Authentication -> Google
+// - Create Firestore database
+// - Paste firebaseConfig below
+// =========================
+
+
+// Firebase config is not a secret, but Firestore rules must be locked.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCkK45tqlORcpyIkVVsD5sJA6CRx4guad0",
+  authDomain: "shifttap-cloud.firebaseapp.com",
+  projectId: "shifttap-cloud",
+  storageBucket: "shifttap-cloud.firebasestorage.app",
+  messagingSenderId: "818538130643",
+  appId: "1:818538130643:web:2614157b0d6a767deb3826"
+};
+
+let fbApp = null;
+let fbAuth = null;
+let fbDb = null;
+
+function firebaseConfigured(){
+  return !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId);
+}
+
+
+async function ensureFirebase(){
+  if(!firebaseConfigured()) return false;
+  if(fbApp && fbAuth && fbDb) return true;
+
+  fbApp = firebase.initializeApp(FIREBASE_CONFIG);
+  fbAuth = firebase.auth();
+  fbDb = firebase.firestore();
+
+  await fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  return true;
+}
+
+/* =========================
+   Cloud sync (Google login)
+   - Mobile friendly: redirect login
+   ========================= */
+const elLoginNote     = document.getElementById("loginNote");
+const btnGoogleLogin  = document.getElementById("btnGoogleLogin");
+const btnGoogleLogout = document.getElementById("btnGoogleLogout");
+const btnCloudPull    = document.getElementById("btnCloudPull");
+const btnCloudPush    = document.getElementById("btnCloudPush");
+
+function setCloudUiEnabled(enabled){
+  if(btnGoogleLogin)  btnGoogleLogin.disabled  = !enabled;
+  if(btnGoogleLogout) btnGoogleLogout.disabled = !enabled;
+  if(btnCloudPull)    btnCloudPull.disabled    = !enabled;
+  if(btnCloudPush)    btnCloudPush.disabled    = !enabled;
+}
+
+function setLoginUi(user){
+  const loggedIn = !!user;
+  if(btnGoogleLogin)  btnGoogleLogin.style.display  = loggedIn ? "none" : "inline-flex";
+  if(btnGoogleLogout) btnGoogleLogout.style.display = loggedIn ? "inline-flex" : "none";
+  if(elLoginNote){
+    elLoginNote.textContent = loggedIn
+      ? `✅ Ingelogd: ${user.email || user.displayName || "Google"}`
+      : `Niet ingelogd.`;
+  }
+}
+
+
+
+
+
+
   let calYear  = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
@@ -1270,8 +1270,8 @@ let calMonth = new Date().getMonth();
       cloud_not_available: "Nog niet mogelijk.",
       login_google: "Inloggen met Google",
       logout_google: "Uitloggen",
-      cloud_download: "Cloud → toestel",
-      cloud_upload: "Toestel → cloud",
+      cloud_download: "Backup downl",
+      cloud_upload: " Maak Backup",
       settle_hint: "Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.",
 
       today_work: "Vandaag (werk)",
@@ -1286,6 +1286,9 @@ let calMonth = new Date().getMonth();
       status_busy: "Bezig...",
       status_paused: "Gepauzeerd",
       status_not_started: "Niet gestart",
+      cloud_logged_in: "Ingelogd:",
+cloud_not_logged: "Niet ingelogd.",
+cloud_login_error: "Google login fout",
 
       recup_line: "RECUP - gaat van overuren af",
       net_line: "netto",
@@ -1356,9 +1359,12 @@ hours_amount_hhmm: "Aantal uren (HH:MM)",
       cloud_not_available: "Not available yet.",
       login_google: "Login with Google",
       logout_google: "Logout",
-      cloud_download: "Cloud → device",
-      cloud_upload: "Device → cloud",
+      cloud_upload: "Create backup",
+cloud_download: "Restore backup",
       settle_hint: "Have your overtime hours been paid out? Record them here to deduct them from your balance.",
+      cloud_logged_in: "Logged in:",
+cloud_not_logged: "Not logged in.",
+cloud_login_error: "Google login error",
 
       today_work: "Today (work)",
       week_work: "This week (work)",
@@ -1410,6 +1416,9 @@ hours_amount_hhmm: "Number of hours (HH:MM)",
       btn_close: "Fermer",
       btn_save: "Enregistrer",
       btn_delete: "Supprimer",
+      cloud_logged_in: "Connecté :",
+cloud_not_logged: "Non connecté.",
+cloud_login_error: "Erreur de connexion Google",
 
       lbl_date: "Date",
       lbl_type: "Type",
@@ -1443,8 +1452,8 @@ hours_amount_hhmm: "Number of hours (HH:MM)",
       cloud_not_available: "Pas encore disponible.",
       login_google: "Connexion Google",
       logout_google: "Déconnexion",
-      cloud_download: "Cloud → appareil",
-      cloud_upload: "Appareil → cloud",
+      cloud_upload: "Sauvegarde",
+cloud_download: "Restaurer",
       settle_hint: "Des heures supplémentaires ont été payées ? Enregistre-les ici pour les déduire de ton solde.",
 
       today_work: "Aujourd’hui (travail)",
@@ -1550,18 +1559,7 @@ verrekenInput?.addEventListener("input", (e) => {
   e.target.value = v;
 });
 
-  /* =========================
-     Firebase config (later)
-     ========================= */
-  const firebaseConfig = {
-    apiKey: "AIzaSyCi-qkswsNawKr_-A3FIuxlWqNAUpjYCcs",
-    authDomain: "shiftbuddyproject-ef1dd.firebaseapp.com",
-    projectId: "shiftbuddyproject-ef1dd",
-    storageBucket: "shiftbuddyproject-ef1dd.firebasestorage.app",
-    messagingSenderId: "267425682905",
-    appId: "1:267425682905:web:2e521b1df5ce92245235c8"
-  };
-
+  
   /* =========================
      Toast + Confirm
      ========================= */
@@ -2630,7 +2628,233 @@ ${t("pause_line")} ${e.pauseMin||0} ${t("minutes")}${noteLine}`;
     reader.readAsText(file);
   }
 
-  /* =========================
+  
+
+/* =========================
+   Google login + Cloud sync (Firebase)
+   ========================= */
+
+/**
+ * Belangrijk:
+ * - Deze app draait als PWA (GitHub Pages / HTTPS).
+ * - Voor Google login moet je in Firebase Console bij Authentication → Settings
+ *   je domein toevoegen aan "Authorized domains" (bv. <user>.github.io).
+ * - Als dat niet klopt, zie je hieronder een duidelijke foutmelding.
+ */
+
+const elCloudStatus = document.getElementById("cloudStatus");
+
+function setCloudStatus(txt){
+  if(elCloudStatus) elCloudStatus.textContent = txt || "—";
+}
+
+function currentUser(){
+  try{
+    return fbAuth?.currentUser || null;
+  }catch(e){
+    return null;
+  }
+}
+
+function backupObject(){
+  return {
+    state,
+    meta,
+    cloud: {
+      appId: APP_ID,
+      channel: APP_CHANNEL,
+      version: APP_VERSION,
+      exportedAt: Date.now()
+    }
+  };
+}
+
+function cloudDocRef(uid){
+  // 1 doc per user per app/channel
+  const docId = `${APP_ID}_${APP_CHANNEL}`;
+  return fbDb.collection("users").doc(uid).collection("apps").doc(docId);
+}
+
+/* ---------- Redirect result (mobiel/PWA) ---------- */
+async function handleRedirectLoginResult(){
+  if(!(await ensureFirebase())){
+    setCloudStatus("Cloud: niet geconfigureerd.");
+    setCloudUiEnabled(false);
+    return;
+  }
+
+  const elLoginNote = document.getElementById("loginNote");
+
+  try {
+    const res = await fbAuth.getRedirectResult();
+
+    if (res && res.user) {
+      showToast(`✅ ${t("cloud_logged_in")} ${res.user.email || "Google"}`, "ok");
+    }
+  } catch (e) {
+    console.error("getRedirectResult:", e);
+
+    const code = e?.code ? String(e.code) : "login-error";
+    showToast(`❌ ${t("cloud_login_error")} (${code})`, "warn");
+    setCloudStatus(`❌ ${t("cloud_login_error")}: ${code}`);
+
+    if (elLoginNote) {
+      elLoginNote.textContent = `❌ ${t("cloud_login_error")}: ${code}`;
+    }
+  }
+}
+
+/* ---------- Login / Logout ---------- */
+async function loginGoogle(){
+  if(!(await ensureFirebase())){
+    showToast("Cloud niet geconfigureerd.", "warn");
+    return;
+  }
+  try{
+  const provider = new firebase.auth.GoogleAuthProvider();
+  await fbAuth.signInWithPopup(provider);
+}catch(e){
+  // Als popup geblokkeerd is, proberen we toch redirect (alleen dan)
+  if (e && (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user")) {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await fbAuth.signInWithRedirect(provider);
+    return;
+  }
+  console.error("loginGoogle:", e);
+  showToast("❌ Inloggen mislukt", "warn");
+}
+}
+
+async function logoutGoogle(){
+  if(!(await ensureFirebase())) return;
+  try{
+    await fbAuth.signOut();
+    showToast("Uitgelogd.", "ok");
+  }catch(e){
+    console.error("logoutGoogle:", e);
+    showToast("❌ Uitloggen mislukt", "warn");
+  }
+}
+
+/* ---------- Cloud push / pull ---------- */
+async function cloudPush(){
+  if(!(await ensureFirebase())){
+    showToast("Cloud niet geconfigureerd.", "warn");
+    return;
+  }
+  const u = currentUser();
+  if(!u){
+    showToast("Log eerst in met Google.", "warn");
+    return;
+  }
+
+  try{
+    showToast("⬆️ Upload bezig...", "ok");
+    const payload = backupObject();
+    await cloudDocRef(u.uid).set({
+      payload,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge:true });
+
+    setCloudStatus(`✅ Cloud bijgewerkt (${u.email || "Google"})`);
+    showToast("✅ Backup naar cloud gelukt", "ok");
+  }catch(err){
+    console.error(err);
+    showToast("❌ Cloud upload mislukt", "warn");
+  }
+}
+
+async function cloudPull(){
+  if(!(await ensureFirebase())){
+    showToast("Cloud niet geconfigureerd.", "warn");
+    return;
+  }
+  const u = currentUser();
+  if(!u){
+    showToast("Log eerst in met Google.", "warn");
+    return;
+  }
+
+  try{
+    showToast("⬇️ Download bezig...", "ok");
+    const snap = await cloudDocRef(u.uid).get();
+    if(!snap.exists){
+      showToast("Geen cloud-backup gevonden.", "warn");
+      return;
+    }
+
+    const payload = snap.data()?.payload || null;
+    if(!payload?.state){
+      showToast("Cloud-backup is ongeldig.", "warn");
+      return;
+    }
+
+    openConfirm("Cloud → toestel: dit overschrijft je data op dit toestel. Doen?", ()=>{
+      state = payload.state;
+      meta  = payload.meta || meta;
+
+      // safety defaults
+      if(!state.settings) state.settings = { startSaldoMin:0, normDayMin:NORM_MIN, lang:"nl" };
+      if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
+      if(!Array.isArray(state.entries)) state.entries = [];
+      if(!Array.isArray(state.verrekeningen)) state.verrekeningen = [];
+      if(typeof state.overtimePaidMinutes !== "number") state.overtimePaidMinutes = 0;
+      if(!meta) meta = { lastBackupAt:null, lastBackupName:null };
+
+      saveState();
+      saveMeta();
+      renderAll();
+
+      setCloudStatus(`⬇️ Cloud geladen (${u.email || "Google"})`);
+      showToast("✅ Cloud → toestel gelukt", "ok");
+    });
+  }catch(err){
+    console.error(err);
+    showToast("❌ Cloud download mislukt", "warn");
+  }
+}
+
+/* ---------- UI wiring ---------- */
+function bindCloudButtons(){
+  btnGoogleLogin?.addEventListener("click", ()=> loginGoogle().catch(console.error));
+  btnGoogleLogout?.addEventListener("click", ()=> logoutGoogle().catch(console.error));
+  btnCloudPush?.addEventListener("click", ()=> cloudPush().catch(console.error));
+  btnCloudPull?.addEventListener("click", ()=> cloudPull().catch(console.error));
+}
+
+async function wireCloudAuthUI(){
+  // knoppen standaard uit tot we Firebase zeker hebben
+  setCloudUiEnabled(false);
+
+  if(!(await ensureFirebase())){
+    setCloudStatus("Cloud: niet geconfigureerd.");
+    if(elLoginNote) elLoginNote.textContent = "Nog niet mogelijk (Firebase niet geconfigureerd).";
+    return;
+  }
+
+  // Vanaf hier: Firebase OK
+  setCloudUiEnabled(true);
+  setCloudStatus("Niet ingelogd.");
+
+  // 1x listener (blijft actief)
+  fbAuth.onAuthStateChanged((u)=>{
+    setLoginUi(u);
+
+    if(u){
+      setCloudStatus(`✅ Ingelogd: ${u.email || u.displayName || "Google"}`);
+      // login knop verbergen gebeurt al in setLoginUi
+      if(btnCloudPull) btnCloudPull.disabled = false;
+      if(btnCloudPush) btnCloudPush.disabled = false;
+    }else{
+      setCloudStatus("Niet ingelogd.");
+      if(btnCloudPull) btnCloudPull.disabled = true;
+      if(btnCloudPush) btnCloudPush.disabled = true;
+    }
+  });
+}
+
+
+/* =========================
      Settings
      ========================= */
   function renderSettings(){
@@ -2720,45 +2944,44 @@ elOvertimeSaldo.innerHTML = `
   }
 
   /* =========================
-     Bind events
-     ========================= */
-  btnStart?.addEventListener("click", startTimer);
-  btnPause?.addEventListener("click", pauseTimer);
-  btnSave?.addEventListener("click", saveWorkEntry);
-  btnRecup?.addEventListener("click", addRecup);
+   Bind events
+   ========================= */
 
-  btnAddManual?.addEventListener("click", ()=> openModal("add"));
+// Basis knoppen
+btnStart?.addEventListener("click", startTimer);
+btnPause?.addEventListener("click", pauseTimer);
+btnSave?.addEventListener("click", saveWorkEntry);
+btnRecup?.addEventListener("click", addRecup);
+btnAddManual?.addEventListener("click", ()=> openModal("add"));
 
-  btnBackupNow?.addEventListener("click", ()=> exportJSON());
-  fileImport2?.addEventListener("change", (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(f) importJSON(f);
-    e.target.value = "";
-  });
-  
+// Backup
+btnBackupNow?.addEventListener("click", ()=> exportJSON());
+fileImport2?.addEventListener("change", (e)=>{
+  const f = e.target.files?.[0];
+  if(f) importJSON(f);
+  e.target.value = "";
+});
+
+// Verrekenen
 const verrekenAmount = document.getElementById("verrekenAmount");
 const verrekenDate   = document.getElementById("verrekenDate");
 const btnSaveVerreken = document.getElementById("btnSaveVerrekening");
 const btnCloseVerreken = document.getElementById("btnCloseVerreken");
 
-// Open (als je die al had mag blijven, maar zorg dat je NIET dubbel bindt)
 document.getElementById("btnVerreken")?.addEventListener("click", () => {
   if(verrekenDate) verrekenDate.value = todayISO();
   if(verrekenAmount && !verrekenAmount.value) verrekenAmount.value = "0:00";
   if(verrekenModal) verrekenModal.style.display = "flex";
 });
 
-// Sluiten (X)
 btnCloseVerreken?.addEventListener("click", () => {
   if(verrekenModal) verrekenModal.style.display = "none";
 });
 
-// Klik op achtergrond = sluiten
 verrekenModal?.addEventListener("click", (e) => {
   if(e.target === verrekenModal) verrekenModal.style.display = "none";
 });
 
-// ✅ OPSLAAN
 btnSaveVerreken?.addEventListener("click", () => {
   const date = (verrekenDate?.value || "").trim();
   const amountStr = (verrekenAmount?.value || "").trim();
@@ -2768,14 +2991,12 @@ btnSaveVerreken?.addEventListener("click", () => {
     return;
   }
 
-  // parseHM bestaat al bij jou en kan ook 50:00 aan ✅
   const mins = parseHM(amountStr);
   if(mins == null){
     showToast("Vul uren in als u:min (bv 10:00).", "warn");
     return;
   }
 
-  // bewaren
   state.verrekeningen = state.verrekeningen || [];
   state.verrekeningen.unshift({
     id: uid(),
@@ -2784,7 +3005,6 @@ btnSaveVerreken?.addEventListener("click", () => {
     createdAt: Date.now()
   });
 
-  // totaal bijhouden (later gebruiken we dit om saldo af te trekken)
   state.overtimePaidMinutes = (state.overtimePaidMinutes || 0) + mins;
 
   saveState();
@@ -2792,10 +3012,14 @@ btnSaveVerreken?.addEventListener("click", () => {
   showToast("Verrekenen ✓", "ok");
   renderAll();
 });
-  dayClose?.addEventListener("click", closeDayDetail);
+
+// Dag detail
+dayClose?.addEventListener("click", closeDayDetail);
+
 dayOverlay?.addEventListener("click", (ev)=>{
   if(ev.target === dayOverlay) closeDayDetail();
 });
+
 dayEdit?.addEventListener("click", () => {
   const ymdStr = dayTitle?.dataset?.ymd;
   if(!ymdStr) return;
@@ -2807,39 +3031,62 @@ dayEdit?.addEventListener("click", () => {
   openModal("edit", e);
 });
 
-  btnSaveSettings?.addEventListener("click", saveSettings);
-  btnCloseModal?.addEventListener("click", closeModal);
-  modalBack?.addEventListener("click", (e)=>{ if(e.target===modalBack) closeModal(); });
-  btnSaveModal?.addEventListener("click", saveModal);
-  btnDeleteInModal?.addEventListener("click", deleteEditing);
+// Settings
+btnSaveSettings?.addEventListener("click", saveSettings);
+btnCloseModal?.addEventListener("click", closeModal);
+modalBack?.addEventListener("click", (e)=>{ if(e.target===modalBack) closeModal(); });
+btnSaveModal?.addEventListener("click", saveModal);
+btnDeleteInModal?.addEventListener("click", deleteEditing);
 
-  if(langSelect){
-    langSelect.addEventListener("change", ()=>{
-      currentLang = langSelect.value;
-      state.settings.lang = currentLang;
-      saveState();
-      renderAll();
-    });
-  }
-
-  window.addEventListener("online", renderOnlineBadge);
-  window.addEventListener("offline", renderOnlineBadge);
-
-  function init(){
-    showTab("tab1");
-
-    if(state.timer.running){
-      if(!interval) interval = setInterval(()=>{ updateTimerUI(); saveState(); }, 250);
-      setStatus("playing");
-    }else{
-      setStatus(state.timer.accMs>0 ? "paused" : "stopped");
-    }
-
+if(langSelect){
+  langSelect.addEventListener("change", ()=>{
+    currentLang = langSelect.value;
+    state.settings.lang = currentLang;
+    saveState();
     renderAll();
+  });
+}
+
+window.addEventListener("online", renderOnlineBadge);
+window.addEventListener("offline", renderOnlineBadge);
+
+
+/* =========================
+   INIT
+   ========================= */
+
+async function init(){
+  try{
+    await handleRedirectLoginResult();
+  }catch(e){
+    console.warn("redirect init error:", e);
   }
 
-  init();
-})();  
+  try{
+    await wireCloudAuthUI();
+  }catch(e){
+    console.warn("auth UI error:", e);
+  }
+
+  bindCloudButtons();
+
+  showTab("tab1");
+
+  if(state.timer.running){
+    if(!interval) interval = setInterval(()=>{ 
+      updateTimerUI(); 
+      saveState(); 
+    }, 250);
+    setStatus("playing");
+  }else{
+    setStatus(state.timer.accMs>0 ? "paused" : "stopped");
+  }
+
+  renderAll();
+}
+
+init();
+})();
 
 </script>
 <!-- ===== TOEVOEGING CONFIRM MODAL START ===== -->
@@ -2856,9 +3103,5 @@ dayEdit?.addEventListener("click", () => {
 <!-- ===== TOEVOEGING CONFIRM MODAL END ===== -->
 
 
-
-  <!-- PDF export (offline): place jspdf.umd.min.js next to this file -->
-  <script src="jspdf.umd.min.js"></script>
-  <script src="pdf-export.js"></script>
 </body>
 </html>
