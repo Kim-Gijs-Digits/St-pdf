@@ -1669,15 +1669,15 @@ function openLangModal(){
   });
 
   applyLang(); // zodat "Annuleren" correct vertaalt
-  overlay.style.display = "flex";
+  overlay.classList.add("show");
   overlay.setAttribute("aria-hidden","false");
 }
 
 function closeAppModal(){
   const overlay = document.getElementById("appModalOverlay");
   if(!overlay) return;
-  overlay.style.display = "none";
-  overlay.setAttribute("aria-hidden","true");
+  overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden","true");
 }
 
 document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal);
