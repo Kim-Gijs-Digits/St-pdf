@@ -1882,7 +1882,9 @@ document.getElementById("btnCloseVerreken")?.addEventListener("click", () => {
 verrekenModal?.addEventListener("click", (e) => {
   if(e.target === verrekenModal) verrekenModal.style.display = "none";
 });
-
+document.getElementById("btnLangOpen")?.addEventListener("click", () => {
+  alert("klik werkt");
+});
 
   document.getElementById("btnOpenHistory")?.addEventListener("click", () => showTab("tab2"));
   document.getElementById("btnHome")?.addEventListener("click", () => showTab("tab1"));
