@@ -802,6 +802,62 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
   background: rgba(0,255,120,.9);
   box-shadow: 0 0 0 2px rgba(0,0,0,.25);
 }
+.label-with-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.info-icon {
+  font-size: 14px;
+  opacity: 0.7;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.info-icon:hover {
+  opacity: 1;
+}
+.info-bubble{
+  position:absolute;
+  top:28px;
+  left:0;
+  background:#1a0a10;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  font-size:13px;
+  font-weight:700;
+  max-width:220px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+  display:none;
+  z-index:200;
+}
+.info-bubble{
+  white-space: pre-line;
+}
+/* === Recup knop bubble correct uitlijnen === */
+.recupWrap{
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.recupWrap .btnRecup{
+  width: 100%;
+}
+
+.recupWrap .info-icon{
+  margin-left: 8px;
+}
+
+.recupWrap .info-bubble{
+  top: 52px;
+  left: auto;
+  right: 0;
+}
 
 </style>
 </head>
@@ -851,16 +907,22 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
         <div class="row">
 <button class="btnSave btnHalf" id="btnSave" data-i18n="save">Opslaan</button>
-          <button class="btnRecup btnHalf" id="btnRecup" data-i18n="recup">Recup</button>
+
+<div class="recupWrap">
+  <button class="btnRecup btnHalf" id="btnRecup" data-i18n="recup">Recup</button>
+  <span class="info-icon" id="infoRecup">ⓘ</span>
+  <div class="info-bubble" id="bubbleRecup" data-i18n="recup_info"></div>
+</div>
         </div>
 
   <div class="miniCard" style="margin-top:12px;">
   <div class="k" data-i18n="overtime">Saldo overuren</div>
   <div id="overtimeSaldo" class="v" style="font-size:28px; font-weight:900; margin-top:6px;">0:00</div>
-<button class="btnSmall" id="btnVerreken" type="button"
-        style="margin-top:14px; margin-left:auto; display:block;"
-        data-i18n="settle">
-</button>
+<div class="label-with-info" style="justify-content:flex-end; margin-top:14px;">
+  <button class="btnSmall" id="btnVerreken" type="button" data-i18n="settle">Verrekenen</button>
+  <span class="info-icon" id="infoVerreken">ⓘ</span>
+  <div class="info-bubble" id="bubbleVerreken" data-i18n="settle_info"></div>
+</div>
 </div>
 <!-- ===== Verrekenen modal ===== -->
 <div id="verrekenModal" class="modalBack" style="display:none;">
@@ -933,7 +995,11 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 <div id="tab3" class="tab" style="display:none;">
   <div class="card">
     <div class="h2Row">
-      <h2 data-i18n="calendar">Kalender</h2>
+ <div class="label-with-info" style="margin-bottom:8px;">
+  <h2 data-i18n="calendar" style="margin:0;">Kalender</h2>
+  <span class="info-icon" id="infoCalendar">ⓘ</span>
+  <div class="info-bubble" id="bubbleCalendar" data-i18n="calendar_info"></div>
+</div>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btnSmall" id="calPrev" type="button">◀</button>
@@ -995,26 +1061,62 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
     <div class="sp"></div>
 
-    <!-- Start saldo -->
-    <label for="startSaldoInput" data-i18n="start_saldo">
-      Start saldo overuren (u:min)
-    </label>
-    <input id="startSaldoInput" type="text" value="0:00" placeholder="60:00" />
+<label id="lblEmployeeName" data-i18n="employee_name_label">
+  Naam werknemer
+</label>
+<input 
+  type="text" 
+  id="employeeName" 
+  placeholder="Jouw naam"
+  data-i18n-placeholder="employee_name_ph"
+/>
 
-    <div class="sp"></div>
+<div class="sp"></div>
+
+<label id="lblEmployerName" data-i18n="employer_name_label">
+  Naam werkgever
+</label>
+<input 
+  type="text" 
+  id="employerName" 
+  placeholder="Naam werkgever"
+  data-i18n-placeholder="employer_name_ph"
+/>
+<div class="sp"></div>
+
+<!-- Start saldo -->
+<div class="label-with-info">
+  <label for="startSaldoInput" data-i18n="start_saldo">
+    Start saldo overuren (u:min)
+  </label>
+  <span class="info-icon" id="infoStartSaldo">ⓘ</span>
+<div class="info-bubble" id="bubbleStartSaldo" data-i18n="start_saldo_info"></div>
+</div>
+
+<input id="startSaldoInput" type="text" value="0:00" placeholder="60:00" />
+
+<div class="sp"></div>
 
     <!-- Pauze -->
-    <label for="pauseMin" data-i18n="default_pause">
-      Standaard pauze (min)
-    </label>
+<div class="label-with-info">
+  <label for="pauseMin" data-i18n="default_pause">
+    Standaard pauze (min)
+  </label>
+  <span class="info-icon" id="infoDefaultBreak">ⓘ</span>
+  <div class="info-bubble" id="bubbleDefaultBreak" data-i18n="default_break_info"></div>
+</div>
     <input id="pauseMin" type="number" min="0" step="5" value="30" />
 
     <div class="hr"></div>
 
     <!-- Normale werkdag -->
-    <label for="normDayInput" data-i18n="norm_day">
-      Duur normale werkdag (u:min)
-    </label>
+<div class="label-with-info">
+  <label for="normDayInput" data-i18n="norm_day">
+    Duur normale werkdag (u:min)
+  </label>
+  <span class="info-icon" id="infoNormDay">ⓘ</span>
+  <div class="info-bubble" id="bubbleNormDay" data-i18n="norm_day_info"></div>
+</div>
     <input id="normDayInput" type="text" value="7:30" placeholder="7:30" />
 
     <div class="row" style="margin-top:16px;">
@@ -1184,8 +1286,8 @@ const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
 // Expose for extra modules (bv. pdf-export.js)
 window.SHIFTTAP_STORE_KEY = STORE_KEY;
 
-const NORM_MIN  = 7 * 60 + 30;
-const RECUP_MIN = 7 * 60 + 30;
+const NORM_MIN  = 0;
+const RECUP_MIN = 0;
 
 // =========================
 // Cloud sync (Google login) via Firebase
@@ -1244,6 +1346,9 @@ function setCloudUiEnabled(enabled){
   if(btnCloudPull)    btnCloudPull.disabled    = !enabled;
   if(btnCloudPush)    btnCloudPush.disabled    = !enabled;
 }
+window.showStartSaldoInfo = function(){
+  alert(t("start_saldo_info"));
+};
 
 function setLoginUi(user){
   const loggedIn = !!user;
@@ -1251,9 +1356,9 @@ function setLoginUi(user){
   if(btnGoogleLogout) btnGoogleLogout.style.display = loggedIn ? "inline-flex" : "none";
   if(elLoginNote){
     elLoginNote.textContent = loggedIn
-      ? `✅ Ingelogd: ${user.email || user.displayName || "Google"}`
-      : `Niet ingelogd.`;
-  }
+      ? `✅ ${t("cloud_logged_in")} ${user.email || user.displayName || "Google"}`
+      : t("cloud_not_logged");
+}
 }
 
 
@@ -1279,6 +1384,7 @@ let calMonth = new Date().getMonth();
       btn_close: "Sluiten",
       btn_save: "Opslaan",
       btn_delete: "Verwijderen",
+      no_entries: "Geen ingevulde data gevonden.",
 
       lbl_date: "Datum",
       lbl_type: "Type",
@@ -1344,6 +1450,12 @@ let calMonth = new Date().getMonth();
       cloud_logged_in: "Ingelogd:",
 cloud_not_logged: "Niet ingelogd.",
 cloud_login_error: "Google login fout",
+cloud_logged_in: "Ingelogd:",
+cloud_not_logged: "Niet ingelogd.",
+employee_name_label: "Naam werknemer",
+employee_name_ph: "Jouw naam",
+employer_name_label: "Naam werkgever",
+employer_name_ph: "Naam werkgever",
 
       recup_line: "RECUP - gaat van overuren af",
       net_line: "netto",
@@ -1362,9 +1474,10 @@ verrek_none: "Geen verrekening gevonden op die dag.",
   settle: "Verrekenen",
   overtime_settled: "Overuren verrekend",
 hours_amount_hhmm: "Aantal uren (HH:MM)",
-day_no_entry: "Geen entry op deze dag.",
+day_no_entry: "Geen invoer op deze dag.",
 reconciled: "Verrekend",
 reconciled_remove: "Verrekening verwijderen",
+
 
       err_start_saldo_format: "Start saldo moet in formaat u:min zijn, bv 60:00",
       err_normday_format: "Norm dag moet in formaat u:min zijn, bv 7:30",
@@ -1372,234 +1485,303 @@ reconciled_remove: "Verrekening verwijderen",
       status_online: "Status: online",
       status_offline: "Status: offline",
       err_bad_json: "Ongeldig JSON bestand.",
-      err_timer_short: "Timer is te kort. Gebruik START of + Handmatig."
+      err_timer_short: "Timer is te kort. Gebruik START of + Handmatig.",
+      
+      calendar_info: "Hier krijg je een overzicht per dag. Je ziet wanneer je recup, ziekte, vakantie, feestdag had of gewerkt hebt.\nVerrekeningen worden weergegeven met een groen bolletje.\nTik op een dag om details te bekijken of iets toe te voegen.",
+      settle_info: "Gebruik deze knop wanneer overuren zijn uitbetaald. Het ingegeven aantal uren wordt van je overurensaldo afgetrokken.",
+      norm_day_info: "Dit is het aantal uren dat je normaal per werkdag moet presteren. Pauzes reken je hier niet mee. Alles daarboven telt als overuren.",
+      start_saldo_info: "Dit is het aantal overuren dat je al had vóór deze periode.",
+      default_break_info: "Deze pauze wordt automatisch afgetrokken van je gewerkte tijd wanneer je een dag opslaat. Dit geldt zowel voor de timer als voor handmatige invoer.",
+      recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken."
     },
 
-    en: {
-      history_title: "History",
-      history_hint: "Forgot to clock out?<br>Add it manually.",
-      modal_add_title: "Add manually",
-      modal_edit_title: "Edit entry",
-      modal_hint: "Forgot to clock out? Just add the correct times.",
-      btn_close: "Close",
-      btn_save: "Save",
-      btn_delete: "Delete",
+en: {
 
-      lbl_date: "Date",
-      lbl_type: "Type",
-      lbl_start: "Start (HH:MM)",
-      lbl_end: "End (HH:MM)",
-      lbl_pause: "Break (min)",
-      lbl_note: "Note (optional)",
-      ph_note: "e.g. Garage after route, traffic, waiting for customer...",
+  // ===== General navigation =====
+  calendar: "Calendar",
+  history_title: "History",
+  tab_day: "Day Shift",
+  tab_history: "History",
+  language: "Language",
 
-      err_choose_date: "Choose a date.",
-      err_fill_times: "Fill in start and end (or choose Comp Day).",
-      confirm_delete_entry: "Delete this entry?",
-      backup_last: "Last backup",
-      backup_never: "never",
-      settings: "Save",
-      tab_day: "Day Shift",
-      tab_history: "History",
-      recup: "Comp Day",
-      start: "Start",
-      pause_stop: "Stop",
-      save: "Save",
-      manual: "+ Manual",
-
-      // --- PDF export ---
-      pdf_export_btn: "📄 PDF",
-      pdf_export_btn_aria: "Export PDF",
-      pdf_title: "PDF export",
-      pdf_month: "Month",
-      pdf_dates: "Dates",
-      pdf_from: "From",
-      pdf_to: "To",
-      make_pdf: "Make PDF",
-      cancel: "Cancel",
-      ok: "OK",
-
-      backup: "Backup",
-      import_json: "Import JSON",
-      backup_tip: "Tip: Make regular backups.",
-      language: "Language",
-      start_saldo: "Start overtime balance (h:mm)",
-      default_pause: "Default break (min)",
-      norm_day: "Normal workday duration (h:mm)",
-      cloud_title: "Google login + Cloud sync",
-      cloud_not_available: "Not available yet.",
-      login_google: "Login with Google",
-      logout_google: "Logout",
-      cloud_upload: "Create backup",
-cloud_download: "Restore backup",
-      settle_hint: "Have your overtime hours been paid out? Record them here to deduct them from your balance.",
-      cloud_logged_in: "Logged in:",
-cloud_not_logged: "Not logged in.",
-cloud_login_error: "Google login error",
-day_no_entry: "No entry on this day.",
-reconciled: "Reconciled",
-reconciled_remove: "Remove reconciliation",
-
-
-      today_work: "Today",
-      week_work: "This week",
-      overtime: "Overtime balance",
-      minutes: "min",
-      hours: "h",
-      days: "day",
-      work_label: "WORK",
-      sick: "Sick leave",
-vacation: "Vacation",
-holiday: "Public holiday",
-calendar: "Calendar",
-vac_taken: "Vacation taken",
-note_label: "Note",
-edit_btn: "✎ Edit",
-edit_aria: "Edit",
-work: "Work",
-verrek_none: "No settlement found on that day.",
-  verrek_deleted: "Settlement removed ✓",
+  // ===== General buttons =====
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Save",
+  manual: "+ Manual",
+  cancel: "Cancel",
+  ok: "OK",
+  btn_close: "Close",
+  btn_save: "Save",
+  btn_delete: "Delete",
   btn_add_manual: "Add manual",
-  settle: "Deduct",
+  no_entries: "No entries yet.",
+
+  // ===== Manual modal =====
+  modal_add_title: "Add manually",
+  modal_edit_title: "Edit entry",
+  modal_hint: "Forgot to clock out? Just add the correct times.",
+  history_hint: "Forgot to clock out?<br>Add it manually.",
+  
+  lbl_date: "Date",
+  lbl_type: "Type",
+  lbl_start: "Start (HH:MM)",
+  lbl_end: "End (HH:MM)",
+  lbl_pause: "Break (min)",
+  lbl_note: "Note (optional)",
+  ph_note: "e.g. Garage after route, traffic, waiting for customer...",
+
+  // ===== Employee / Employer =====
+  employee_name_label: "Employee name",
+  employee_name_ph: "Your name",
+  employer_name_label: "Employer name",
+  employer_name_ph: "Employer name",
+
+  // ===== PDF =====
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Export PDF",
+  pdf_title: "PDF export",
+  pdf_month: "Month",
+  pdf_dates: "Dates",
+  pdf_from: "From",
+  pdf_to: "To",
+  make_pdf: "Make PDF",
+
+  // ===== Cloud =====
+  cloud_title: "Google login + Cloud sync",
+  cloud_not_available: "Not available yet.",
+  login_google: "Login with Google",
+  logout_google: "Logout",
+  cloud_download: "Restore backup",
+  cloud_upload: "Create backup",
+  cloud_logged_in: "Logged in:",
+  cloud_not_logged: "Not logged in.",
+  cloud_login_error: "Google login error",
+ 
+  // ===== Backup =====
+  backup: "Backup",
+  backup_last: "Last backup",
+  backup_never: "never",
+  backup_tip: "Tip: Make regular backups.",
+  import_json: "Import JSON",
+
+  // ===== Overtime / Settlement =====
+  overtime: "Overtime balance",
   overtime_settled: "Overtime settled",
-hours_amount_hhmm: "Number of hours (HH:MM)",
+  settle: "Deduct",
+  settle_hint: "Have your overtime hours been paid out? Record them here to deduct them from your balance.",
+  verrek_none: "No settlement found on that day.",
+  verrek_deleted: "Settlement removed ✓",
+  reconciled: "Reconciled",
+  reconciled_remove: "Remove reconciliation",
+  hours_amount_hhmm: "Number of hours (HH:MM)",
 
+  // ===== Status =====
+  status_busy: "Running...",
+  status_paused: "Paused",
+  status_not_started: "Not started",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
 
-      status_busy: "Running...",
-      status_paused: "Paused",
-      status_not_started: "Not started",
+  // ===== Work statistics =====
+  today_work: "Today",
+  week_work: "This week",
+  vac_taken: "Vacation taken",
+  minutes: "min",
+  hours: "h",
+  days: "day",
 
-      recup_line: "COMP DAY - subtracts from overtime",
-      net_line: "net",
-      pause_line: "break",
+  // ===== Types =====
+  work: "Work",
+  work_label: "WORK",
+  recup: "Comp Day",
+  recup_line: "COMP DAY - subtracts from overtime",
+  sick: "Sick leave",
+  vacation: "Vacation",
+  holiday: "Public holiday",
+  net_line: "net",
+  pause_line: "break",
 
-      err_start_saldo_format: "Start balance must be in h:mm format, e.g. 60:00",
-      err_normday_format: "Daily norm must be in h:mm format, e.g. 7:30",
-      settings_saved: "Settings saved",
-      status_online: "Status: online",
-      status_offline: "Status: offline",
-      err_bad_json: "Invalid JSON file.",
-      err_timer_short: "Timer is too short. Use START or + Manual."
-    },
+  // ===== Settings =====
+  settings: "Save",
+  settings_saved: "Settings saved",
+  start_saldo: "Start overtime balance (h:mm)",
+  default_pause: "Default break (min)",
+  norm_day: "Normal workday duration (h:mm)",
+  
+
+  // ===== Errors =====
+  err_choose_date: "Choose a date.",
+  err_fill_times: "Fill in start and end (or choose Comp Day).",
+  err_start_saldo_format: "Start balance must be in h:mm format, e.g. 60:00",
+  err_normday_format: "Daily norm must be in h:mm format, e.g. 7:30",
+  err_bad_json: "Invalid JSON file.",
+  err_timer_short: "Timer is too short. Use START or + Manual.",
+
+  // ===== Day detail =====
+  day_no_entry: "No entry on this day.",
+  edit_btn: "✎ Edit",
+  edit_aria: "Edit",
+  note_label: "Note",
+  
+  calendar_info: "Here you get a daily overview. You can see when you had a comp day, sick leave, vacation, public holiday or worked.\nSettlements are indicated with a green dot.\nTap a day to view details or add an entry.",
+  settle_info: "Use this button when overtime hours have been paid out. The entered number of hours will be deducted from your overtime balance.",
+  norm_day_info: "This is the number of hours you are expected to work on a normal day. Breaks are not included. Anything above this counts as overtime.",
+  start_saldo_info: "This is the overtime balance you already had before this period.",
+  default_break_info: "This break is automatically deducted from your worked time when you save a day. This applies to both the timer and manual entries.",
+  recup_info: "Use Comp Day when you take a full day off using accumulated overtime. This day will be deducted from your overtime balance."
+  
+},
 
     fr: {
-      history_title: "Historique",
-      history_hint: "Tu as oublié de pointer?<br>Ajoute-le manuellement.",
-      modal_add_title: "Ajout manuel",
-      modal_edit_title: "Modifier l’entrée",
-      modal_hint: "Tu as oublié de pointer ? Ajoute simplement les bonnes heures.",
-      btn_close: "Fermer",
-      btn_save: "Enregistrer",
-      btn_delete: "Supprimer",
-      cloud_logged_in: "Connecté :",
-cloud_not_logged: "Non connecté.",
-cloud_login_error: "Erreur de connexion Google",
 
-      lbl_date: "Date",
-      lbl_type: "Type",
-      lbl_start: "Début (HH:MM)",
-      lbl_end: "Fin (HH:MM)",
-      lbl_pause: "Pause (min)",
-      lbl_note: "Remarque (optionnel)",
-      ph_note: "ex. Garage après tournée, embouteillage, attente client...",
+  // ===== Navigation générale =====
+  calendar: "Calendrier",
+  history_title: "Historique",
+  tab_day: "Jour de travail",
+  tab_history: "Historique",
+  language: "Langue",
 
-      err_choose_date: "Choisis une date.",
-      err_fill_times: "Remplis début et fin (ou choisis Jour de récup).",
-      confirm_delete_entry: "Supprimer cette entrée ?",
-      backup_last: "Dernière sauvegarde",
-      backup_never: "jamais",
-      settings: "Enregistrer",
-      tab_day: "Jour de travail",
-      tab_history: "Historique",
-      recup: "Jour de récup",
-      start: "Démarrer",
-      pause_stop: "Arrêter",
-      save: "Enregistrer",
-      manual: "+ Manuel",
-
-      // --- PDF export ---
-      pdf_export_btn: "📄 PDF",
-      pdf_export_btn_aria: "Exporter PDF",
-      pdf_title: "Export PDF",
-      pdf_month: "Mois",
-      pdf_dates: "Dates",
-      pdf_from: "De",
-      pdf_to: "À",
-      make_pdf: "Créer PDF",
-      cancel: "Annuler",
-      ok: "OK",
-
-      backup: "Sauvegarde",
-      import_json: "Importer JSON",
-      backup_tip: "Astuce : faites régulièrement une sauvegarde.",
-      language: "Langue",
-      start_saldo: "Solde initial heures sup (h:mm)",
-      default_pause: "Pause par défaut (min)",
-      norm_day: "Durée normale de travail (h:mm)",
-      cloud_title: "Connexion Google + synchronisation cloud",
-      cloud_not_available: "Pas encore disponible.",
-      login_google: "Connexion Google",
-      logout_google: "Déconnexion",
-      cloud_upload: "Sauvegarde",
-cloud_download: "Restaurer",
-      settle_hint: "Des heures supplémentaires ont été payées ? Enregistre-les ici pour les déduire de ton solde.",
-
-      today_work: "Aujourd’hui",
-      week_work: "Cette semaine",
-      overtime: "Solde heures sup",
-      minutes: "min",
-      hours: "h",
-      days: "jour",
-      work_label: "TRAVAIL",
-      work: "Travail",
-      sick: "Maladie",
-vacation: "Vacances",
-holiday: "Jour férié",
-calendar: "Calendrier",
-vac_taken: "Congés pris",
-note_label: "Remarque",
-edit_btn: "✎ Modifier",
-edit_aria: "Modifier",
-verrek_none: "Aucune régularisation trouvée ce jour-là.",
-  verrek_deleted: "Régularisation supprimée ✓",
+  // ===== Boutons généraux =====
+  start: "Démarrer",
+  pause_stop: "Arrêter",
+  save: "Enregistrer",
+  manual: "+ Manuel",
+  cancel: "Annuler",
+  ok: "OK",
+  btn_close: "Fermer",
+  btn_save: "Enregistrer",
+  btn_delete: "Supprimer",
   btn_add_manual: "Ajouter",
-  settle: "Compenser",
+  no_entries: "Aucune entrée pour l’instant.",
+
+  // ===== Modal manuel =====
+  modal_add_title: "Ajout manuel",
+  modal_edit_title: "Modifier l’entrée",
+  modal_hint: "Tu as oublié de pointer ? Ajoute simplement les bonnes heures.",
+  history_hint: "Tu as oublié de pointer ?<br>Ajoute-le manuellement.",
+
+  lbl_date: "Date",
+  lbl_type: "Type",
+  lbl_start: "Début (HH:MM)",
+  lbl_end: "Fin (HH:MM)",
+  lbl_pause: "Pause (min)",
+  lbl_note: "Remarque (optionnel)",
+  ph_note: "ex. Garage après tournée, embouteillage, attente client...",
+
+  // ===== Employé / Employeur =====
+  employee_name_label: "Nom de l'employé",
+  employee_name_ph: "Ton nom",
+  employer_name_label: "Nom de l'employeur",
+  employer_name_ph: "Nom de l'employeur",
+
+  // ===== PDF =====
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Exporter PDF",
+  pdf_title: "Export PDF",
+  pdf_month: "Mois",
+  pdf_dates: "Dates",
+  pdf_from: "De",
+  pdf_to: "À",
+  make_pdf: "Créer PDF",
+
+  // ===== Cloud =====
+  cloud_title: "Connexion Google + synchronisation cloud",
+  cloud_not_available: "Pas encore disponible.",
+  login_google: "Connexion Google",
+  logout_google: "Déconnexion",
+  cloud_download: "Restaurer",
+  cloud_upload: "Sauvegarde",
+  cloud_logged_in: "Connecté :",
+  cloud_not_logged: "Non connecté.",
+  cloud_login_error: "Erreur de connexion Google",
+
+  // ===== Sauvegarde =====
+  backup: "Sauvegarde",
+  backup_last: "Dernière sauvegarde",
+  backup_never: "jamais",
+  backup_tip: "Astuce : faites régulièrement une sauvegarde.",
+  import_json: "Importer JSON",
+
+  // ===== Heures sup / Régularisation =====
+  overtime: "Solde heures sup",
   overtime_settled: "Heures supplémentaires réglées",
-hours_amount_hhmm: "Nombre d'heures (HH:MM)",
-day_no_entry: "Aucune entrée ce jour-là.",
-reconciled: "Régularisé",
-reconciled_remove: "Supprimer la régularisation",
+  settle: "Compenser",
+  settle_hint: "Des heures supplémentaires ont été payées ? Enregistre-les ici pour les déduire de ton solde.",
+  verrek_none: "Aucune régularisation trouvée ce jour-là.",
+  verrek_deleted: "Régularisation supprimée ✓",
+  reconciled: "Régularisé",
+  reconciled_remove: "Supprimer la régularisation",
+  hours_amount_hhmm: "Nombre d'heures (HH:MM)",
 
-      status_busy: "En cours...",
-      status_paused: "En pause",
-      status_not_started: "Pas encore démarré",
+  // ===== Statut =====
+  status_busy: "En cours...",
+  status_paused: "En pause",
+  status_not_started: "Pas encore démarré",
+  status_online: "Statut : en ligne",
+  status_offline: "Statut : hors ligne",
 
-      recup_line: "JOUR DE RÉCUP - déduit des heures sup",
-      net_line: "net",
-      pause_line: "pause",
+  // ===== Statistiques =====
+  today_work: "Aujourd’hui",
+  week_work: "Cette semaine",
+  vac_taken: "Congés pris",
+  minutes: "min",
+  hours: "h",
+  days: "jour",
 
-      err_start_saldo_format: "Le solde initial doit être au format h:mm, ex. 60:00",
-      err_normday_format: "La norme/jour doit être au format h:mm, ex. 7:30",
-      settings_saved: "Enregistrer",
-      status_online: "Statut : en ligne",
-      status_offline: "Statut : hors ligne",
-      err_bad_json: "Fichier JSON invalide.",
-      err_timer_short: "Le timer est trop court. Utilise DÉMARRER ou + Manuel."
-    }
+  // ===== Types =====
+  work: "Travail",
+  work_label: "TRAVAIL",
+  recup: "Jour de récup",
+  recup_line: "JOUR DE RÉCUP - déduit des heures sup",
+  sick: "Maladie",
+  vacation: "Vacances",
+  holiday: "Jour férié",
+  net_line: "net",
+  pause_line: "pause",
 
+  // ===== Settings =====
+  settings: "Enregistrer",
+  settings_saved: "Enregistrer",
+  start_saldo: "Solde initial heures sup (h:mm)",
+  default_pause: "Pause par défaut (min)",
+  norm_day: "Durée normale de travail (h:mm)",
+  
+
+  // ===== Erreurs =====
+  err_choose_date: "Choisis une date.",
+  err_fill_times: "Remplis début et fin (ou choisis Jour de récup).",
+  err_start_saldo_format: "Le solde initial doit être au format h:mm, ex. 60:00",
+  err_normday_format: "La norme/jour doit être au format h:mm, ex. 7:30",
+  err_bad_json: "Fichier JSON invalide.",
+  err_timer_short: "Le timer est trop court. Utilise DÉMARRER ou + Manuel.",
+
+  // ===== Détail du jour =====
+  day_no_entry: "Aucune entrée ce jour-là.",
+  edit_btn: "✎ Modifier",
+  edit_aria: "Modifier",
+  note_label: "Remarque",
+  
+  calendar_info: "Ici tu as une vue par jour. Tu vois quand tu avais un jour de récup, maladie, vacances, jour férié ou travaillé.\nLes régularisations sont indiquées par un point vert.\nAppuie sur un jour pour voir les détails ou ajouter une entrée.",
+  settle_info: "Utilise ce bouton lorsque des heures supplémentaires ont été payées. Le nombre d’heures saisi sera déduit de ton solde d’heures supplémentaires.",
+  norm_day_info: "C'est le nombre d'heures que tu dois normalement prester par jour. Les pauses ne sont pas comprises. Tout ce qui dépasse compte comme heures supplémentaires.",
+  start_saldo_info: "Il s'agit du solde d'heures supplémentaires que tu avais avant cette période.",
+  default_break_info: "Cette pause est automatiquement déduite de ton temps de travail lorsque tu enregistres une journée. Cela s'applique aussi bien au timer qu'aux entrées manuelles.",
+  recup_info: "Utilise Jour de récup lorsque tu prends une journée complète en compensation d’heures supplémentaires. Cette journée sera déduite de ton solde d’heures supplémentaires."
+}
   };
 
-  /* =========================
-     i18n engine
-     ========================= */
-  let currentLang = localStorage.getItem("lang") || "nl";
-  if(!LANG[currentLang]) currentLang = "nl";
+/* =========================
+   i18n engine
+   ========================= */
+let currentLang = localStorage.getItem("lang") || "nl";
+if(!LANG[currentLang]) currentLang = "nl";
 
-  function t(key){
-    return LANG[currentLang]?.[key] ?? key;
-  }
+function t(key){
+  return LANG[currentLang]?.[key] ?? key;
+}
 
-  function applyLang(){
+function applyLang(){
 
   // gewone tekst
   document.querySelectorAll("[data-i18n]").forEach(el=>{
@@ -1619,17 +1801,22 @@ reconciled_remove: "Supprimer la régularisation",
     const key = el.dataset.i18nAria;
     el.setAttribute("aria-label", t(key));
   });
-  // taal label + custom taalkeuze (geen standaard select popup)
+
+  // taal label + custom taalkeuze
   function getLangName(code){
     return code === "nl" ? "Nederlands" : code === "en" ? "English" : "Français";
   }
+
   function updateLangLabel(){
     const lbl = document.getElementById("langCurrentLabel");
     if(lbl) lbl.textContent = getLangName(currentLang);
   }
-  updateLangLabel();
-}
 
+  updateLangLabel();
+
+  // 👇 BELANGRIJK: dynamische content opnieuw tekenen
+  if(typeof renderHistory === "function") renderHistory();
+}
 function openLangModal(){
   const overlay  = document.getElementById("appModalOverlay");
   const body     = document.getElementById("appModalBody");
@@ -1760,7 +1947,13 @@ verrekenInput?.addEventListener("input", (e) => {
      State + Meta defaults
      ========================= */
   const defaultState = () => ({
-  settings: { startSaldoMin: 0, normDayMin: NORM_MIN, lang: "nl" },
+  settings: { 
+    startSaldoMin: 0, 
+    normDayMin: NORM_MIN, 
+    lang: "nl",
+    employeeName: "",
+    employerName: ""
+  },
   timer:    { running: false, startMs: null, accMs: 0 },
   entries:  [],
   verrekeningen: [],          
@@ -1777,16 +1970,32 @@ verrekenInput?.addEventListener("input", (e) => {
     const raw = localStorage.getItem(STORE_KEY);
     if(!raw) return defaultState();
     const s = JSON.parse(raw);
-    if(!s.settings) s.settings = { startSaldoMin: 0, normDayMin: NORM_MIN, lang:"nl" };
-    if(!s.timer)    s.timer    = { running:false, startMs:null, accMs:0 };
-    if(!Array.isArray(s.entries)) s.entries = [];
 
-    
-    if(!Array.isArray(s.verrekeningen)) s.verrekeningen = [];
-    if(typeof s.overtimePaidMinutes !== "number") s.overtimePaidMinutes = 0;
+    if(!s.settings) 
+      s.settings = { startSaldoMin: 0, normDayMin: NORM_MIN, lang:"nl" };
+
+    if(typeof s.settings.employeeName !== "string") 
+      s.settings.employeeName = "";
+
+    if(typeof s.settings.employerName !== "string") 
+      s.settings.employerName = "";
+
+    if(!s.timer)    
+      s.timer = { running:false, startMs:null, accMs:0 };
+
+    if(!Array.isArray(s.entries)) 
+      s.entries = [];
+
+    if(!Array.isArray(s.verrekeningen)) 
+      s.verrekeningen = [];
+
+    if(typeof s.overtimePaidMinutes !== "number") 
+      s.overtimePaidMinutes = 0;
 
     return s;
-  }catch(e){ return defaultState(); }
+  }catch(e){ 
+    return defaultState(); 
+  }
 }
 
   function loadMeta(){
@@ -1848,6 +2057,84 @@ const elVacTaken = document.getElementById("vacTaken");
   const elLastBackupText  = document.getElementById("lastBackupText");
   const btnBackupNow      = document.getElementById("btnBackupNow");
   const elStartSaldoInput = document.getElementById("startSaldoInput");
+
+const infoStartSaldo = document.getElementById("infoStartSaldo");
+const bubbleStartSaldo = document.getElementById("bubbleStartSaldo");
+const infoRecup = document.getElementById("infoRecup");
+const bubbleRecup = document.getElementById("bubbleRecup");
+const infoNormDay = document.getElementById("infoNormDay");
+const bubbleNormDay = document.getElementById("bubbleNormDay");
+const infoDefaultBreak = document.getElementById("infoDefaultBreak");
+
+const bubbleDefaultBreak = document.getElementById("bubbleDefaultBreak");
+const infoCalendar = document.getElementById("infoCalendar");
+
+const bubbleCalendar = document.getElementById("bubbleCalendar");
+
+const infoVerreken = document.getElementById("infoVerreken");
+const bubbleVerreken = document.getElementById("bubbleVerreken");
+
+infoStartSaldo?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleStartSaldo) return;
+
+  const isOpen = bubbleStartSaldo.style.display === "block";
+  closeAllBubbles();
+  bubbleStartSaldo.style.display = isOpen ? "none" : "block";
+});
+infoRecup?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleRecup) return;
+
+  const isOpen = bubbleRecup.style.display === "block";
+  closeAllBubbles();
+  bubbleRecup.style.display = isOpen ? "none" : "block";
+});
+
+infoCalendar?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleCalendar) return;
+
+  const isOpen = bubbleCalendar.style.display === "block";
+  closeAllBubbles();
+  bubbleCalendar.style.display = isOpen ? "none" : "block";
+});
+
+infoVerreken?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleVerreken) return;
+
+  const isOpen = bubbleVerreken.style.display === "block";
+  closeAllBubbles();
+  bubbleVerreken.style.display = isOpen ? "none" : "block";
+});
+infoDefaultBreak?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleDefaultBreak) return;
+
+  const isOpen = bubbleDefaultBreak.style.display === "block";
+  closeAllBubbles();
+  bubbleDefaultBreak.style.display = isOpen ? "none" : "block";
+});
+infoNormDay?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleNormDay) return;
+
+  const isOpen = bubbleNormDay.style.display === "block";
+  closeAllBubbles();
+  bubbleNormDay.style.display = isOpen ? "none" : "block";
+});
+
+function closeAllBubbles(){
+  if(bubbleStartSaldo) bubbleStartSaldo.style.display = "none";
+  if(bubbleCalendar) bubbleCalendar.style.display = "none";
+  if(bubbleVerreken) bubbleVerreken.style.display = "none";
+  if(bubbleNormDay) bubbleNormDay.style.display = "none";
+  if(bubbleDefaultBreak) bubbleDefaultBreak.style.display = "none";
+  if(bubbleRecup) bubbleRecup.style.display = "none";
+}
+
+document.addEventListener("click", closeAllBubbles);
 
   const btnSaveSettings   = document.getElementById("btnSaveSettings");
 
@@ -2246,7 +2533,7 @@ function openDayDetail(ymdStr){
 if(dayBody){
   const btn = document.createElement("button");
   btn.type = "button";
-  btn.className = "btnGhostSmall";
+  btn.className = "btnSmall";
   btn.textContent = t("btn_add_manual");
   btn.style.marginTop = "12px";
 
@@ -2560,16 +2847,38 @@ function hmFromMinutes(mins){
   }
 
   function msgRecupConfirm(){
-    if(currentLang === "fr") return `Ajouter un jour de récup pour ${dmy(new Date())} ?\nCela enlève 7h30 de tes heures sup.`;
-    if(currentLang === "en") return `Add comp day for ${dmy(new Date())}?\nThis subtracts 7h30 from your overtime.`;
-    return `RECUP toevoegen voor ${dmy(new Date())}?\nDit doet 7u30 op je overuren.`;
+  const mins = (state.settings?.normDayMin ?? NORM_MIN);
+  const hh = Math.floor(mins / 60);
+  const mm = mins % 60;
+
+  const nl = `${hh}u${mm.toString().padStart(2,"0")}`;
+  const fr = `${hh}h${mm.toString().padStart(2,"0")}`;
+  const en = `${hh}:${mm.toString().padStart(2,"0")}`;
+
+  const hasNorm = mins > 0;
+
+  if(currentLang === "fr"){
+    return hasNorm
+      ? `Ajouter un jour de récup pour ${dmy(new Date())} ?\nCela déduit ${fr} de vos heures sup.`
+      : `Ajouter un jour de récup pour ${dmy(new Date())} ?`;
   }
+
+  if(currentLang === "en"){
+    return hasNorm
+      ? `Add comp day for ${dmy(new Date())}?\nThis subtracts ${en} from your overtime.`
+      : `Add comp day for ${dmy(new Date())}?`;
+  }
+
+  return hasNorm
+    ? `Recup toevoegen voor ${dmy(new Date())}?\nDit trekt ${nl} af van je overuren.`
+    : `Recup toevoegen voor ${dmy(new Date())}?`;
+}
 
   function addRecup(){
     openConfirm(msgRecupConfirm(), () => {
       state.entries.unshift({
         id: uid(), date: ymd(new Date()), type:"Recup",
-        start:null, end:null, pauseMin:0, netMin: RECUP_MIN, createdAt: Date.now()
+        start:null, end:null, pauseMin:0, netMin: (state.settings?.normDayMin ?? NORM_MIN), createdAt: Date.now()
       });
       saveState();
       showToast(`${t("recup")} ✓`, "ok");
@@ -2763,11 +3072,14 @@ ${t("pause_line")} ${e.pauseMin||0} ${t("minutes")}${noteLine}`;
       .slice()
       .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
-    if(list.length===0){
-      elHistoryList.innerHTML = `<div class="muted" style="font-weight:950; margin-top:12px;">Nog geen entries.</div>`;
-      return;
-    }
-
+if(list.length===0){
+  elHistoryList.innerHTML = `
+    <div class="muted" style="font-weight:950; margin-top:12px;">
+      ${t("no_entries")}
+    </div>
+  `;
+  return;
+}
     elHistoryList.innerHTML = "";
     list.forEach(e=>{
       const div = document.createElement("div");
@@ -3098,28 +3410,41 @@ async function wireCloudAuthUI(){
 
 
 /* =========================
-     Settings
-     ========================= */
-  function renderSettings(){
-    if(elStartSaldoInput) elStartSaldoInput.value = formatHM(state.settings.startSaldoMin || 0);
-    if(elNormDayInput)    elNormDayInput.value    = formatHM(state.settings.normDayMin ?? NORM_MIN);
-  }
+   Settings
+   ========================= */
+function renderSettings(){
+  if(elStartSaldoInput)
+    elStartSaldoInput.value = formatHM(state.settings.startSaldoMin || 0);
 
-  function saveSettings(){
-    const mins = parseHM(elStartSaldoInput?.value);
-    if(mins==null){ showToast(t("err_start_saldo_format"), "warn"); return; }
-    const norm = parseHM(elNormDayInput?.value);
-    if(norm==null){ showToast(t("err_normday_format"), "warn"); return; }
+  if(elNormDayInput)
+    elNormDayInput.value = formatHM(state.settings.normDayMin ?? NORM_MIN);
 
-    state.settings.startSaldoMin = mins;
-    state.settings.normDayMin = norm;
-    state.settings.lang = currentLang;
+  const emp = document.getElementById("employeeName");
+  const emr = document.getElementById("employerName");
 
-    saveState();
-    renderAll();
-    showToast(t("settings_saved"), "ok");
-  }
+  if(emp) emp.value = state.settings.employeeName || "";
+  if(emr) emr.value = state.settings.employerName || "";
+}
 
+function saveSettings(){
+  const mins = parseHM(elStartSaldoInput?.value);
+  if(mins==null){ showToast(t("err_start_saldo_format"), "warn"); return; }
+
+  const norm = parseHM(elNormDayInput?.value);
+  if(norm==null){ showToast(t("err_normday_format"), "warn"); return; }
+
+  state.settings.startSaldoMin = mins;
+  state.settings.normDayMin = norm;
+  state.settings.lang = currentLang;
+
+  // 👇 deze twee moeten erbij
+  state.settings.employeeName = (document.getElementById("employeeName")?.value || "").trim();
+  state.settings.employerName = (document.getElementById("employerName")?.value || "").trim();
+
+  saveState();
+  renderAll();
+  showToast(t("settings_saved"), "ok");
+}
   function renderOnlineBadge(){
     if(!elOnlineBadge) return;
     const online = navigator.onLine;
@@ -3289,6 +3614,13 @@ window.addEventListener("offline", renderOnlineBadge);
    ========================= */
 
 async function init(){
+  const savedLang = localStorage.getItem("lang");
+  currentLang = savedLang || state?.settings?.lang || "nl";
+
+  state.settings = state.settings || {};
+  state.settings.lang = currentLang;
+  localStorage.setItem("lang", currentLang);
+  
   try{
     await handleRedirectLoginResult();
   }catch(e){
@@ -3305,17 +3637,23 @@ async function init(){
 
   showTab("tab1");
 
-  if(state.timer.running){
-    if(!interval) interval = setInterval(()=>{ 
-      updateTimerUI(); 
-      saveState(); 
-    }, 250);
-    setStatus("playing");
-  }else{
-    setStatus(state.timer.accMs>0 ? "paused" : "stopped");
-  }
+if(state.timer.running){
+  if(!interval) interval = setInterval(()=>{ 
+    updateTimerUI(); 
+    saveState(); 
+  }, 250);
+}
 
-  renderAll();
+// altijd opnieuw tekenen + vertalen
+renderAll();
+applyLang();
+
+// status altijd NA applyLang (juiste taal)
+setStatus(
+  state.timer.running
+    ? "playing"
+    : (state.timer.accMs > 0 ? "paused" : "stopped")
+);
 }
 
 init();
