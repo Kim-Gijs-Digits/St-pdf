@@ -1550,7 +1550,9 @@ nl: {
   norm_day_info: "Dit is het aantal uren dat je normaal per werkdag moet presteren. Pauzes reken je hier niet mee. Alles daarboven telt als overuren.",
   start_saldo_info: "Dit is het aantal overuren dat je al had vóór deze periode.",
   default_break_info: "Deze pauze wordt automatisch afgetrokken van je gewerkte tijd wanneer je een dag opslaat. Dit geldt zowel voor de timer als voor handmatige invoer.",
-  recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken."
+  recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken.",
+  setup_fill_fields: "Vul beide velden correct in.",
+setup_set_normday: "Stel eerst je normale werkdag in."
 },
 
 
@@ -1699,7 +1701,586 @@ en: {
   norm_day_info: "This is the number of hours you are expected to work on a normal day. Breaks are not included. Anything above this counts as overtime.",
   start_saldo_info: "This is the overtime balance you already had before this period.",
   default_break_info: "This break is automatically deducted from your worked time when you save a day. This applies to both the timer and manual entries.",
-  recup_info: "Use Comp Day when you take a full day off using accumulated overtime. This day will be deducted from your overtime balance."
+  recup_info: "Use Comp Day when you take a full day off using accumulated overtime. This day will be deducted from your overtime balance.",
+  setup_fill_fields: "Fill in both fields correctly.",
+setup_set_normday: "Set your normal workday first."
+},
+
+hu: {
+  // --- Modal (manual) ---
+  history_title: "Előzmények",
+  history_hint: "Elfelejtettél kijelentkezni?<br>Add hozzá kézzel.",
+  modal_add_title: "Kézi hozzáadás",
+  modal_edit_title: "Bejegyzés szerkesztése",
+  modal_hint: "Elfelejtettél kijelentkezni? Csak add meg a helyes időket.",
+  btn_close: "Bezárás",
+  btn_save: "Mentés",
+  btn_delete: "Törlés",
+  btn_add_manual: "Hozzáadás",
+  no_entries: "Nem található adat.",
+
+  lbl_date: "Dátum",
+  lbl_type: "Típus",
+  lbl_start: "Kezdés (ÓÓ:PP)",
+  lbl_end: "Vége (ÓÓ:PP)",
+  lbl_pause: "Szünet (perc)",
+  lbl_note: "Megjegyzés (opcionális)",
+  ph_note: "pl. garázs a fuvar után, dugó, várakozás az ügyfélre...",
+
+  // --- Errors ---
+  err_choose_date: "Válassz dátumot.",
+  err_fill_times: "Add meg a kezdést és a végét (vagy válaszd a szabadnapot).",
+  err_start_saldo_format: "A kezdő egyenleg formátuma ó:pp kell legyen, pl. 60:00",
+  err_normday_format: "A napi norma formátuma ó:pp kell legyen, pl. 07:30",
+  err_bad_json: "Érvénytelen JSON fájl.",
+  err_timer_short: "Az időzítő túl rövid. Használd a START vagy + Kézi opciót.",
+  confirm_delete_entry: "Törlöd ezt a bejegyzést?",
+
+  // --- General / UI ---
+  tab_day: "Munkanap",
+  tab_history: "Előzmények",
+  calendar: "Naptár",
+  language: "Nyelv",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Mentés",
+  manual: "+ Kézi",
+  cancel: "Mégse",
+  ok: "OK",
+
+  status_busy: "Fut...",
+  status_paused: "Szüneteltetve",
+  status_not_started: "Nem indult el",
+  status_online: "Állapot: online",
+  status_offline: "Állapot: offline",
+
+  today_work: "Ma",
+  week_work: "Ez a hét",
+  vac_taken: "Kivett szabadság",
+  overtime: "Túlóra egyenleg",
+  overtime_settled: "Túlóra elszámolva",
+  minutes: "perc",
+  hours: "óra",
+  days: "nap",
+
+  // --- Types / labels ---
+  work: "Munka",
+  work_label: "MUNKA",
+  recup: "Szabadnap",
+  recup_line: "SZABADNAP - levonva a túlórából",
+  sick: "Betegség",
+  vacation: "Szabadság",
+  holiday: "Ünnepnap",
+  net_line: "nettó",
+  pause_line: "szünet",
+
+  // --- Detail ---
+  day_no_entry: "Nincs bejegyzés ezen a napon.",
+  edit_btn: "✎ Szerkesztés",
+  edit_aria: "Szerkesztés",
+  note_label: "Megjegyzés",
+
+  // --- Settlement ---
+  settle: "Elszámolás",
+  settle_hint: "Kifizették a túlórákat? Rögzítsd itt, hogy levonódjanak az egyenlegből.",
+  verrek_none: "Nincs elszámolás ezen a napon.",
+  verrek_deleted: "Elszámolás törölve ✓",
+  reconciled: "Elszámolva",
+  reconciled_remove: "Elszámolás törlése",
+  hours_amount_hhmm: "Órák száma (ÓÓ:PP)",
+
+  // --- Settings ---
+  settings: "Mentés",
+  settings_saved: "Beállítások mentve",
+  start_saldo: "Kezdő túlóra egyenleg (ó:perc)",
+  default_pause: "Alapértelmezett szünet (perc)",
+  norm_day: "Normál munkanap hossza (ó:perc)",
+
+  // --- Backup ---
+  backup: "Biztonsági mentés",
+  backup_last: "Utolsó mentés",
+  backup_never: "soha",
+  backup_tip: "Tipp: készíts rendszeresen biztonsági mentést.",
+  import_json: "JSON import",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "PDF export",
+  pdf_title: "PDF export",
+  pdf_month: "Hónap",
+  pdf_dates: "Dátumok",
+  pdf_from: "Kezd",
+  pdf_to: "Vége",
+  make_pdf: "PDF készítése",
+
+  // --- Cloud ---
+  cloud_title: "Google bejelentkezés + felhő szinkron",
+  cloud_not_available: "Még nem elérhető.",
+  login_google: "Bejelentkezés Google-lel",
+  logout_google: "Kijelentkezés",
+  cloud_download: "Mentés visszaállítása",
+  cloud_upload: "Mentés készítése",
+  cloud_logged_in: "Bejelentkezve:",
+  cloud_not_logged: "Nincs bejelentkezve.",
+  cloud_login_error: "Google bejelentkezési hiba",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Dolgozó neve",
+  employee_name_ph: "A te neved",
+  employer_name_label: "Munkáltató neve",
+  employer_name_ph: "Munkáltató neve",
+
+  // --- Setup modal ---
+  setup_title: "Üdv a Shift-Tap alkalmazásban 👋",
+  setup_intro: "Munkaidő, szabadnap és túlóra egyszerűen. Először állítsd be az alapbeállításokat.",
+  setup_lang: "Nyelv",
+  setup_normday: "Normál munkanap (óra)",
+  setup_norm_hint: "Példa: 07:30 vagy 08:00",
+  setup_pause: "Szünet (perc)",
+  setup_pause_hint: "Ez az alapértelmezett szünet, amely automatikusan levonásra kerül.",
+  setup_note: "Ezeket a beállításokat később bármikor módosíthatod.",
+  setup_done: "Készen áll a használatra",
+
+  // --- Info bubbles ---
+  calendar_info: "Itt napi áttekintést kapsz. Láthatod mikor volt szabadnapod, betegszabadságod, szabadságod vagy munkád.\nAz elszámolások zöld ponttal jelennek meg.\nÉrints meg egy napot a részletekhez vagy új bejegyzéshez.",
+  settle_info: "Használd ezt a gombot amikor a túlórákat kifizették. A megadott órák levonásra kerülnek az egyenlegből.",
+  norm_day_info: "Ez az a munkaidő, amit egy normál munkanapon teljesítened kell. A szünetek nem számítanak bele. Ami efölött van, túlórának számít.",
+  start_saldo_info: "Ez a túlórák száma, amivel már rendelkeztél a periódus előtt.",
+  default_break_info: "Ez a szünet automatikusan levonásra kerül a munkaidőből a nap mentésekor. Ez érvényes az időzítőre és a kézi bejegyzésekre is.",
+  recup_info: "Használd a Szabadnap opciót amikor egy teljes napot veszel ki a felhalmozott túlórákból. Ez levonódik a túlóra egyenlegből.",
+  setup_fill_fields: "Töltse ki mindkét mezőt helyesen.",
+setup_set_normday: "Először állítsa be a normál munkanapot."
+},
+
+de: {
+
+  history_title: "Verlauf",
+  history_hint: "Vergessen auszuticken?<br>Manuell hinzufügen.",
+  modal_add_title: "Manuell hinzufügen",
+  modal_edit_title: "Eintrag bearbeiten",
+  modal_hint: "Vergessen auszuticken? Füge einfach die richtigen Zeiten hinzu.",
+  btn_close: "Schließen",
+  btn_save: "Speichern",
+  btn_delete: "Löschen",
+  btn_add_manual: "Hinzufügen",
+  no_entries: "Keine Daten gefunden.",
+
+  lbl_date: "Datum",
+  lbl_type: "Typ",
+  lbl_start: "Start (HH:MM)",
+  lbl_end: "Ende (HH:MM)",
+  lbl_pause: "Pause (Min)",
+  lbl_note: "Notiz (optional)",
+  ph_note: "z.B. Garage nach Tour, Stau, warten auf Kunde...",
+
+  err_choose_date: "Datum wählen.",
+  err_fill_times: "Start und Ende ausfüllen (oder Freizeitausgleich wählen).",
+  err_start_saldo_format: "Startsaldo muss im Format h:mm sein, z.B. 60:00",
+  err_normday_format: "Normtag muss im Format h:mm sein, z.B. 07:30",
+  err_bad_json: "Ungültige JSON Datei.",
+  err_timer_short: "Timer ist zu kurz. Verwende START oder + Manuell.",
+  confirm_delete_entry: "Diesen Eintrag löschen?",
+
+  tab_day: "Arbeitstag",
+  tab_history: "Verlauf",
+  calendar: "Kalender",
+  language: "Sprache",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Speichern",
+  manual: "+ Manuell",
+  cancel: "Abbrechen",
+  ok: "OK",
+
+  status_busy: "Läuft...",
+  status_paused: "Pausiert",
+  status_not_started: "Nicht gestartet",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+
+  today_work: "Heute",
+  week_work: "Diese Woche",
+  vac_taken: "Urlaub genommen",
+  overtime: "Überstunden Saldo",
+  overtime_settled: "Überstunden verrechnet",
+  minutes: "min",
+  hours: "Std",
+  days: "Tag",
+
+  work: "Arbeit",
+  work_label: "ARBEIT",
+  recup: "Freizeitausgleich",
+  recup_line: "FREIZEITAUSGLEICH - wird von Überstunden abgezogen",
+  sick: "Krank",
+  vacation: "Urlaub",
+  holiday: "Feiertag",
+  net_line: "netto",
+  pause_line: "Pause",
+
+  day_no_entry: "Keine Einträge an diesem Tag.",
+  edit_btn: "✎ Bearbeiten",
+  edit_aria: "Bearbeiten",
+  note_label: "Notiz",
+
+  settle: "Verrechnen",
+  settle_hint: "Überstunden ausbezahlt bekommen? Trage sie hier ein, um sie vom Saldo abzuziehen.",
+  verrek_none: "Keine Verrechnung an diesem Tag gefunden.",
+  verrek_deleted: "Verrechnung gelöscht ✓",
+  reconciled: "Verrechnet",
+  reconciled_remove: "Verrechnung entfernen",
+  hours_amount_hhmm: "Stundenanzahl (HH:MM)",
+
+  settings: "Speichern",
+  settings_saved: "Einstellungen gespeichert",
+  start_saldo: "Startsaldo Überstunden (h:min)",
+  default_pause: "Standardpause (Min)",
+  norm_day: "Normale Arbeitszeit pro Tag (h:min)",
+
+  backup: "Backup",
+  backup_last: "Letztes Backup",
+  backup_never: "nie",
+  backup_tip: "Tipp: Regelmäßig Backup erstellen.",
+  import_json: "JSON importieren",
+
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "PDF Export",
+  pdf_title: "PDF Export",
+  pdf_month: "Monat",
+  pdf_dates: "Daten",
+  pdf_from: "Von",
+  pdf_to: "Bis",
+  make_pdf: "PDF erstellen",
+
+  cloud_title: "Google Login + Cloud Sync",
+  cloud_not_available: "Noch nicht verfügbar.",
+  login_google: "Mit Google anmelden",
+  logout_google: "Abmelden",
+  cloud_download: "Backup wiederherstellen",
+  cloud_upload: "Backup erstellen",
+  cloud_logged_in: "Angemeldet:",
+  cloud_not_logged: "Nicht angemeldet.",
+  cloud_login_error: "Google Login Fehler",
+
+  employee_name_label: "Name Mitarbeiter",
+  employee_name_ph: "Dein Name",
+  employer_name_label: "Name Arbeitgeber",
+  employer_name_ph: "Name Arbeitgeber",
+
+  setup_title: "Willkommen bei Shift-Tap 👋",
+  setup_intro: "Arbeitszeit, Freizeitausgleich und Überstunden ohne Aufwand. Richte zuerst deine Grundeinstellungen ein.",
+  setup_lang: "Sprache",
+  setup_normday: "Normale Arbeitszeit (Stunden)",
+  setup_norm_hint: "Beispiel: 07:30 oder 08:00",
+  setup_pause: "Pause (Minuten)",
+  setup_pause_hint: "Dies ist deine Standardpause und wird automatisch abgezogen.",
+  setup_note: "Du kannst diese Einstellungen später jederzeit ändern.",
+  setup_done: "Bereit",
+
+  calendar_info: "Hier bekommst du eine Tagesübersicht. Du siehst wann du Freizeitausgleich, Krankheit, Urlaub, Feiertag hattest oder gearbeitet hast.\nVerrechnungen werden mit einem grünen Punkt angezeigt.\nTippe auf einen Tag um Details zu sehen oder etwas hinzuzufügen.",
+  settle_info: "Verwende diese Taste wenn Überstunden ausbezahlt wurden. Die eingegebene Stundenanzahl wird vom Überstunden-Saldo abgezogen.",
+  norm_day_info: "Dies ist die Anzahl Stunden die du normalerweise pro Arbeitstag leisten musst. Pausen werden hier nicht mitgerechnet. Alles darüber zählt als Überstunden.",
+  start_saldo_info: "Dies ist die Anzahl Überstunden die du vor diesem Zeitraum bereits hattest.",
+  default_break_info: "Diese Pause wird automatisch von deiner Arbeitszeit abgezogen wenn du einen Tag speicherst. Dies gilt sowohl für den Timer als auch für manuelle Einträge.",
+  recup_info: "Verwende Freizeitausgleich wenn du einen ganzen Tag mit angesammelten Überstunden kompensierst. Dieser Tag wird vom Überstunden-Saldo abgezogen.",
+  setup_fill_fields: "Füllen Sie beide Felder korrekt aus.",
+setup_set_normday: "Stellen Sie zuerst Ihren normalen Arbeitstag ein."
+
+},
+
+pl: {
+  // --- Modal (handmatig) ---
+  history_title: "Historia",
+  history_hint: "Zapomniałeś się wylogować?<br>Dodaj ręcznie.",
+  modal_add_title: "Dodaj ręcznie",
+  modal_edit_title: "Edytuj wpis",
+  modal_hint: "Zapomniałeś się wylogować? Dodaj właściwe godziny.",
+  btn_close: "Zamknij",
+  btn_save: "Zapisz",
+  btn_delete: "Usuń",
+  btn_add_manual: "Dodaj",
+  no_entries: "Nie znaleziono danych.",
+
+  lbl_date: "Data",
+  lbl_type: "Typ",
+  lbl_start: "Start (GG:MM)",
+  lbl_end: "Koniec (GG:MM)",
+  lbl_pause: "Przerwa (min)",
+  lbl_note: "Notatka (opcjonalnie)",
+  ph_note: "np. garaż po trasie, korek, oczekiwanie na klienta...",
+
+  // --- Errors ---
+  err_choose_date: "Wybierz datę.",
+  err_fill_times: "Wprowadź start i koniec (lub wybierz dzień odbioru).",
+  err_start_saldo_format: "Saldo początkowe musi mieć format g:mm, np. 60:00",
+  err_normday_format: "Norma dnia musi mieć format g:mm, np. 07:30",
+  err_bad_json: "Nieprawidłowy plik JSON.",
+  err_timer_short: "Timer jest zbyt krótki. Użyj START lub + Ręcznie.",
+  confirm_delete_entry: "Usunąć ten wpis?",
+
+  // --- General / UI ---
+  tab_day: "Dzień pracy",
+  tab_history: "Historia",
+  calendar: "Kalendarz",
+  language: "Język",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Zapisz",
+  manual: "+ Ręcznie",
+  cancel: "Anuluj",
+  ok: "OK",
+
+  status_busy: "W toku...",
+  status_paused: "Wstrzymane",
+  status_not_started: "Nie rozpoczęto",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+
+  today_work: "Dzisiaj",
+  week_work: "Ten tydzień",
+  vac_taken: "Wykorzystany urlop",
+  overtime: "Saldo nadgodzin",
+  overtime_settled: "Nadgodziny rozliczone",
+  minutes: "min",
+  hours: "godz.",
+  days: "dzień",
+
+  // --- Types / labels ---
+  work: "Praca",
+  work_label: "PRACA",
+  recup: "Odbiór",
+  recup_line: "ODBÓR - odejmowany od nadgodzin",
+  sick: "Chorobowe",
+  vacation: "Urlop",
+  holiday: "Święto",
+  net_line: "netto",
+  pause_line: "przerwa",
+
+  // --- Detail ---
+  day_no_entry: "Brak wpisu w tym dniu.",
+  edit_btn: "✎ Edytuj",
+  edit_aria: "Edytuj",
+  note_label: "Notatka",
+
+  // --- Verrekening ---
+  settle: "Rozlicz",
+  settle_hint: "Otrzymałeś wypłatę za nadgodziny? Zarejestruj je tutaj, aby odjąć je od salda.",
+  verrek_none: "Nie znaleziono rozliczenia w tym dniu.",
+  verrek_deleted: "Rozliczenie usunięte ✓",
+  reconciled: "Rozliczone",
+  reconciled_remove: "Usuń rozliczenie",
+  hours_amount_hhmm: "Liczba godzin (GG:MM)",
+
+  // --- Settings ---
+  settings: "Zapisz",
+  settings_saved: "Ustawienia zapisane",
+  start_saldo: "Saldo początkowe nadgodzin (g:min)",
+  default_pause: "Domyślna przerwa (min)",
+  norm_day: "Normalny dzień pracy (g:min)",
+
+  // --- Backup ---
+  backup: "Kopia zapasowa",
+  backup_last: "Ostatnia kopia",
+  backup_never: "nigdy",
+  backup_tip: "Wskazówka: regularnie twórz kopię zapasową.",
+  import_json: "Importuj JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Eksport PDF",
+  pdf_title: "Eksport PDF",
+  pdf_month: "Miesiąc",
+  pdf_dates: "Daty",
+  pdf_from: "Od",
+  pdf_to: "Do",
+  make_pdf: "Utwórz PDF",
+
+  // --- Cloud ---
+  cloud_title: "Logowanie Google + synchronizacja w chmurze",
+  cloud_not_available: "Jeszcze niedostępne.",
+  login_google: "Zaloguj się przez Google",
+  logout_google: "Wyloguj",
+  cloud_download: "Przywróć kopię zapasową",
+  cloud_upload: "Utwórz kopię zapasową",
+  cloud_logged_in: "Zalogowano:",
+  cloud_not_logged: "Nie zalogowano.",
+  cloud_login_error: "Błąd logowania Google",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Imię pracownika",
+  employee_name_ph: "Twoje imię",
+  employer_name_label: "Nazwa pracodawcy",
+  employer_name_ph: "Nazwa pracodawcy",
+
+  // --- Setup modal ---
+  setup_title: "Witamy w Shift-Tap 👋",
+  setup_intro: "Godziny pracy, odbiór i nadgodziny bez problemów. Najpierw ustaw podstawowe ustawienia.",
+  setup_lang: "Język",
+  setup_normday: "Normalny dzień pracy (godziny)",
+  setup_norm_hint: "Przykład: 07:30 lub 08:00",
+  setup_pause: "Przerwa (minuty)",
+  setup_pause_hint: "To jest twoja domyślna przerwa i zostanie automatycznie odjęta.",
+  setup_note: "Te ustawienia możesz później zawsze zmienić w ustawieniach.",
+  setup_done: "Gotowe do użycia",
+
+  // --- Info bubbles ---
+  calendar_info: "Tutaj masz przegląd każdego dnia. Widzisz kiedy miałeś odbiór, chorobowe, urlop, święto lub pracowałeś.\nRozliczenia są oznaczone zieloną kropką.\nDotknij dnia aby zobaczyć szczegóły lub coś dodać.",
+  settle_info: "Użyj tego przycisku gdy nadgodziny zostały wypłacone. Wpisana liczba godzin zostanie odjęta od salda nadgodzin.",
+  norm_day_info: "To liczba godzin które normalnie musisz przepracować w ciągu dnia. Przerwy nie są wliczane. Wszystko powyżej liczy się jako nadgodziny.",
+  start_saldo_info: "To liczba nadgodzin które miałeś przed tym okresem.",
+  default_break_info: "Ta przerwa jest automatycznie odejmowana od przepracowanego czasu podczas zapisu dnia. Dotyczy to zarówno timera jak i wpisów ręcznych.",
+  recup_info: "Użyj Odbioru gdy bierzesz cały dzień wolny w ramach zgromadzonych nadgodzin. Ten dzień zostanie odjęty od salda nadgodzin.",
+  setup_fill_fields: "Wypełnij poprawnie oba pola.",
+setup_set_normday: "Najpierw ustaw normalny dzień pracy."
+},
+
+es: {
+  // --- Modal (manual) ---
+  history_title: "Historial",
+  history_hint: "¿Olvidaste fichar la salida?<br>Añádelo manualmente.",
+  modal_add_title: "Añadir manualmente",
+  modal_edit_title: "Editar entrada",
+  modal_hint: "¿Olvidaste fichar la salida? Solo añade las horas correctas.",
+  btn_close: "Cerrar",
+  btn_save: "Guardar",
+  btn_delete: "Eliminar",
+  btn_add_manual: "Añadir",
+  no_entries: "No se encontraron datos.",
+
+  lbl_date: "Fecha",
+  lbl_type: "Tipo",
+  lbl_start: "Inicio (HH:MM)",
+  lbl_end: "Fin (HH:MM)",
+  lbl_pause: "Pausa (min)",
+  lbl_note: "Nota (opcional)",
+  ph_note: "p. ej. garaje después de la ruta, atasco, esperando al cliente...",
+
+  // --- Errors ---
+  err_choose_date: "Elige una fecha.",
+  err_fill_times: "Introduce inicio y fin (o elige día de recuperación).",
+  err_start_saldo_format: "El saldo inicial debe tener formato h:mm, por ej. 60:00",
+  err_normday_format: "La jornada normal debe tener formato h:mm, por ej. 07:30",
+  err_bad_json: "Archivo JSON no válido.",
+  err_timer_short: "El temporizador es demasiado corto. Usa START o + Manual.",
+  confirm_delete_entry: "¿Eliminar esta entrada?",
+
+  // --- General / UI ---
+  tab_day: "Día laboral",
+  tab_history: "Historial",
+  calendar: "Calendario",
+  language: "Idioma",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Guardar",
+  manual: "+ Manual",
+  cancel: "Cancelar",
+  ok: "OK",
+
+  status_busy: "En curso...",
+  status_paused: "Pausado",
+  status_not_started: "No iniciado",
+  status_online: "Estado: online",
+  status_offline: "Estado: offline",
+
+  today_work: "Hoy",
+  week_work: "Esta semana",
+  vac_taken: "Vacaciones tomadas",
+  overtime: "Saldo de horas extra",
+  overtime_settled: "Horas extra liquidadas",
+  minutes: "min",
+  hours: "h",
+  days: "día",
+
+  // --- Types / labels ---
+  work: "Trabajo",
+  work_label: "TRABAJO",
+  recup: "Recuperación",
+  recup_line: "RECUPERACIÓN - se descuenta de las horas extra",
+  sick: "Baja médica",
+  vacation: "Vacaciones",
+  holiday: "Festivo",
+  net_line: "neto",
+  pause_line: "pausa",
+
+  // --- Detail ---
+  day_no_entry: "No hay entradas en este día.",
+  edit_btn: "✎ Editar",
+  edit_aria: "Editar",
+  note_label: "Nota",
+
+  // --- Settlement ---
+  settle: "Liquidar",
+  settle_hint: "¿Te han pagado horas extra? Regístralas aquí para descontarlas de tu saldo.",
+  verrek_none: "No se encontró ninguna liquidación en ese día.",
+  verrek_deleted: "Liquidación eliminada ✓",
+  reconciled: "Liquidado",
+  reconciled_remove: "Eliminar liquidación",
+  hours_amount_hhmm: "Número de horas (HH:MM)",
+
+  // --- Settings ---
+  settings: "Guardar",
+  settings_saved: "Ajustes guardados",
+  start_saldo: "Saldo inicial de horas extra (h:min)",
+  default_pause: "Pausa predeterminada (min)",
+  norm_day: "Duración normal de la jornada (h:min)",
+
+  // --- Backup ---
+  backup: "Copia de seguridad",
+  backup_last: "Última copia",
+  backup_never: "nunca",
+  backup_tip: "Consejo: haz copias de seguridad regularmente.",
+  import_json: "Importar JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Exportar PDF",
+  pdf_title: "Exportación PDF",
+  pdf_month: "Mes",
+  pdf_dates: "Fechas",
+  pdf_from: "Desde",
+  pdf_to: "Hasta",
+  make_pdf: "Crear PDF",
+
+  // --- Cloud ---
+  cloud_title: "Inicio de sesión con Google + sincronización en la nube",
+  cloud_not_available: "Aún no disponible.",
+  login_google: "Iniciar sesión con Google",
+  logout_google: "Cerrar sesión",
+  cloud_download: "Restaurar copia",
+  cloud_upload: "Crear copia",
+  cloud_logged_in: "Conectado:",
+  cloud_not_logged: "No conectado.",
+  cloud_login_error: "Error de inicio de sesión con Google",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Nombre del empleado",
+  employee_name_ph: "Tu nombre",
+  employer_name_label: "Nombre del empleador",
+  employer_name_ph: "Nombre del empleador",
+
+  // --- Setup modal ---
+  setup_title: "Bienvenido a Shift-Tap 👋",
+  setup_intro: "Horas de trabajo, recuperación y horas extra sin complicaciones. Configura primero tus ajustes básicos.",
+  setup_lang: "Idioma",
+  setup_normday: "Jornada normal (horas)",
+  setup_norm_hint: "Ejemplo: 07:30 o 08:00",
+  setup_pause: "Pausa (minutos)",
+  setup_pause_hint: "Esta es tu pausa predeterminada y se descontará automáticamente.",
+  setup_note: "Siempre puedes cambiar estos ajustes más tarde en Configuración.",
+  setup_done: "Listo para usar",
+
+  // --- Info bubbles ---
+  calendar_info: "Aquí tienes una vista general por día. Ves cuándo tuviste recuperación, baja médica, vacaciones, festivo o trabajaste.\nLas liquidaciones se muestran con un punto verde.\nToca un día para ver detalles o añadir algo.",
+  settle_info: "Usa este botón cuando se hayan pagado horas extra. El número de horas introducido se descontará de tu saldo de horas extra.",
+  norm_day_info: "Este es el número de horas que normalmente debes trabajar por día. Las pausas no se cuentan aquí. Todo lo que supere esto cuenta como horas extra.",
+  start_saldo_info: "Este es el número de horas extra que ya tenías antes de este período.",
+  default_break_info: "Esta pausa se descuenta automáticamente del tiempo trabajado al guardar un día. Esto se aplica tanto al temporizador como a las entradas manuales.",
+  recup_info: "Usa Recuperación cuando tomes un día completo compensado con horas extra acumuladas. Este día se descontará de tu saldo de horas extra.",
+  setup_fill_fields: "Complete correctamente ambos campos.",
+setup_set_normday: "Primero configure su jornada laboral normal."
 },
 
 fr: {
@@ -1847,7 +2428,9 @@ fr: {
   norm_day_info: "C'est le nombre d'heures que tu dois normalement prester par jour. Les pauses ne sont pas comprises. Tout ce qui dépasse compte comme heures supplémentaires.",
   start_saldo_info: "Il s'agit du solde d'heures supplémentaires que tu avais avant cette période.",
   default_break_info: "Cette pause est automatiquement déduite de ton temps de travail lorsque tu enregistres une journée. Cela s'applique aussi bien au timer qu'aux entrées manuelles.",
-  recup_info: "Utilise Jour de récup lorsque tu prends une journée complète en compensation d’heures supplémentaires. Cette journée sera déduite de ton solde d’heures supplémentaires."
+  recup_info: "Utilise Jour de récup lorsque tu prends une journée complète en compensation d’heures supplémentaires. Cette journée sera déduite de ton solde d’heures supplémentaires.",
+  setup_fill_fields: "Remplissez correctement les deux champs.",
+setup_set_normday: "Définissez d'abord votre journée de travail normale."
 
 }
   };
@@ -1883,10 +2466,7 @@ function applyLang(){
     el.setAttribute("aria-label", t(key));
   });
 
-  // taal label + custom taalkeuze
-  function getLangName(code){
-    return code === "nl" ? "Nederlands" : code === "en" ? "English" : "Français";
-  }
+
 
   function updateLangLabel(){
     const lbl = document.getElementById("langCurrentLabel");
@@ -1916,7 +2496,7 @@ function openLangModal(){
   body.innerHTML = `
     <div style="font-size:28px; font-weight:800; margin-bottom:12px;">${t("language")}</div>
     <div style="display:flex; flex-direction:column; gap:10px;">
-      ${["nl","en","fr"].map(code => `
+${["nl","en","fr","de","pl","es","hu"].map(code => `
         <button type="button" class="btnSmall" data-langpick="${code}"
           style="display:flex; justify-content:space-between; align-items:center; padding:14px 16px;">
           <span>${getLangName(code)}</span>
@@ -1953,9 +2533,17 @@ function openLangModal(){
 
 function closeAppModal(){
   const overlay = document.getElementById("appModalOverlay");
+  const btnOk = document.getElementById("appModalOk");
+  const btnCancel = document.getElementById("appModalCancel");
+
   if(!overlay) return;
+
   overlay.classList.remove("show");
-      overlay.setAttribute("aria-hidden","true");
+  overlay.setAttribute("aria-hidden","true");
+
+  // knoppen terug normaal zetten
+  if(btnOk) btnOk.style.display = "inline-flex";
+  if(btnCancel) btnCancel.style.display = "inline-flex";
 }
 
 document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal);
@@ -2288,7 +2876,12 @@ verrekenModal?.addEventListener("click", (e) => {
 function getLangName(code){
   if(code === "nl") return "Nederlands";
   if(code === "en") return "English";
-  return "Français";
+  if(code === "fr") return "Français";
+  if(code === "de") return "Deutsch";
+  if(code === "pl") return "Polski";
+  if(code === "es") return "Español";
+  if(code === "hu") return "Magyar";
+  return code;
 }
 
 function setLang(code){
@@ -2325,7 +2918,7 @@ function openLangModal(){
   body.innerHTML = `
     <div style="font-size:26px;font-weight:800;margin-bottom:12px;">Taal</div>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      ${["nl","en","fr"].map(code => `
+    ${["nl","en","fr","de","pl","es","hu"].map(code => `
         <button type="button" class="btnSmall" data-langpick="${code}"
           style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
           <span>${getLangName(code)}</span>
@@ -2393,8 +2986,14 @@ btnCalNext?.addEventListener("click", ()=>{
   
   const dmy  = d => `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
   function calLocale(){
-    return currentLang==="fr" ? "fr-FR" : currentLang==="en" ? "en-GB" : "nl-BE";
-  }
+  return currentLang==="fr" ? "fr-FR"
+    : currentLang==="en" ? "en-GB"
+    : currentLang==="de" ? "de-DE"
+    : currentLang==="pl" ? "pl-PL"
+    : currentLang==="es" ? "es-ES"
+    : currentLang==="hu" ? "hu-HU"
+    : "nl-BE";
+}
   
 function escapeHtml(str){
   if(!str) return "";
@@ -2425,11 +3024,15 @@ function updateLegendLetters(){
 }
 
   function dayHeaders(){
-    // Maandag eerst
-    if(currentLang==="fr") return ["L","M","M","J","V","S","D"];
-    if(currentLang==="en") return ["M","T","W","T","F","S","S"];
-    return ["M","D","W","D","V","Z","Z"];
-  }
+  // Maandag eerst
+  if(currentLang==="fr") return ["L","M","M","J","V","S","D"];
+  if(currentLang==="en") return ["M","T","W","T","F","S","S"];
+  if(currentLang==="de") return ["M","D","M","D","F","S","S"];
+  if(currentLang==="pl") return ["P","W","Ś","C","P","S","N"];
+  if(currentLang==="es") return ["L","M","X","J","V","S","D"];
+  if(currentLang==="hu") return ["H","K","S","C","P","S","V"];
+  return ["M","D","W","D","V","Z","Z"]; // Nederlands
+}
 
   function entryForDate(dateStr){
     // 1 entry per datum: neem de “laatste” (createdAt) als er toch meerdere zouden zijn
@@ -2939,28 +3542,57 @@ function hmFromMinutes(mins){
   const hh = Math.floor(mins / 60);
   const mm = mins % 60;
 
+  
   const nl = `${hh}u${mm.toString().padStart(2,"0")}`;
-  const fr = `${hh}h${mm.toString().padStart(2,"0")}`;
-  const en = `${hh}:${mm.toString().padStart(2,"0")}`;
+const fr = `${hh}h${mm.toString().padStart(2,"0")}`;
+const en = `${hh}:${mm.toString().padStart(2,"0")}`;
+const de = `${hh}Std ${mm.toString().padStart(2,"0")}`;
+const pl = `${hh}g${mm.toString().padStart(2,"0")}`;
+const es = `${hh}h ${mm.toString().padStart(2,"0")}`;
+const hu = `${hh}ó${mm.toString().padStart(2,"0")}`;
 
   const hasNorm = mins > 0;
 
-  if(currentLang === "fr"){
-    return hasNorm
-      ? `Ajouter un jour de récup pour ${dmy(new Date())} ?\nCela déduit ${fr} de vos heures sup.`
-      : `Ajouter un jour de récup pour ${dmy(new Date())} ?`;
-  }
-
-  if(currentLang === "en"){
-    return hasNorm
-      ? `Add comp day for ${dmy(new Date())}?\nThis subtracts ${en} from your overtime.`
-      : `Add comp day for ${dmy(new Date())}?`;
-  }
-
+if(currentLang === "fr"){
   return hasNorm
-    ? `Recup toevoegen voor ${dmy(new Date())}?\nDit trekt ${nl} af van je overuren.`
-    : `Recup toevoegen voor ${dmy(new Date())}?`;
+    ? `Ajouter un jour de récup pour ${dmy(new Date())} ?\nCela déduit ${fr} de vos heures sup.`
+    : `Ajouter un jour de récup pour ${dmy(new Date())} ?`;
 }
+
+if(currentLang === "en"){
+  return hasNorm
+    ? `Add comp day for ${dmy(new Date())}?\nThis subtracts ${en} from your overtime.`
+    : `Add comp day for ${dmy(new Date())}?`;
+}
+
+if(currentLang === "de"){
+  return hasNorm
+    ? `Recup-Tag hinzufügen für ${dmy(new Date())}?\nDies zieht ${de} von deinen Überstunden ab.`
+    : `Recup-Tag hinzufügen für ${dmy(new Date())}?`;
+}
+
+if(currentLang === "pl"){
+  return hasNorm
+    ? `Dodać odbiór za ${dmy(new Date())}?\nTo odejmie ${pl} z twoich nadgodzin.`
+    : `Dodać odbiór za ${dmy(new Date())}?`;
+}
+
+if(currentLang === "es"){
+  return hasNorm
+    ? `¿Agregar día de recup para ${dmy(new Date())}?\nEsto restará ${es} de tus horas extra.`
+    : `¿Agregar día de recup para ${dmy(new Date())}?`;
+}
+
+if(currentLang === "hu"){
+  return hasNorm
+    ? `Hozzáadod a szabadnapot erre a napra: ${dmy(new Date())}?\nEz levon ${hu}-t a túlóráidból.`
+    : `Hozzáadod a szabadnapot erre a napra: ${dmy(new Date())}?`;
+}
+
+return hasNorm
+  ? `Recup toevoegen voor ${dmy(new Date())}?\nDit trekt ${nl} af van je overuren.`
+  : `Recup toevoegen voor ${dmy(new Date())}?`;
+   }
 
   function addRecup(){
     openConfirm(msgRecupConfirm(), () => {
@@ -3129,7 +3761,14 @@ function hmFromMinutes(mins){
      ========================= */
   function entryTitle(e){
     const d = new Date(e.date);
-    const loc = currentLang==="fr" ? "fr-FR" : currentLang==="en" ? "en-GB" : "nl-BE";
+    const loc =
+  currentLang==="fr" ? "fr-FR" :
+  currentLang==="en" ? "en-GB" :
+  currentLang==="de" ? "de-DE" :
+  currentLang==="pl" ? "pl-PL" :
+  currentLang==="es" ? "es-ES" :
+  currentLang==="hu" ? "hu-HU" :
+  "nl-BE";
     return d.toLocaleDateString(loc);
   }
 
@@ -3542,9 +4181,22 @@ function saveSettings(){
   }
 
   function formatTodayPill(){
-    const loc = currentLang==="fr" ? "fr-FR" : currentLang==="en" ? "en-GB" : "nl-BE";
-    return new Date().toLocaleDateString(loc, { weekday:"short", day:"2-digit", month:"2-digit", year:"numeric" });
-  }
+  const loc =
+    currentLang==="fr" ? "fr-FR" :
+    currentLang==="en" ? "en-GB" :
+    currentLang==="de" ? "de-DE" :
+    currentLang==="pl" ? "pl-PL" :
+    currentLang==="es" ? "es-ES" :
+    currentLang==="hu" ? "hu-HU" :
+    "nl-BE";
+
+  return new Date().toLocaleDateString(loc, {
+    weekday:"short",
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric"
+  });
+}
 
   function renderTotals(){
     const today = ymd(new Date());
@@ -3766,7 +4418,7 @@ if(vEl) vEl.textContent = "v" + APP_VERSION;
     }
   }
 
-  // ===== SETUP START BUTTON =====
+// ===== SETUP START BUTTON =====
 const setupBtn = document.getElementById("btnSetupStart");
 if (setupBtn) {
   setupBtn.addEventListener("click", () => {
@@ -3775,7 +4427,7 @@ if (setupBtn) {
     const pauseMin = parseInt(document.getElementById("setupPauseMin")?.value, 10);
 
     if (!time || Number.isNaN(pauseMin)) {
-      alert("Vul beide velden correct in.");
+      showToast(t("setup_fill_fields"), "warn");
       return;
     }
 
@@ -3784,19 +4436,29 @@ if (setupBtn) {
     const mm = parseInt(m, 10);
 
     if (Number.isNaN(hh) || Number.isNaN(mm)) {
-      alert("Vul beide velden correct in.");
+      showToast(t("setup_fill_fields"), "warn");
+      return;
+    }
+
+    if ((hh * 60 + mm) === 0) {
+      showToast(t("setup_set_normday"), "warn");
+      return;
+    }
+
+    if (pauseMin < 0) {
+      showToast(t("setup_fill_fields"), "warn");
       return;
     }
 
     state.settings = state.settings || {};
-    state.settings.normMinutes = (hh * 60) + mm;
-    state.settings.pauseMinutes = pauseMin;
-    
-      // TAAL OPSLAAN
-  const lang = currentLang || "nl";
-  state.settings.lang = lang;
-  localStorage.setItem("lang", lang);
-  currentLang = lang;
+    state.settings.normDayMin = (hh * 60) + mm;
+    state.settings.pauseMin = pauseMin;
+
+    // TAAL OPSLAAN
+    const lang = currentLang || "nl";
+    state.settings.lang = lang;
+    localStorage.setItem("lang", lang);
+    currentLang = lang;
 
     saveState();
     markSetupDone();
@@ -3831,7 +4493,10 @@ function openSetupAfterLang(lang){
 document.getElementById("btnLangNl")?.addEventListener("click", () => openSetupAfterLang("nl"));
 document.getElementById("btnLangEn")?.addEventListener("click", () => openSetupAfterLang("en"));
 document.getElementById("btnLangFr")?.addEventListener("click", () => openSetupAfterLang("fr"));
-
+document.getElementById("btnLangDe")?.addEventListener("click", () => openSetupAfterLang("de"));
+document.getElementById("btnLangPl")?.addEventListener("click", () => openSetupAfterLang("pl"));
+document.getElementById("btnLangEs")?.addEventListener("click", () => openSetupAfterLang("es"));
+document.getElementById("btnLangHu")?.addEventListener("click", () => openSetupAfterLang("hu"));
 
 init();
 });
@@ -3917,6 +4582,10 @@ init();
         <button type="button" class="btnGhost" id="btnLangNl">Nederlands</button>
         <button type="button" class="btnGhost" id="btnLangEn">English</button>
         <button type="button" class="btnGhost" id="btnLangFr">Français</button>
+        <button type="button" class="btnGhost" id="btnLangDe">Deutsch</button>
+        <button type="button" class="btnGhost" id="btnLangPl">Polski</button>
+        <button type="button" class="btnGhost" id="btnLangEs">Español</button>
+        <button type="button" class="btnGhost" id="btnLangHu">Magyar</button>
       </div>
     </div>
   </div>
@@ -3946,12 +4615,12 @@ init();
             Normale werkdag (uren)
           </label>
 
-          <input
-            type="time"
-            id="setupNormHours"
-            value="07:30"
-            step="60">
-
+<input
+  type="time"
+  id="setupNormHours"
+  value="00:00"
+  step="60">
+  
           <div class="setupHint" data-i18n="setup_norm_hint">
             Voorbeeld: 07:30 of 08:00
           </div>
