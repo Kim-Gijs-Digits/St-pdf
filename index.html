@@ -1555,6 +1555,153 @@ nl: {
 setup_set_normday: "Stel eerst je normale werkdag in."
 },
 
+it: {
+  // --- Modal (manuale) ---
+  history_title: "Cronologia",
+  history_hint: "Hai dimenticato di timbrare?<br>Aggiungi manualmente.",
+  modal_add_title: "Aggiungi manualmente",
+  modal_edit_title: "Modifica voce",
+  modal_hint: "Hai dimenticato di timbrare? Inserisci semplicemente gli orari corretti.",
+  btn_close: "Chiudi",
+  btn_save: "Salva",
+  btn_delete: "Elimina",
+  btn_add_manual: "Aggiungi",
+  no_entries: "Nessun dato inserito.",
+
+  lbl_date: "Data",
+  lbl_type: "Tipo",
+  lbl_start: "Inizio (HH:MM)",
+  lbl_end: "Fine (HH:MM)",
+  lbl_pause: "Pausa (min)",
+  lbl_note: "Nota (opzionale)",
+  ph_note: "es. Garage dopo il giro, traffico, attesa cliente...",
+
+  // --- Errors ---
+  err_choose_date: "Scegli una data.",
+  err_fill_times: "Inserisci inizio e fine (o scegli Recupero).",
+  err_start_saldo_format: "Il saldo iniziale deve essere nel formato h:mm, es. 60:00",
+  err_normday_format: "La giornata normale deve essere nel formato h:mm, es. 7:30",
+  err_bad_json: "File JSON non valido.",
+  err_timer_short: "Il timer è troppo breve. Usa START o + Manuale.",
+  confirm_delete_entry: "Eliminare questa voce?",
+
+  // --- General / UI ---
+  tab_day: "Giornata",
+  tab_history: "Cronologia",
+  calendar: "Calendario",
+  language: "Lingua",
+
+  start: "Avvia",
+  pause_stop: "Stop",
+  save: "Salva",
+  manual: "+ Manuale",
+  cancel: "Annulla",
+  ok: "OK",
+
+  status_busy: "In corso...",
+  status_paused: "In pausa",
+  status_not_started: "Non avviato",
+  status_online: "Stato: online",
+  status_offline: "Stato: offline",
+
+  today_work: "Oggi",
+  week_work: "Questa settimana",
+  vac_taken: "Ferie utilizzate",
+  overtime: "Saldo straordinari",
+  overtime_settled: "Straordinari compensati",
+  minutes: "min",
+  hours: "h",
+  days: "giorno",
+
+  // --- Types / labels ---
+  work: "Lavoro",
+  work_label: "LAVORO",
+  recup: "Recupero",
+  recup_line: "RECUPERO - sottratto dagli straordinari",
+  sick: "Malattia",
+  vacation: "Vacanza",
+  holiday: "Festivo",
+  net_line: "netto",
+  pause_line: "pausa",
+
+  // --- Detail ---
+  day_no_entry: "Nessuna voce per questo giorno.",
+  edit_btn: "✎ Modifica",
+  edit_aria: "Modifica",
+  note_label: "Nota",
+
+  // --- Verrekening ---
+  settle: "Compensa",
+  settle_hint: "Hai ricevuto il pagamento degli straordinari? Registralo qui per sottrarlo dal saldo.",
+  verrek_none: "Nessuna compensazione trovata in questo giorno.",
+  verrek_deleted: "Compensazione eliminata ✓",
+  reconciled: "Compensato",
+  reconciled_remove: "Rimuovi compensazione",
+  hours_amount_hhmm: "Numero di ore (HH:MM)",
+
+  // --- Settings ---
+  settings: "Salva",
+  settings_saved: "Impostazioni salvate",
+  start_saldo: "Saldo iniziale straordinari (h:mm)",
+  default_pause: "Pausa predefinita (min)",
+  norm_day: "Durata giornata lavorativa (h:mm)",
+
+  // --- Backup ---
+  backup: "Backup",
+  backup_last: "Ultimo backup",
+  backup_never: "mai",
+  backup_tip: "Suggerimento: esegui regolarmente un backup.",
+  import_json: "Importa JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Esporta PDF",
+  pdf_title: "Esportazione PDF",
+  pdf_month: "Mese",
+  pdf_dates: "Date",
+  pdf_from: "Da",
+  pdf_to: "A",
+  make_pdf: "Crea PDF",
+
+  // --- Cloud ---
+  cloud_title: "Accesso Google + sincronizzazione cloud",
+  cloud_not_available: "Non ancora disponibile.",
+  login_google: "Accedi con Google",
+  logout_google: "Disconnetti",
+  cloud_download: "Ripristina backup",
+  cloud_upload: "Crea backup",
+  cloud_logged_in: "Connesso:",
+  cloud_not_logged: "Non connesso.",
+  cloud_login_error: "Errore di accesso Google",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Nome dipendente",
+  employee_name_ph: "Il tuo nome",
+  employer_name_label: "Nome datore di lavoro",
+  employer_name_ph: "Nome datore di lavoro",
+
+  // --- Setup modal ---
+  setup_title: "Benvenuto in Shift-Tap 👋",
+  setup_intro: "Ore di lavoro, recupero e straordinari senza complicazioni. Configura prima le impostazioni di base.",
+  setup_lang: "Lingua",
+  setup_normday: "Giornata lavorativa normale (ore)",
+  setup_norm_hint: "Esempio: 07:30 o 08:00",
+  setup_pause: "Pausa (minuti)",
+  setup_pause_hint: "Questa è la pausa standard che verrà sottratta automaticamente.",
+  setup_note: "Puoi sempre modificare queste impostazioni più tardi nelle Impostazioni.",
+  setup_done: "Pronto all'uso",
+
+  // --- Info bubbles ---
+  calendar_info: "Qui hai una panoramica giornaliera. Vedi quando hai avuto recupero, malattia, ferie, festivo o hai lavorato.\nLe compensazioni sono indicate con un punto verde.\nTocca un giorno per vedere i dettagli o aggiungere una voce.",
+  settle_info: "Usa questo pulsante quando gli straordinari sono stati pagati. Il numero di ore inserito verrà sottratto dal saldo straordinari.",
+  norm_day_info: "Questo è il numero di ore che normalmente devi lavorare in un giorno. Le pause non sono incluse. Tutto ciò che supera questo conta come straordinario.",
+  start_saldo_info: "Questo è il saldo di straordinari che avevi prima di questo periodo.",
+  default_break_info: "Questa pausa viene automaticamente sottratta dal tempo lavorato quando salvi una giornata. Vale sia per il timer che per le inserzioni manuali.",
+  recup_info: "Usa Recupero quando prendi un giorno libero utilizzando straordinari accumulati. Questo giorno verrà sottratto dal saldo straordinari.",
+
+  setup_fill_fields: "Compila correttamente entrambi i campi.",
+  setup_set_normday: "Imposta prima la tua giornata lavorativa normale."
+},
 
 en: {
 
@@ -2496,7 +2643,7 @@ function openLangModal(){
   body.innerHTML = `
     <div style="font-size:28px; font-weight:800; margin-bottom:12px;">${t("language")}</div>
     <div style="display:flex; flex-direction:column; gap:10px;">
-${["nl","en","fr","de","pl","es","hu"].map(code => `
+${["nl","en","fr","de","pl","es","hu","it"].map(code => `
         <button type="button" class="btnSmall" data-langpick="${code}"
           style="display:flex; justify-content:space-between; align-items:center; padding:14px 16px;">
           <span>${getLangName(code)}</span>
@@ -2881,6 +3028,7 @@ function getLangName(code){
   if(code === "pl") return "Polski";
   if(code === "es") return "Español";
   if(code === "hu") return "Magyar";
+  if(code === "it") return "Italiano";
   return code;
 }
 
@@ -2918,7 +3066,7 @@ function openLangModal(){
   body.innerHTML = `
     <div style="font-size:26px;font-weight:800;margin-bottom:12px;">Taal</div>
     <div style="display:flex;flex-direction:column;gap:10px;">
-    ${["nl","en","fr","de","pl","es","hu"].map(code => `
+    ${["nl","en","fr","de","pl","es","hu","it"].map(code => `
         <button type="button" class="btnSmall" data-langpick="${code}"
           style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
           <span>${getLangName(code)}</span>
@@ -2992,6 +3140,7 @@ btnCalNext?.addEventListener("click", ()=>{
     : currentLang==="pl" ? "pl-PL"
     : currentLang==="es" ? "es-ES"
     : currentLang==="hu" ? "hu-HU"
+    : currentLang==="it" ?  "it-IT"
     : "nl-BE";
 }
   
@@ -3031,6 +3180,7 @@ function updateLegendLetters(){
   if(currentLang==="pl") return ["P","W","Ś","C","P","S","N"];
   if(currentLang==="es") return ["L","M","X","J","V","S","D"];
   if(currentLang==="hu") return ["H","K","S","C","P","S","V"];
+  if(currentLang==="it") return ["L","M","M","G","V","S","D"];
   return ["M","D","W","D","V","Z","Z"]; // Nederlands
 }
 
@@ -3550,6 +3700,7 @@ const de = `${hh}Std ${mm.toString().padStart(2,"0")}`;
 const pl = `${hh}g${mm.toString().padStart(2,"0")}`;
 const es = `${hh}h ${mm.toString().padStart(2,"0")}`;
 const hu = `${hh}ó${mm.toString().padStart(2,"0")}`;
+const it = `${hh}h${mm.toString().padStart(2,"0")}`;
 
   const hasNorm = mins > 0;
 
@@ -3557,6 +3708,11 @@ if(currentLang === "fr"){
   return hasNorm
     ? `Ajouter un jour de récup pour ${dmy(new Date())} ?\nCela déduit ${fr} de vos heures sup.`
     : `Ajouter un jour de récup pour ${dmy(new Date())} ?`;
+}
+if(currentLang === "it"){
+  return hasNorm
+    ? `Aggiungere un giorno di recupero per ${dmy(new Date())}?\nQuesto sottrae ${it} dalle tue ore straordinarie.`
+    : `Aggiungere un giorno di recupero per ${dmy(new Date())}?`;
 }
 
 if(currentLang === "en"){
@@ -3768,6 +3924,7 @@ return hasNorm
   currentLang==="pl" ? "pl-PL" :
   currentLang==="es" ? "es-ES" :
   currentLang==="hu" ? "hu-HU" :
+  currentLang==="it" ? "it-IT" :
   "nl-BE";
     return d.toLocaleDateString(loc);
   }
@@ -4188,6 +4345,7 @@ function saveSettings(){
     currentLang==="pl" ? "pl-PL" :
     currentLang==="es" ? "es-ES" :
     currentLang==="hu" ? "hu-HU" :
+    currentLang==="it" ? "it-IT" :
     "nl-BE";
 
   return new Date().toLocaleDateString(loc, {
@@ -4497,6 +4655,7 @@ document.getElementById("btnLangDe")?.addEventListener("click", () => openSetupA
 document.getElementById("btnLangPl")?.addEventListener("click", () => openSetupAfterLang("pl"));
 document.getElementById("btnLangEs")?.addEventListener("click", () => openSetupAfterLang("es"));
 document.getElementById("btnLangHu")?.addEventListener("click", () => openSetupAfterLang("hu"));
+document.getElementById("btnLangIt")?.addEventListener("click", () => openSetupAfterLang("it"));
 
 init();
 });
@@ -4586,6 +4745,7 @@ init();
         <button type="button" class="btnGhost" id="btnLangPl">Polski</button>
         <button type="button" class="btnGhost" id="btnLangEs">Español</button>
         <button type="button" class="btnGhost" id="btnLangHu">Magyar</button>
+        <button type="button" class="btnGhost" id="btnLangIt">Italiano</button>
       </div>
     </div>
   </div>
