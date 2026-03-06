@@ -858,7 +858,22 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
   left: auto;
   right: 0;
 }
-
+.setupHint{
+margin-bottom: 16px;
+}
+.setupLangRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin: 10px 0 14px;
+}
+.setupLangLabel{
+  min-width: 70px;
+  opacity:.85;
+}
+.setupLangSelect{
+  flex:1;
+}
 </style>
 </head>
 
@@ -873,7 +888,7 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
             <img src="ST-logo.png" alt="Shift Tap logo" class="app-logo">
             <div class="app-title-wrap">
               <h1>Shift-Tap</h1>
-              <div class="sub">v2.0.1</div>
+<div class="sub" id="appVersionText">v2.0.2</div>
             </div>
           </div>
 
@@ -1273,12 +1288,21 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
 
 <script>
 (() => {
+
+
+window.onerror = function(message, source, lineno, colno, error){
+  alert("JS fout:\n" + message + "\nLijn: " + lineno + ":" + colno);
+  return false;
+};
+
   /* =========================
-     ShiftTap (try Gmail)
+     ShiftTap + + + setuppage
      ========================= */
   const APP_ID = "shifttap";
-const APP_CHANNEL = "stable_try_gmailv1";
-const APP_VERSION = "2.0.0";
+const APP_CHANNEL = "stable_met_gmail_pdf_setuppagev1";
+const APP_VERSION = "2.0.3";
+
+
 
 const STORE_KEY = `${APP_ID}_state_${APP_CHANNEL}`;
 const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
@@ -1288,6 +1312,16 @@ window.SHIFTTAP_STORE_KEY = STORE_KEY;
 
 const NORM_MIN  = 0;
 const RECUP_MIN = 0;
+
+// Setup flag (per channel)
+const SETUP_KEY = `${APP_ID}_setupDone_${APP_CHANNEL}`;
+
+function isSetupDone(){
+  return localStorage.getItem(SETUP_KEY) === "1";
+}
+function markSetupDone(){
+  localStorage.setItem(SETUP_KEY, "1");
+}
 
 // =========================
 // Cloud sync (Google login) via Firebase
@@ -1334,11 +1368,11 @@ async function ensureFirebase(){
    Cloud sync (Google login)
    - Mobile friendly: redirect login
    ========================= */
-const elLoginNote     = document.getElementById("loginNote");
-const btnGoogleLogin  = document.getElementById("btnGoogleLogin");
-const btnGoogleLogout = document.getElementById("btnGoogleLogout");
-const btnCloudPull    = document.getElementById("btnCloudPull");
-const btnCloudPush    = document.getElementById("btnCloudPush");
+const elLoginNote     = document.getElementById("loginNote") || null;
+const btnGoogleLogin  = document.getElementById("btnGoogleLogin") || null;
+const btnGoogleLogout = document.getElementById("btnGoogleLogout") || null;
+const btnCloudPull    = document.getElementById("btnCloudPull") || null;
+const btnCloudPush    = document.getElementById("btnCloudPush") || null;
 
 function setCloudUiEnabled(enabled){
   if(btnGoogleLogin)  btnGoogleLogin.disabled  = !enabled;
@@ -1374,126 +1408,151 @@ let calMonth = new Date().getMonth();
      ========================= */
   const LANG = {
 
-    nl: {
-      // --- Modal (handmatig) ---
-      history_title: "Historiek",
-      history_hint: "Vergeten uit te tikken?<br>Voeg handmatig toe.",
-      modal_add_title: "Handmatig toevoegen",
-      modal_edit_title: "Entry bewerken",
-      modal_hint: "Vergeet uit te tikken? Voeg gewoon de juiste tijden toe.",
-      btn_close: "Sluiten",
-      btn_save: "Opslaan",
-      btn_delete: "Verwijderen",
-      no_entries: "Geen ingevulde data gevonden.",
-
-      lbl_date: "Datum",
-      lbl_type: "Type",
-      lbl_start: "Start (HH:MM)",
-      lbl_end: "Einde (HH:MM)",
-      lbl_pause: "Pauze (min)",
-      lbl_note: "Opmerking (optioneel)",
-      ph_note: "bv. Garage na rit, file, wachten op klant...",
-
-      err_choose_date: "Kies een datum.",
-      err_fill_times: "Vul start en einde in (of kies Recup).",
-      confirm_delete_entry: "Deze entry verwijderen?",
-      backup_last: "Laatste backup",
-      backup_never: "nooit",
-      settings: "Opslaan",
-      tab_day: "Dag-Shift",
-      tab_history: "Historiek",
-      recup: "Recup",
-      start: "Start",
-      pause_stop: "Stop",
-      save: "Opslaan",
-      manual: "+ Handmatig",
-
-      // --- PDF export ---
-      pdf_export_btn: "📄 PDF",
-      pdf_export_btn_aria: "PDF export",
-      pdf_title: "PDF export",
-      pdf_month: "Maand",
-      pdf_dates: "Datums",
-      pdf_from: "Van",
-      pdf_to: "Tot",
-      make_pdf: "Maak PDF",
-      cancel: "Annuleren",
-      ok: "OK",
-
-      backup: "Backup",
-      import_json: "Import JSON",
-      backup_tip: "Tip: Maak regelmatig backup.",
-      language: "Taal",
-      start_saldo: "Start saldo overuren (u:min)",
-      default_pause: "Standaard pauze (min)",
-      norm_day: "Duur normale werkdag (u:min)",
-      cloud_title: "Google login + Cloud sync",
-      cloud_not_available: "Nog niet mogelijk.",
-      login_google: "Inloggen met Google",
-      logout_google: "Uitloggen",
-      cloud_download: "Herstel v Backup",
-      cloud_upload: "Backup Maken",
-      settle_hint: "Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.",
-
-      today_work: "Vandaag",
-      week_work: "Deze week",
-      overtime: "Saldo overuren",
-      minutes: "min",
-      hours: "u",
-      days: "dag",
-      calendar: "Kalender",
-      vac_taken: "Opgenomen vakantie",
-
-      status_busy: "Bezig...",
-      status_paused: "Gepauzeerd",
-      status_not_started: "Niet gestart",
-      cloud_logged_in: "Ingelogd:",
-cloud_not_logged: "Niet ingelogd.",
-cloud_login_error: "Google login fout",
-cloud_logged_in: "Ingelogd:",
-cloud_not_logged: "Niet ingelogd.",
-employee_name_label: "Naam werknemer",
-employee_name_ph: "Jouw naam",
-employer_name_label: "Naam werkgever",
-employer_name_ph: "Naam werkgever",
-
-      recup_line: "RECUP - gaat van overuren af",
-      net_line: "netto",
-      pause_line: "pauze",
-      work_label: "WERK",
-      sick: "Ziekte",
-vacation: "Vakantie",
-holiday: "Feestdag",
-note_label: "Opmerking",
-edit_btn: "✎ Bewerken",
-edit_aria: "Bewerken",
-work: "Werk",
-verrek_none: "Geen verrekening gevonden op die dag.",
-  verrek_deleted: "Verrekening verwijderd ✓",
+nl: {
+  // --- Modal (handmatig) ---
+  history_title: "Historiek",
+  history_hint: "Vergeten uit te tikken?<br>Voeg handmatig toe.",
+  modal_add_title: "Handmatig toevoegen",
+  modal_edit_title: "Entry bewerken",
+  modal_hint: "Vergeet uit te tikken? Voeg gewoon de juiste tijden toe.",
+  btn_close: "Sluiten",
+  btn_save: "Opslaan",
+  btn_delete: "Verwijderen",
   btn_add_manual: "Toevoegen",
-  settle: "Verrekenen",
+  no_entries: "Geen ingevulde data gevonden.",
+
+  lbl_date: "Datum",
+  lbl_type: "Type",
+  lbl_start: "Start (HH:MM)",
+  lbl_end: "Einde (HH:MM)",
+  lbl_pause: "Pauze (min)",
+  lbl_note: "Opmerking (optioneel)",
+  ph_note: "bv. Garage na rit, file, wachten op klant...",
+
+  // --- Errors ---
+  err_choose_date: "Kies een datum.",
+  err_fill_times: "Vul start en einde in (of kies Recup).",
+  err_start_saldo_format: "Start saldo moet in formaat u:min zijn, bv 60:00",
+  err_normday_format: "Norm dag moet in formaat u:min zijn, bv 07:30",
+  err_bad_json: "Ongeldig JSON bestand.",
+  err_timer_short: "Timer is te kort. Gebruik START of + Handmatig.",
+  confirm_delete_entry: "Deze entry verwijderen?",
+
+  // --- General / UI ---
+  tab_day: "Dag-Shift",
+  tab_history: "Historiek",
+  calendar: "Kalender",
+  language: "Taal",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Opslaan",
+  manual: "+ Handmatig",
+  cancel: "Annuleren",
+  ok: "OK",
+
+  status_busy: "Bezig...",
+  status_paused: "Gepauzeerd",
+  status_not_started: "Niet gestart",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+
+  today_work: "Vandaag",
+  week_work: "Deze week",
+  vac_taken: "Opgenomen vakantie",
+  overtime: "Saldo overuren",
   overtime_settled: "Overuren verrekend",
-hours_amount_hhmm: "Aantal uren (HH:MM)",
-day_no_entry: "Geen invoer op deze dag.",
-reconciled: "Verrekend",
-reconciled_remove: "Verrekening verwijderen",
+  minutes: "min",
+  hours: "u",
+  days: "dag",
 
+  // --- Types / labels ---
+  work: "Werk",
+  work_label: "WERK",
+  recup: "Recup",
+  recup_line: "RECUP - gaat van overuren af",
+  sick: "Ziekte",
+  vacation: "Vakantie",
+  holiday: "Feestdag",
+  net_line: "netto",
+  pause_line: "pauze",
 
-      err_start_saldo_format: "Start saldo moet in formaat u:min zijn, bv 60:00",
-      err_normday_format: "Norm dag moet in formaat u:min zijn, bv 7:30",
-      settings_saved: "Instellingen opgeslagen",
-      status_online: "Status: online",
-      status_offline: "Status: offline",
-      err_bad_json: "Ongeldig JSON bestand.",
-      err_timer_short: "Timer is te kort. Gebruik START of + Handmatig.",
-      
-      calendar_info: "Hier krijg je een overzicht per dag. Je ziet wanneer je recup, ziekte, vakantie, feestdag had of gewerkt hebt.\nVerrekeningen worden weergegeven met een groen bolletje.\nTik op een dag om details te bekijken of iets toe te voegen.",
-      settle_info: "Gebruik deze knop wanneer overuren zijn uitbetaald. Het ingegeven aantal uren wordt van je overurensaldo afgetrokken.",
-      norm_day_info: "Dit is het aantal uren dat je normaal per werkdag moet presteren. Pauzes reken je hier niet mee. Alles daarboven telt als overuren.",
-      start_saldo_info: "Dit is het aantal overuren dat je al had vóór deze periode.",
-      default_break_info: "Deze pauze wordt automatisch afgetrokken van je gewerkte tijd wanneer je een dag opslaat. Dit geldt zowel voor de timer als voor handmatige invoer.",
-      recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken."
-    },
+  // --- Detail ---
+  day_no_entry: "Geen invoer op deze dag.",
+  edit_btn: "✎ Bewerken",
+  edit_aria: "Bewerken",
+  note_label: "Opmerking",
+
+  // --- Verrekening ---
+  settle: "Verrekenen",
+  settle_hint: "Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.",
+  verrek_none: "Geen verrekening gevonden op die dag.",
+  verrek_deleted: "Verrekening verwijderd ✓",
+  reconciled: "Verrekend",
+  reconciled_remove: "Verrekening verwijderen",
+  hours_amount_hhmm: "Aantal uren (HH:MM)",
+
+  // --- Settings ---
+  settings: "Opslaan",
+  settings_saved: "Instellingen opgeslagen",
+  start_saldo: "Start saldo overuren (u:min)",
+  default_pause: "Standaard pauze (min)",
+  norm_day: "Duur normale werkdag (u:min)",
+
+  // --- Backup ---
+  backup: "Backup",
+  backup_last: "Laatste backup",
+  backup_never: "nooit",
+  backup_tip: "Tip: Maak regelmatig backup.",
+  import_json: "Import JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "PDF export",
+  pdf_title: "PDF export",
+  pdf_month: "Maand",
+  pdf_dates: "Datums",
+  pdf_from: "Van",
+  pdf_to: "Tot",
+  make_pdf: "Maak PDF",
+
+  // --- Cloud ---
+  cloud_title: "Google login + Cloud sync",
+  cloud_not_available: "Nog niet mogelijk.",
+  login_google: "Inloggen met Google",
+  logout_google: "Uitloggen",
+  cloud_download: "Herstel v Backup",
+  cloud_upload: "Backup Maken",
+  cloud_logged_in: "Ingelogd:",
+  cloud_not_logged: "Niet ingelogd.",
+  cloud_login_error: "Google login fout",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Naam werknemer",
+  employee_name_ph: "Jouw naam",
+  employer_name_label: "Naam werkgever",
+  employer_name_ph: "Naam werkgever",
+
+  // --- Setup modal ---
+  setup_title: "Welkom bij Shift-Tap 👋",
+  setup_intro: "Werkuren, recup en overuren zonder gedoe. Stel eerst even je basisinstellingen in.",
+  setup_lang: "Taal",
+  setup_normday: "Normale werkdag (uren)",
+  setup_norm_hint: "Voorbeeld: 07:30 of 08:00",
+  setup_pause: "Pauze (minuten)",
+  setup_pause_hint: "Dit is uw standaard pauze, deze wordt automatisch afgetrokken.",
+  setup_note: "Je kan deze instellingen later altijd aanpassen bij Instellingen.",
+  setup_done: "Klaar voor gebruik",
+
+  // --- Info bubbles ---
+  calendar_info: "Hier krijg je een overzicht per dag. Je ziet wanneer je recup, ziekte, vakantie, feestdag had of gewerkt hebt.\nVerrekeningen worden weergegeven met een groen bolletje.\nTik op een dag om details te bekijken of iets toe te voegen.",
+  settle_info: "Gebruik deze knop wanneer overuren zijn uitbetaald. Het ingegeven aantal uren wordt van je overurensaldo afgetrokken.",
+  norm_day_info: "Dit is het aantal uren dat je normaal per werkdag moet presteren. Pauzes reken je hier niet mee. Alles daarboven telt als overuren.",
+  start_saldo_info: "Dit is het aantal overuren dat je al had vóór deze periode.",
+  default_break_info: "Deze pauze wordt automatisch afgetrokken van je gewerkte tijd wanneer je een dag opslaat. Dit geldt zowel voor de timer als voor handmatige invoer.",
+  recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken."
+},
+
 
 en: {
 
@@ -1522,7 +1581,7 @@ en: {
   modal_edit_title: "Edit entry",
   modal_hint: "Forgot to clock out? Just add the correct times.",
   history_hint: "Forgot to clock out?<br>Add it manually.",
-  
+
   lbl_date: "Date",
   lbl_type: "Type",
   lbl_start: "Start (HH:MM)",
@@ -1557,7 +1616,7 @@ en: {
   cloud_logged_in: "Logged in:",
   cloud_not_logged: "Not logged in.",
   cloud_login_error: "Google login error",
- 
+
   // ===== Backup =====
   backup: "Backup",
   backup_last: "Last backup",
@@ -1608,7 +1667,6 @@ en: {
   start_saldo: "Start overtime balance (h:mm)",
   default_pause: "Default break (min)",
   norm_day: "Normal workday duration (h:mm)",
-  
 
   // ===== Errors =====
   err_choose_date: "Choose a date.",
@@ -1623,17 +1681,28 @@ en: {
   edit_btn: "✎ Edit",
   edit_aria: "Edit",
   note_label: "Note",
-  
+
+  // ===== Setup modal =====
+  setup_title: "Welcome to Shift-Tap 👋",
+  setup_intro: "Work hours, recup and overtime without hassle. First set your basic settings.",
+  setup_lang: "Language",
+  setup_normday: "Normal workday (hours)",
+  setup_norm_hint: "Example: 07:30 or 08:00",
+  setup_pause: "Break (minutes)",
+  setup_pause_hint: "This is your default break and will be automatically deducted.",
+  setup_note: "You can always change these settings later in Settings.",
+  setup_done: "Ready to use",
+
+  // ===== Info bubbles =====
   calendar_info: "Here you get a daily overview. You can see when you had a comp day, sick leave, vacation, public holiday or worked.\nSettlements are indicated with a green dot.\nTap a day to view details or add an entry.",
   settle_info: "Use this button when overtime hours have been paid out. The entered number of hours will be deducted from your overtime balance.",
   norm_day_info: "This is the number of hours you are expected to work on a normal day. Breaks are not included. Anything above this counts as overtime.",
   start_saldo_info: "This is the overtime balance you already had before this period.",
   default_break_info: "This break is automatically deducted from your worked time when you save a day. This applies to both the timer and manual entries.",
   recup_info: "Use Comp Day when you take a full day off using accumulated overtime. This day will be deducted from your overtime balance."
-  
 },
 
-    fr: {
+fr: {
 
   // ===== Navigation générale =====
   calendar: "Calendrier",
@@ -1746,7 +1815,6 @@ en: {
   start_saldo: "Solde initial heures sup (h:mm)",
   default_pause: "Pause par défaut (min)",
   norm_day: "Durée normale de travail (h:mm)",
-  
 
   // ===== Erreurs =====
   err_choose_date: "Choisis une date.",
@@ -1761,13 +1829,26 @@ en: {
   edit_btn: "✎ Modifier",
   edit_aria: "Modifier",
   note_label: "Remarque",
-  
+
+  // ===== Setup modal (ENKEL 1x) =====
+  setup_title: "Bienvenue sur Shift-Tap 👋",
+  setup_intro: "Heures de travail, récup et heures supplémentaires sans tracas. Configure d'abord tes réglages de base.",
+  setup_lang: "Langue",
+  setup_normday: "Journée normale (heures)",
+  setup_norm_hint: "Exemple : 07:30 ou 08:00",
+  setup_pause: "Pause (minutes)",
+  setup_pause_hint: "Ceci est votre pause standard, elle sera automatiquement déduite.",
+  setup_note: "Vous pouvez toujours modifier ces paramètres plus tard dans les paramètres.",
+  setup_done: "Prêt à l’emploi",
+
+  // ===== Info bubbles =====
   calendar_info: "Ici tu as une vue par jour. Tu vois quand tu avais un jour de récup, maladie, vacances, jour férié ou travaillé.\nLes régularisations sont indiquées par un point vert.\nAppuie sur un jour pour voir les détails ou ajouter une entrée.",
   settle_info: "Utilise ce bouton lorsque des heures supplémentaires ont été payées. Le nombre d’heures saisi sera déduit de ton solde d’heures supplémentaires.",
   norm_day_info: "C'est le nombre d'heures que tu dois normalement prester par jour. Les pauses ne sont pas comprises. Tout ce qui dépasse compte comme heures supplémentaires.",
   start_saldo_info: "Il s'agit du solde d'heures supplémentaires que tu avais avant cette période.",
   default_break_info: "Cette pause est automatiquement déduite de ton temps de travail lorsque tu enregistres une journée. Cela s'applique aussi bien au timer qu'aux entrées manuelles.",
   recup_info: "Utilise Jour de récup lorsque tu prends une journée complète en compensation d’heures supplémentaires. Cette journée sera déduite de ton solde d’heures supplémentaires."
+
 }
   };
 
@@ -3614,6 +3695,16 @@ window.addEventListener("offline", renderOnlineBadge);
    ========================= */
 
 async function init(){
+
+// Stop normale init als setup nog niet gedaan is
+if(!isSetupDone()){
+  const langOverlay = document.getElementById("langOverlay");
+  if(langOverlay){
+    langOverlay.style.display = "flex";
+  }
+  return;
+}
+  // Taal instellen (mag pas na setup)
   const savedLang = localStorage.getItem("lang");
   currentLang = savedLang || state?.settings?.lang || "nl";
 
@@ -3621,6 +3712,8 @@ async function init(){
   state.settings.lang = currentLang;
   localStorage.setItem("lang", currentLang);
   
+  applyLang();
+
   try{
     await handleRedirectLoginResult();
   }catch(e){
@@ -3634,31 +3727,106 @@ async function init(){
   }
 
   bindCloudButtons();
-
   showTab("tab1");
 
-if(state.timer.running){
-  if(!interval) interval = setInterval(()=>{ 
-    updateTimerUI(); 
-    saveState(); 
-  }, 250);
+  if(state.timer.running){
+    if(!interval) interval = setInterval(()=>{ 
+      updateTimerUI(); 
+      saveState(); 
+    }, 250);
+  }
 }
 
-// altijd opnieuw tekenen + vertalen
-renderAll();
-applyLang();
+document.addEventListener("DOMContentLoaded", () => {
+const vEl = document.getElementById("appVersionText");
+if(vEl) vEl.textContent = "v" + APP_VERSION;
 
-// status altijd NA applyLang (juiste taal)
-setStatus(
-  state.timer.running
-    ? "playing"
-    : (state.timer.accMs > 0 ? "paused" : "stopped")
-);
+  // TEST button (alleen actief als setup NIET klaar is)
+  const btn = document.getElementById("btnTestSetup");
+  if(btn){
+    btn.textContent = "SETUP=" + (localStorage.getItem(SETUP_KEY) ?? "null");
+
+    if(!isSetupDone()){
+      btn.style.display = "block";
+      btn.addEventListener("click", () => {
+        markSetupDone();
+        location.reload();
+      });
+    }else{
+      btn.style.display = "none"; // verberg als setup al gedaan is
+    }
+  }
+
+  // ===== SETUP START BUTTON =====
+const setupBtn = document.getElementById("btnSetupStart");
+if (setupBtn) {
+  setupBtn.addEventListener("click", () => {
+
+    const time = document.getElementById("setupNormHours")?.value;
+    const pauseMin = parseInt(document.getElementById("setupPauseMin")?.value, 10);
+
+    if (!time || Number.isNaN(pauseMin)) {
+      alert("Vul beide velden correct in.");
+      return;
+    }
+
+    const [h, m] = time.split(":");
+    const hh = parseInt(h, 10);
+    const mm = parseInt(m, 10);
+
+    if (Number.isNaN(hh) || Number.isNaN(mm)) {
+      alert("Vul beide velden correct in.");
+      return;
+    }
+
+    state.settings = state.settings || {};
+    state.settings.normMinutes = (hh * 60) + mm;
+    state.settings.pauseMinutes = pauseMin;
+    
+      // TAAL OPSLAAN
+  const lang = currentLang || "nl";
+  state.settings.lang = lang;
+  localStorage.setItem("lang", lang);
+  currentLang = lang;
+
+    saveState();
+    markSetupDone();
+
+    const overlay = document.getElementById("setupOverlay");
+    if (overlay) overlay.style.display = "none";
+
+    location.reload();
+  });
 }
+// ===== LANGUAGE MODAL =====
+const langOverlay = document.getElementById("langOverlay");
+const setupOverlay = document.getElementById("setupOverlay");
+
+function openSetupAfterLang(lang){
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+
+  if(state && state.settings){
+    state.settings.lang = lang;
+  }
+
+  applyLang();
+
+  const setupSelect = document.getElementById("setupLang");
+  if(setupSelect) setupSelect.value = lang;
+
+  if(langOverlay) langOverlay.style.display = "none";
+  if(setupOverlay) setupOverlay.style.display = "flex";
+}
+
+document.getElementById("btnLangNl")?.addEventListener("click", () => openSetupAfterLang("nl"));
+document.getElementById("btnLangEn")?.addEventListener("click", () => openSetupAfterLang("en"));
+document.getElementById("btnLangFr")?.addEventListener("click", () => openSetupAfterLang("fr"));
+
 
 init();
+});
 })();
-
 </script>
 <!-- ===== TOEVOEGING CONFIRM MODAL START ===== -->
 <div class="appModalOverlay" id="appModalOverlay" aria-hidden="true">
@@ -3725,6 +3893,99 @@ init();
 <script src="jspdf.umd.min.js"></script>
 <script src="pdf-export.js"></script>
 
+<button id="btnTestSetup" style="display:none; position:fixed; bottom:10px; right:10px; z-index:9999;">
+  TEST Setup Done
+</button>
 
+<!-- ===== LANGUAGE MODAL START ===== -->
+<div class="appModalOverlay" id="langOverlay" style="display:none;" aria-hidden="true">
+  <div class="appModal" role="dialog" aria-modal="true">
+    <div class="appModalBody" style="text-align:center;">
+      <div style="font-size:32px; margin-bottom:10px;">🌍</div>
+      <h2 style="margin:0 0 14px 0;">Choose language</h2>
+
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button type="button" class="btnGhost" id="btnLangNl">Nederlands</button>
+        <button type="button" class="btnGhost" id="btnLangEn">English</button>
+        <button type="button" class="btnGhost" id="btnLangFr">Français</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ===== LANGUAGE MODAL END ===== -->
+
+
+<!-- ===== SETUP MODAL START ===== -->
+<div class="appModalOverlay" id="setupOverlay" style="display:none;" aria-hidden="true">
+  <div class="appModal" role="dialog" aria-modal="true">
+    
+    <div class="appModalBody">
+
+      <h2 data-i18n="setup_title">Welkom bij Shift-Tap 👋</h2>
+
+      <p data-i18n="setup_intro">
+        Werkuren, recup en overuren zonder gedoe.<br>
+        Stel eerst even je basisinstellingen in.
+      </p>
+
+     
+      <!-- instellingen -->
+      <div class="setupGrid">
+
+        <div class="setupField">
+          <label for="setupNormHours" data-i18n="setup_normday">
+            Normale werkdag (uren)
+          </label>
+
+          <input
+            type="time"
+            id="setupNormHours"
+            value="07:30"
+            step="60">
+
+          <div class="setupHint" data-i18n="setup_norm_hint">
+            Voorbeeld: 07:30 of 08:00
+          </div>
+        </div>
+
+        <div class="setupField">
+          <label for="setupPauseMin" data-i18n="setup_pause">
+            Pauze (minuten)
+          </label>
+
+          <input
+            type="number"
+            id="setupPauseMin"
+            step="5"
+            min="0"
+            inputmode="numeric"
+            placeholder="bv. 30">
+
+          <div class="setupHint" data-i18n="setup_pause_hint">
+            Dit is uw standaard pauze, deze wordt automatisch afgetrokken.
+          </div>
+        </div>
+
+      </div>
+
+      <p class="setupNote" data-i18n="setup_note">
+        Je kan deze instellingen later altijd aanpassen bij Instellingen.
+      </p>
+
+    </div>
+
+    <div class="appModalActions">
+      <button
+        type="button"
+        class="btnGreen"
+        id="btnSetupStart"
+        data-i18n="setup_done">
+        Klaar voor gebruik
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- ===== SETUP MODAL END ===== --
 </body>
 </html>
