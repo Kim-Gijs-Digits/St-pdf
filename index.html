@@ -2052,9 +2052,16 @@ verrekenInput?.addEventListener("input", (e) => {
     if(!raw) return defaultState();
     const s = JSON.parse(raw);
 
-    if(!s.settings) 
-      s.settings = { startSaldoMin: 0, normDayMin: NORM_MIN, lang:"nl" };
+s.settings = s.settings || {};
 
+if(typeof s.settings.startSaldoMin !== "number")
+  s.settings.startSaldoMin = 0;
+
+if(typeof s.settings.normDayMin !== "number")
+  s.settings.normDayMin = NORM_MIN;
+
+if(typeof s.settings.lang !== "string")
+  s.settings.lang = "nl";
     if(typeof s.settings.employeeName !== "string") 
       s.settings.employeeName = "";
 
