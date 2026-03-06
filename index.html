@@ -2062,12 +2062,12 @@ if(typeof s.settings.normDayMin !== "number")
 
 if(typeof s.settings.lang !== "string")
   s.settings.lang = "nl";
-    if(typeof s.settings.employeeName !== "string") 
-      s.settings.employeeName = "";
 
-    if(typeof s.settings.employerName !== "string") 
-      s.settings.employerName = "";
+if(typeof s.settings.employeeName !== "string")
+  s.settings.employeeName = "";
 
+if(typeof s.settings.employerName !== "string")
+  s.settings.employerName = "";
     if(!s.timer)    
       s.timer = { running:false, startMs:null, accMs:0 };
 
