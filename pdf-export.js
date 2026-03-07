@@ -201,15 +201,7 @@ it: {
   };
 
   function getLang(state){
-
-  // 1️⃣ eerst kijken naar taal van app (UI)
-  let l = (localStorage.getItem("lang") || "").toLowerCase();
-
-  // 2️⃣ fallback naar state
-  if(!l){
-    l = (state?.settings?.lang || "nl").toLowerCase();
-  }
-
+  const l = (state?.settings?.lang || "nl").toLowerCase();
   if (l.startsWith("en")) return "en";
   if (l.startsWith("fr")) return "fr";
   if (l.startsWith("de")) return "de";
@@ -217,7 +209,6 @@ it: {
   if (l.startsWith("es")) return "es";
   if (l.startsWith("hu")) return "hu";
   if (l.startsWith("it")) return "it";
-
   return "nl";
 }
 
@@ -540,9 +531,14 @@ it: {
       // Build one row per entry (not per day) so it matches the detailed style
       for(const e of dayEntries){
         const type = e.type || "";
-        const start = e.start || "";
-        const end   = e.end || "";
-        const netMin = e.netMin || 0;
+let start = e.start || "";
+let end   = e.end || "";
+const netMin = e.netMin || 0;
+
+if(type !== "Werk"){
+  start = "—";
+  end = "—";
+}
 
         // totals
         if(type === "Werk") totalWorkNet += netMin;
@@ -576,7 +572,7 @@ it: {
           dmy(day),
           start,
           end,
-          minutesToHM(netMin, L.unitsH),
+          (type === "Werk") ? minutesToHM(netMin, L.unitsH) : "—",
           formatPlusMinus(delta, L.unitsH),
           info,
           remarks
