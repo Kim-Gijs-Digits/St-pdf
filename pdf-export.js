@@ -549,25 +549,16 @@ if(type !== "Werk"){
         else if(type === "Recup") delta = -normDayMin;
         else delta = 0;
 
-        // Info/opmerkingen split
-        const note = (e.note || "").trim();
-        const shortLen = 36;
-        let info = "";
-        let remarks = "";
+ // Info/opmerkingen split
+const note = (e.note || "").trim();
+let info = "";
+let remarks = "";
 
-        if(note){
-          if(note.length > shortLen){
-            info = note.slice(0, shortLen).trimEnd() + "…";
-            remarks = note;
-          }else{
-            info = note;
-            remarks = "";
-          }
-        }else{
-          info = L.infoByType[type] ?? (L.types[type] || type);
-          remarks = "";
-        }
-
+if(note){
+  remarks = note;   // handmatige notities altijd bij Opmerkingen
+}else{
+  info = L.infoByType[type] ?? (L.types[type] || type);
+}
         rows.push([
           dmy(day),
           start,
