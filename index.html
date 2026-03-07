@@ -3980,85 +3980,87 @@ return hasNorm
     });
   }
 
-  /* =========================
-     Modal (manual add/edit)
-     ========================= */
-  let editingId = null;
+/* =========================
+   Modal (manual add/edit)
+   ========================= */
+let editingId = null;
 
-  function openModal(mode, entry=null){
-    editingId = entry ? entry.id : null;
+function openModal(mode, entry=null){
+  editingId = entry ? entry.id : null;
 
-    if(modalTitle){
-      modalTitle.textContent = mode==="edit" ? t("modal_edit_title") : t("modal_add_title");
-    }
+  if(modalTitle){
+    modalTitle.textContent = mode==="edit" ? t("modal_edit_title") : t("modal_add_title");
+  }
 
-    if(btnDeleteInModal){
-      btnDeleteInModal.style.display = mode==="edit" ? "inline-block" : "none";
-    }
+  if(btnDeleteInModal){
+    btnDeleteInModal.style.display = mode==="edit" ? "inline-block" : "none";
+  }
 
-    if(mDate) mDate.value = entry?.date || ymd(new Date());
-    if(mType) mType.value = entry?.type || "Werk";
+  if(mDate) mDate.value = entry?.date || ymd(new Date());
+  if(mType) mType.value = entry?.type || "Werk";
 
-    const effType = entry?.type || (mType ? mType.value : "Werk");
+  const effType = entry?.type || (mType ? mType.value : "Werk");
+  const isZeroType = (effType === "Ziekte" || effType === "Vakantie" || effType === "Feestdag");
 
-if(effType==="Recup"){
-  if(mStartH) mStartH.value = "00";
-  if(mStartM) mStartM.value = "00";
-  if(mEndH)   mEndH.value   = "00";
-  if(mEndM)   mEndM.value   = "00";
-  if(mPause)  mPause.value  = 0;
-}else{
-  const startVal = entry?.start || "06:00";
-  const endVal   = entry?.end   || "14:00";
+  if(effType === "Recup" || isZeroType){
+    if(mStartH){ mStartH.value = "00"; mStartH.disabled = true; }
+    if(mStartM){ mStartM.value = "00"; mStartM.disabled = true; }
+    if(mEndH){ mEndH.value = "00"; mEndH.disabled = true; }
+    if(mEndM){ mEndM.value = "00"; mEndM.disabled = true; }
+    if(mPause){ mPause.value = 0; mPause.disabled = true; }
+  }else{
+    const startVal = entry?.start || "06:00";
+    const endVal   = entry?.end   || "14:00";
 
-  const [sh, sm] = startVal.split(":");
-  const [eh, em] = endVal.split(":");
+    const [sh, sm] = startVal.split(":");
+    const [eh, em] = endVal.split(":");
 
-  if(mStartH) mStartH.value = sh || "06";
-  if(mStartM) mStartM.value = sm || "00";
-  if(mEndH)   mEndH.value   = eh || "14";
-  if(mEndM)   mEndM.value   = em || "00";
-  if(mPause)  mPause.value  = entry?.pauseMin ?? 30;
+    if(mStartH){ mStartH.value = sh || "06"; mStartH.disabled = false; }
+    if(mStartM){ mStartM.value = sm || "00"; mStartM.disabled = false; }
+    if(mEndH){ mEndH.value = eh || "14"; mEndH.disabled = false; }
+    if(mEndM){ mEndM.value = em || "00"; mEndM.disabled = false; }
+    if(mPause){ mPause.value = entry?.pauseMin ?? 30; mPause.disabled = false; }
+  }
+
+  if(mNote) mNote.value = entry?.note || "";
+
+  if(modalBack) modalBack.style.display = "flex";
+  applyLang();
 }
 
-    if(mNote) mNote.value = entry?.note || "";
+function closeModal(){
+  if(modalBack) modalBack.style.display = "none";
+  editingId = null;
+}
 
-    if(modalBack) modalBack.style.display = "flex";
-    applyLang();
-  }
-
-  function closeModal(){
-    if(modalBack) modalBack.style.display = "none";
-    editingId = null;
-  }
-
-  function netFromFields(type, start, end, pauseMin){
+function netFromFields(type, start, end, pauseMin){
   // Deze types tellen niet mee als werkuren (0 min)
   if(type === "Ziekte" || type === "Vakantie" || type === "Feestdag"){
     return 0;
   }
-  
-if(type === "Recup"){
-  return state?.settings?.normDayMin ?? NORM_MIN;
+
+  // Recup = volledige normale werkdag
+  if(type === "Recup"){
+    return state?.settings?.normDayMin ?? NORM_MIN;
+  }
+
+  const s = timeToMin(start);
+  const e = timeToMin(end);
+  if(s == null || e == null) return null;
+
+  let dur = e - s;
+  if(dur < 0) dur += 24 * 60;
+
+  return Math.max(0, dur - pauseMin);
 }
 
-const s = timeToMin(start);
-const e = timeToMin(end);
-if(s==null || e==null) return null;
-
-let dur = e - s;
-if(dur < 0) dur += 24*60;
-
-return Math.max(0, dur - pauseMin);
-}
-
-  function saveModal(){
+function saveModal(){
   const date = mDate?.value;
   const type = mType?.value || "Werk";
 
   // lees velden (mag leeg zijn bij sommige types)
   let start = `${mStartH?.value || "00"}:${mStartM?.value || "00"}`;
-let end   = `${mEndH?.value || "00"}:${mEndM?.value || "00"}`;
+  let end   = `${mEndH?.value || "00"}:${mEndM?.value || "00"}`;
   let pauseMin = clamp(parseInt(mPause?.value || "0", 10) || 0, 0, 600);
 
   if(!date){
@@ -4068,14 +4070,14 @@ let end   = `${mEndH?.value || "00"}:${mEndM?.value || "00"}`;
 
   const isZeroType = (type === "Ziekte" || type === "Vakantie" || type === "Feestdag");
 
-  // ✅ Zero-types: geen tijden nodig, alles naar null/0
-  if(isZeroType){
+  // Zero-types en recup hebben geen tijden nodig
+  if(type === "Recup" || isZeroType){
     start = null;
     end = null;
     pauseMin = 0;
   }
 
-  const netMin = isZeroType ? 0 : netFromFields(type, start, end, pauseMin);
+  const netMin = netFromFields(type, start, end, pauseMin);
 
   if(netMin == null){
     showToast(t("err_fill_times"));
@@ -4116,44 +4118,43 @@ let end   = `${mEndH?.value || "00"}:${mEndM?.value || "00"}`;
   renderAll();
 }
 
-  mType?.addEventListener("change", ()=>{
+mType?.addEventListener("change", ()=>{
   const v = mType.value;
+  const isZeroType = (v === "Ziekte" || v === "Vakantie" || v === "Feestdag");
 
-  const isZeroType = (v==="Ziekte" || v==="Vakantie" || v==="Feestdag");
+  if(v === "Recup" || isZeroType){
 
-if(v==="Recup" || isZeroType){
+    if(mStartH){ mStartH.value = "00"; mStartH.disabled = true; }
+    if(mStartM){ mStartM.value = "00"; mStartM.disabled = true; }
 
-  if(mStartH) mStartH.value = "00";
-  if(mStartM) mStartM.value = "00";
+    if(mEndH){ mEndH.value = "00"; mEndH.disabled = true; }
+    if(mEndM){ mEndM.value = "00"; mEndM.disabled = true; }
 
-  if(mEndH) mEndH.value = "00";
-  if(mEndM) mEndM.value = "00";
+    if(mPause){ mPause.value = 0; mPause.disabled = true; }
 
-  if(mPause) mPause.value = 0;
+  }else{
 
-}else{
+    if(mStartH){ mStartH.disabled = false; if(!mStartH.value) mStartH.value = "08"; }
+    if(mStartM){ mStartM.disabled = false; if(!mStartM.value) mStartM.value = "00"; }
 
-  if(mStartH && !mStartH.value) mStartH.value = "08";
-  if(mStartM && !mStartM.value) mStartM.value = "00";
+    if(mEndH){ mEndH.disabled = false; if(!mEndH.value) mEndH.value = "15"; }
+    if(mEndM){ mEndM.disabled = false; if(!mEndM.value) mEndM.value = "30"; }
 
-  if(mEndH && !mEndH.value) mEndH.value = "15";
-  if(mEndM && !mEndM.value) mEndM.value = "30";
+    if(mPause){ mPause.disabled = false; if(!mPause.value) mPause.value = 30; }
 
-  if(mPause && !mPause.value) mPause.value = 30;
-
-}
-});
-  function deleteEditing(){
-    if(!editingId) return;
-    openConfirm(t("confirm_delete_entry"), () => {
-      const idx = state.entries.findIndex(e=>e.id===editingId);
-      if(idx>=0) state.entries[idx].deletedAt = Date.now();
-      saveState();
-      closeModal();
-      renderAll();
-    });
   }
+});
 
+function deleteEditing(){
+  if(!editingId) return;
+  openConfirm(t("confirm_delete_entry"), () => {
+    const idx = state.entries.findIndex(e=>e.id===editingId);
+    if(idx>=0) state.entries[idx].deletedAt = Date.now();
+    saveState();
+    closeModal();
+    renderAll();
+  });
+}
   /* =========================
      History rendering
      ========================= */
