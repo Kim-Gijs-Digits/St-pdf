@@ -549,17 +549,18 @@ if(type !== "Werk"){
         else if(type === "Recup") delta = -normDayMin;
         else delta = 0;
 
- // Info/opmerkingen split
+// Info/opmerkingen split
 const note = (e.note || "").trim();
 let info = "";
 let remarks = "";
 
 if(note){
-  remarks = note;   // handmatige notities altijd bij Opmerkingen
-}else{
+  remarks = note;           // notities altijd naar Opmerkingen
+}else if(type !== "Werk"){
   info = L.infoByType[type] ?? (L.types[type] || type);
-}
-        rows.push([
+} 
+rows.push([
+
           dmy(day),
           start,
           end,
