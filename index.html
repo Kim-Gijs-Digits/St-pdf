@@ -4038,17 +4038,19 @@ if(effType==="Recup"){
     return 0;
   }
   
-    if(type==="Recup") return RECUP_MIN;
+if(type === "Recup"){
+  return state?.settings?.normDayMin ?? NORM_MIN;
+}
 
-    const s = timeToMin(start);
-    const e = timeToMin(end);
-    if(s==null || e==null) return null;
+const s = timeToMin(start);
+const e = timeToMin(end);
+if(s==null || e==null) return null;
 
-    let dur = e - s;
-    if(dur < 0) dur += 24*60;
+let dur = e - s;
+if(dur < 0) dur += 24*60;
 
-    return Math.max(0, dur - pauseMin);
-  }
+return Math.max(0, dur - pauseMin);
+}
 
   function saveModal(){
   const date = mDate?.value;
