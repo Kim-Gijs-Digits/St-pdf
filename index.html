@@ -874,6 +874,41 @@ margin-bottom: 16px;
 .setupLangSelect{
   flex:1;
 }
+/* ===== Shift-Tap style voor uur/minuut dropdowns ===== */
+.timeSelectRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.timeSelect{
+  height:52px;
+  min-width:68px;
+  padding:0 10px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.10);
+  color:rgba(255,255,255,.92);
+  font-weight:900;
+  font-size:18px;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
+  appearance:auto;
+  -webkit-appearance:menulist;
+  -moz-appearance:menulist;
+  text-align:center;
+}
+
+.timeSelect.small{
+  min-width:74px;
+}
+
+.timeColon{
+  font-weight:900;
+  font-size:22px;
+  color:rgba(255,255,255,.92);
+  line-height:1;
+  transform:translateY(-1px);
+}
 </style>
 </head>
 
@@ -888,7 +923,7 @@ margin-bottom: 16px;
             <img src="ST-logo.png" alt="Shift Tap logo" class="app-logo">
             <div class="app-title-wrap">
               <h1>Shift-Tap</h1>
-<div class="sub" id="appVersionText">v2.0.2</div>
+<div class="sub" id="appVersionText"></div>
             </div>
           </div>
 
@@ -1101,14 +1136,88 @@ margin-bottom: 16px;
 
 <!-- Start saldo -->
 <div class="label-with-info">
-  <label for="startSaldoInput" data-i18n="start_saldo">
-    Start saldo overuren (u:min)
-  </label>
+<label data-i18n="start_saldo">
+  Start saldo overuren (u:min)
+</label>
   <span class="info-icon" id="infoStartSaldo">ⓘ</span>
 <div class="info-bubble" id="bubbleStartSaldo" data-i18n="start_saldo_info"></div>
 </div>
 
-<input id="startSaldoInput" type="text" value="0:00" placeholder="60:00" />
+<div class="timeSelectRow">
+<select id="startSaldoH" class="timeSelect">
+    <option>00</option><option>01</option><option>02</option><option>03</option>
+    <option>04</option><option>05</option><option>06</option><option>07</option>
+    <option>08</option><option>09</option><option>10</option><option>11</option>
+    <option>12</option><option>13</option><option>14</option><option>15</option>
+    <option>16</option><option>17</option><option>18</option><option>19</option>
+    <option>20</option><option>21</option><option>22</option><option>23</option>
+
+  </select>
+  <span class="timeColon">:</span>
+<select id="startSaldoM" class="timeSelect">
+  <option>00</option>
+  <option>01</option>
+  <option>02</option>
+  <option>03</option>
+  <option>04</option>
+  <option>05</option>
+  <option>06</option>
+  <option>07</option>
+  <option>08</option>
+  <option>09</option>
+  <option>10</option>
+  <option>11</option>
+  <option>12</option>
+  <option>13</option>
+  <option>14</option>
+  <option>15</option>
+  <option>16</option>
+  <option>17</option>
+  <option>18</option>
+  <option>19</option>
+  <option>20</option>
+  <option>21</option>
+  <option>22</option>
+  <option>23</option>
+  <option>24</option>
+  <option>25</option>
+  <option>26</option>
+  <option>27</option>
+  <option>28</option>
+  <option>29</option>
+  <option>30</option>
+  <option>31</option>
+  <option>32</option>
+  <option>33</option>
+  <option>34</option>
+  <option>35</option>
+  <option>36</option>
+  <option>37</option>
+  <option>38</option>
+  <option>39</option>
+  <option>40</option>
+  <option>41</option>
+  <option>42</option>
+  <option>43</option>
+  <option>44</option>
+  <option>45</option>
+  <option>46</option>
+  <option>47</option>
+  <option>48</option>
+  <option>49</option>
+  <option>50</option>
+  <option>51</option>
+  <option>52</option>
+  <option>53</option>
+  <option>54</option>
+  <option>55</option>
+  <option>56</option>
+  <option>57</option>
+  <option>58</option>
+  <option>59</option>
+
+  </select>
+</div>
 
 <div class="sp"></div>
 
@@ -1120,19 +1229,61 @@ margin-bottom: 16px;
   <span class="info-icon" id="infoDefaultBreak">ⓘ</span>
   <div class="info-bubble" id="bubbleDefaultBreak" data-i18n="default_break_info"></div>
 </div>
-    <input id="pauseMin" type="number" min="0" step="5" value="30" />
+<select id="pauseMin" class="timeSelect">
+  <option value="0">0</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+  <option value="25">25</option>
+  <option value="30" selected>30</option>
+  <option value="35">35</option>
+  <option value="40">40</option>
+  <option value="45">45</option>
+  <option value="50">50</option>
+  <option value="55">55</option>
+  <option value="60">60</option>
+</select>
 
     <div class="hr"></div>
 
     <!-- Normale werkdag -->
 <div class="label-with-info">
-  <label for="normDayInput" data-i18n="norm_day">
+<label data-i18n="norm_day">
     Duur normale werkdag (u:min)
   </label>
   <span class="info-icon" id="infoNormDay">ⓘ</span>
   <div class="info-bubble" id="bubbleNormDay" data-i18n="norm_day_info"></div>
 </div>
-    <input id="normDayInput" type="text" value="7:30" placeholder="7:30" />
+<div class="timeSelectRow">
+
+  <select id="normDayH" class="timeSelect">
+    <option>00</option><option>01</option><option>02</option><option>03</option>
+    <option>04</option><option>05</option><option>06</option><option>07</option>
+    <option>08</option><option>09</option><option>10</option><option>11</option>
+    <option>12</option><option>13</option><option>14</option><option>15</option>
+    <option>16</option><option>17</option><option>18</option><option>19</option>
+    <option>20</option><option>21</option><option>22</option><option>23</option>
+  </select>
+
+  <span class="timeColon">:</span>
+
+  <select id="normDayM" class="timeSelect">
+    <option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+    <option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+    <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+    <option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+    <option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+    <option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+    <option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+    <option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+    <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+    <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+    <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+    <option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+  </select>
+
+</div>
 
     <div class="row" style="margin-top:16px;">
       <button class="btnGhost" id="btnSaveSettings" data-i18n="settings">
@@ -1216,22 +1367,85 @@ margin-bottom: 16px;
     </div>
   </div>
 
-  <div class="row3">
-    <div>
-      <label for="mStart" data-i18n="lbl_start">Start (HH:MM)</label>
-      <input id="mStart" type="time">
-    </div>
+<div class="row3">
+  <div>
+    <label data-i18n="lbl_start">Start (HH:MM)</label>
+    <div class="timeSelectRow">
+<select id="mStartH" class="timeSelect">
+        <option>00</option><option>01</option><option>02</option><option>03</option>
+        <option>04</option><option>05</option><option>06</option><option>07</option>
+        <option>08</option><option>09</option><option>10</option><option>11</option>
+        <option>12</option><option>13</option><option>14</option><option>15</option>
+        <option>16</option><option>17</option><option>18</option><option>19</option>
+        <option>20</option><option>21</option><option>22</option><option>23</option>
+      </select>
+<span class="timeColon">:</span>
+<select id="mStartM" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+<option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+<option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+<option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+<option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+<option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+<option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+<option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+<option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
 
-    <div>
-      <label for="mEnd" data-i18n="lbl_end">Einde (HH:MM)</label>
-      <input id="mEnd" type="time">
-    </div>
-
-    <div>
-      <label for="mPause" data-i18n="lbl_pause">Pauze (min)</label>
-      <input id="mPause" type="number" min="0" step="5" value="30">
+      </select>
     </div>
   </div>
+
+  <div>
+    <label data-i18n="lbl_end">Einde (HH:MM)</label>
+<div class="timeSelectRow">
+<select id="mEndH" class="timeSelect">
+        <option>00</option><option>01</option><option>02</option><option>03</option>
+        <option>04</option><option>05</option><option>06</option><option>07</option>
+        <option>08</option><option>09</option><option>10</option><option>11</option>
+        <option>12</option><option>13</option><option>14</option><option>15</option>
+        <option>16</option><option>17</option><option>18</option><option>19</option>
+        <option>20</option><option>21</option><option>22</option><option>23</option>
+      </select>
+<span class="timeColon">:</span>
+<select id="mEndM" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+<option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+<option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+<option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+<option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+<option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+<option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+<option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+<option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label for="mPause" data-i18n="lbl_pause">Pauze (min)</label>
+    <select id="mPause">
+      <option value="0">0</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30" selected>30</option>
+      <option value="35">35</option>
+      <option value="40">40</option>
+      <option value="45">45</option>
+      <option value="50">50</option>
+      <option value="55">55</option>
+      <option value="60">60</option>
+    </select>
+  </div>
+</div>
 
   <div class="sp"></div>
 
@@ -1300,7 +1514,7 @@ window.onerror = function(message, source, lineno, colno, error){
      ========================= */
   const APP_ID = "shifttap";
 const APP_CHANNEL = "stable_met_gmail_pdf_setuppagev1";
-const APP_VERSION = "2.0.3";
+const APP_VERSION = "2.0.4";
 
 
 
@@ -2860,7 +3074,8 @@ function scheduleCloudPush(){
   const elTimer           = document.getElementById("timer");
   const elStatus          = document.getElementById("status");
   const elPauseMin        = document.getElementById("pauseMin");
-  const elNormDayInput    = document.getElementById("normDayInput");
+  const elNormDayH = document.getElementById("normDayH");
+const elNormDayM = document.getElementById("normDayM");
 
   const elTodayWork       = document.getElementById("todayWork");
   const elWeekWork        = document.getElementById("weekWork");
@@ -2879,7 +3094,8 @@ const elVacTaken = document.getElementById("vacTaken");
   const elOnlineBadge     = document.getElementById("onlineBadge");
   const elLastBackupText  = document.getElementById("lastBackupText");
   const btnBackupNow      = document.getElementById("btnBackupNow");
-  const elStartSaldoInput = document.getElementById("startSaldoInput");
+  const elStartSaldoH = document.getElementById("startSaldoH");
+const elStartSaldoM = document.getElementById("startSaldoM");
 
 const infoStartSaldo = document.getElementById("infoStartSaldo");
 const bubbleStartSaldo = document.getElementById("bubbleStartSaldo");
@@ -2970,8 +3186,10 @@ document.addEventListener("click", closeAllBubbles);
   const btnDeleteInModal  = document.getElementById("btnDeleteInModal");
   const mDate             = document.getElementById("mDate");
   const mType             = document.getElementById("mType");
-  const mStart            = document.getElementById("mStart");
-  const mEnd              = document.getElementById("mEnd");
+  const mStartH = document.getElementById("mStartH");
+const mStartM = document.getElementById("mStartM");
+const mEndH   = document.getElementById("mEndH");
+const mEndM   = document.getElementById("mEndM");
   const mPause            = document.getElementById("mPause");
   const mNote             = document.getElementById("mNote");
   const elCalGrid  = document.getElementById("calGrid");
@@ -3783,15 +4001,25 @@ return hasNorm
 
     const effType = entry?.type || (mType ? mType.value : "Werk");
 
-    if(effType==="Recup"){
-      if(mStart) mStart.value = "";
-      if(mEnd)   mEnd.value   = "";
-      if(mPause) mPause.value = 0;
-    }else{
-      if(mStart) mStart.value = entry?.start || "06:00";
-      if(mEnd)   mEnd.value   = entry?.end   || "14:00";
-      if(mPause) mPause.value = entry?.pauseMin ?? 30;
-    }
+if(effType==="Recup"){
+  if(mStartH) mStartH.value = "00";
+  if(mStartM) mStartM.value = "00";
+  if(mEndH)   mEndH.value   = "00";
+  if(mEndM)   mEndM.value   = "00";
+  if(mPause)  mPause.value  = 0;
+}else{
+  const startVal = entry?.start || "06:00";
+  const endVal   = entry?.end   || "14:00";
+
+  const [sh, sm] = startVal.split(":");
+  const [eh, em] = endVal.split(":");
+
+  if(mStartH) mStartH.value = sh || "06";
+  if(mStartM) mStartM.value = sm || "00";
+  if(mEndH)   mEndH.value   = eh || "14";
+  if(mEndM)   mEndM.value   = em || "00";
+  if(mPause)  mPause.value  = entry?.pauseMin ?? 30;
+}
 
     if(mNote) mNote.value = entry?.note || "";
 
@@ -3827,8 +4055,8 @@ return hasNorm
   const type = mType?.value || "Werk";
 
   // lees velden (mag leeg zijn bij sommige types)
-  let start = (mStart?.value || "").trim();
-  let end   = (mEnd?.value || "").trim();
+  let start = `${mStartH?.value || "00"}:${mStartM?.value || "00"}`;
+let end   = `${mEndH?.value || "00"}:${mEndM?.value || "00"}`;
   let pauseMin = clamp(parseInt(mPause?.value || "0", 10) || 0, 0, 600);
 
   if(!date){
@@ -3891,15 +4119,27 @@ return hasNorm
 
   const isZeroType = (v==="Ziekte" || v==="Vakantie" || v==="Feestdag");
 
-  if(v==="Recup" || isZeroType){
-    if(mStart) mStart.value = "";
-    if(mEnd)   mEnd.value   = "";
-    if(mPause) mPause.value = 0;
-  }else{
-    if(mStart && !mStart.value) mStart.value = "08:00";
-    if(mEnd   && !mEnd.value)   mEnd.value   = "15:30";
-    if(mPause && !mPause.value) mPause.value = 30;
-  }
+if(v==="Recup" || isZeroType){
+
+  if(mStartH) mStartH.value = "00";
+  if(mStartM) mStartM.value = "00";
+
+  if(mEndH) mEndH.value = "00";
+  if(mEndM) mEndM.value = "00";
+
+  if(mPause) mPause.value = 0;
+
+}else{
+
+  if(mStartH && !mStartH.value) mStartH.value = "08";
+  if(mStartM && !mStartM.value) mStartM.value = "00";
+
+  if(mEndH && !mEndH.value) mEndH.value = "15";
+  if(mEndM && !mEndM.value) mEndM.value = "30";
+
+  if(mPause && !mPause.value) mPause.value = 30;
+
+}
 });
   function deleteEditing(){
     if(!editingId) return;
@@ -4297,11 +4537,24 @@ async function wireCloudAuthUI(){
    Settings
    ========================= */
 function renderSettings(){
-  if(elStartSaldoInput)
-    elStartSaldoInput.value = formatHM(state.settings.startSaldoMin || 0);
+  const startSaldoTxt = formatHM(state.settings.startSaldoMin || 0);
+let [ssh, ssm] = startSaldoTxt.split(":");
 
-  if(elNormDayInput)
-    elNormDayInput.value = formatHM(state.settings.normDayMin ?? NORM_MIN);
+ssh = String(ssh || "00").padStart(2,"0");
+ssm = String(ssm || "00").padStart(2,"0");
+
+if(elStartSaldoH) elStartSaldoH.value = ssh;
+if(elStartSaldoM) elStartSaldoM.value = ssm;
+
+  const normTxt = formatHM(state.settings.normDayMin ?? NORM_MIN);
+let [nh, nm] = normTxt.split(":");
+
+nh = String(nh || "07").padStart(2,"0");
+nm = String(nm || "30").padStart(2,"0");
+
+if(elNormDayH) elNormDayH.value = nh;
+if(elNormDayM) elNormDayM.value = nm;
+  if(elPauseMin) elPauseMin.value = String(state.settings.pauseMin ?? 30);
 
   const emp = document.getElementById("employeeName");
   const emr = document.getElementById("employerName");
@@ -4311,12 +4564,21 @@ function renderSettings(){
 }
 
 function saveSettings(){
-  const mins = parseHM(elStartSaldoInput?.value);
-  if(mins==null){ showToast(t("err_start_saldo_format"), "warn"); return; }
+  const startSaldoTxt = `${elStartSaldoH?.value || "00"}:${elStartSaldoM?.value || "00"}`;
+  const mins = parseHM(startSaldoTxt);
 
-  const norm = parseHM(elNormDayInput?.value);
-  if(norm==null){ showToast(t("err_normday_format"), "warn"); return; }
+  if(mins==null){
+    showToast(t("err_start_saldo_format"), "warn");
+    return;
+  }
 
+  const normTxt = `${elNormDayH?.value || "00"}:${elNormDayM?.value || "00"}`;
+  const norm = parseHM(normTxt);
+
+  if(norm==null){
+    showToast(t("err_normday_format"), "warn");
+    return;
+  }
   state.settings.startSaldoMin = mins;
   state.settings.normDayMin = norm;
   state.settings.lang = currentLang;
@@ -4581,19 +4843,14 @@ const setupBtn = document.getElementById("btnSetupStart");
 if (setupBtn) {
   setupBtn.addEventListener("click", () => {
 
-    const time = document.getElementById("setupNormHours")?.value;
+    const hhStr = document.getElementById("setupNormHoursH")?.value || "00";
+    const mmStr = document.getElementById("setupNormHoursM")?.value || "00";
     const pauseMin = parseInt(document.getElementById("setupPauseMin")?.value, 10);
 
-    if (!time || Number.isNaN(pauseMin)) {
-      showToast(t("setup_fill_fields"), "warn");
-      return;
-    }
+    const hh = parseInt(hhStr, 10);
+    const mm = parseInt(mmStr, 10);
 
-    const [h, m] = time.split(":");
-    const hh = parseInt(h, 10);
-    const mm = parseInt(m, 10);
-
-    if (Number.isNaN(hh) || Number.isNaN(mm)) {
+    if (Number.isNaN(hh) || Number.isNaN(mm) || Number.isNaN(pauseMin)) {
       showToast(t("setup_fill_fields"), "warn");
       return;
     }
@@ -4771,15 +5028,57 @@ init();
       <div class="setupGrid">
 
         <div class="setupField">
-          <label for="setupNormHours" data-i18n="setup_normday">
+   <label data-i18n="setup_normday">
             Normale werkdag (uren)
           </label>
 
-<input
-  type="time"
-  id="setupNormHours"
-  value="00:00"
-  step="60">
+<div class="timeSelectRow">
+  
+<select id="setupNormHoursH" class="timeSelect">
+<option>00</option>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+</select>
+
+<span class="timeColon">:</span>
+
+<select id="setupNormHoursM" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+<option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+<option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+<option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+<option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+<option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+<option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+<option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+<option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+</select>
+
+</div>
   
           <div class="setupHint" data-i18n="setup_norm_hint">
             Voorbeeld: 07:30 of 08:00
@@ -4791,13 +5090,23 @@ init();
             Pauze (minuten)
           </label>
 
-          <input
-            type="number"
-            id="setupPauseMin"
-            step="5"
-            min="0"
-            inputmode="numeric"
-            placeholder="bv. 30">
+     <select id="setupPauseMin">
+
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+
+</select>
 
           <div class="setupHint" data-i18n="setup_pause_hint">
             Dit is uw standaard pauze, deze wordt automatisch afgetrokken.
