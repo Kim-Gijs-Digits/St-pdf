@@ -201,7 +201,15 @@ it: {
   };
 
   function getLang(state){
-  const l = (state?.settings?.lang || "nl").toLowerCase();
+
+  // 1️⃣ eerst kijken naar taal van app (UI)
+  let l = (localStorage.getItem("lang") || "").toLowerCase();
+
+  // 2️⃣ fallback naar state
+  if(!l){
+    l = (state?.settings?.lang || "nl").toLowerCase();
+  }
+
   if (l.startsWith("en")) return "en";
   if (l.startsWith("fr")) return "fr";
   if (l.startsWith("de")) return "de";
@@ -209,6 +217,7 @@ it: {
   if (l.startsWith("es")) return "es";
   if (l.startsWith("hu")) return "hu";
   if (l.startsWith("it")) return "it";
+
   return "nl";
 }
 
