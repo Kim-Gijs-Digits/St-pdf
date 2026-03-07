@@ -3376,7 +3376,12 @@ function typeAbbr(type){
   const abbr = {
     nl: { Werk:"W",  Recup:"R",   Ziekte:"Z", Vakantie:"V", Feestdag:"F" },
     fr: { Werk:"TR", Recup:"JDR", Ziekte:"M", Vakantie:"V", Feestdag:"JF" },
-    en: { Werk:"W",  Recup:"CD",  Ziekte:"SL", Vakantie:"V", Feestdag:"PH" }
+    en: { Werk:"W",  Recup:"CD",  Ziekte:"SL", Vakantie:"V", Feestdag:"PH" },
+    de:{Werk:"A",Recup:"Au",Ziekte:"K",Vakantie:"U",Feestdag:"F"},
+    it:{Werk:"L",Recup:"R",Ziekte:"M",Vakantie:"V",Feestdag:"F"},
+    es:{Werk:"T",Recup:"R",Ziekte:"E",Vakantie:"V",Feestdag:"F"},
+    pl:{Werk:"P",Recup:"R",Ziekte:"C",Vakantie:"U",Feestdag:"S"},
+    hu:{Werk:"M",Recup:"R",Ziekte:"B",Vakantie:"S",Feestdag:"Ü"}
   };
 
   const map = abbr[currentLang] || abbr.nl;
