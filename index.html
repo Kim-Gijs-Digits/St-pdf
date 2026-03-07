@@ -3063,7 +3063,6 @@ function scheduleCloudPush(){
 
   function saveState(){ 
   localStorage.setItem(STORE_KEY, JSON.stringify(state)); 
-  scheduleCloudPush();
 }
   function saveMeta(){ localStorage.setItem(META_KEY, JSON.stringify(meta)); }
 
@@ -4303,7 +4302,8 @@ if(list.length===0){
         if(!state.settings) state.settings = { startSaldoMin:0, normDayMin:NORM_MIN, lang:"nl" };
         if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
         if(!Array.isArray(state.entries)) state.entries = [];
-        if(!meta) meta = { lastBackupAt:null, lastBackupName:null };
+        if(!meta) meta = { lastBackupAt:null, lastBackupName:null, lastAutoBackupAt:null };
+        if(!("lastAutoBackupAt" in meta)) meta.lastAutoBackupAt = null;
 
         saveState(); saveMeta();
         renderAll();
@@ -4500,7 +4500,29 @@ async function cloudPull(){
     showToast("❌ Cloud download mislukt", "warn");
   }
 }
+async function maybeAutoBackupOnOpen(){
+  try{
+    if(!(await ensureFirebase())) return;
 
+    const u = currentUser();
+    if(!u) return;
+
+    const now = Date.now();
+    const last = Number(meta?.lastAutoBackupAt || 0);
+    const DAY = 24 * 60 * 60 * 1000;
+
+    if(last && (now - last) < DAY) return;
+
+    await cloudPush();
+
+    meta.lastAutoBackupAt = now;
+    saveMeta();
+
+    console.log("Auto backup uitgevoerd");
+  }catch(err){
+    console.error("Auto backup mislukt", err);
+  }
+}
 /* ---------- UI wiring ---------- */
 function bindCloudButtons(){
   btnGoogleLogin?.addEventListener("click", ()=> loginGoogle().catch(console.error));
@@ -4824,6 +4846,7 @@ if(!isSetupDone()){
   }
   renderAll();
 applyLang();
+maybeAutoBackupOnOpen(); 
 }
 
 document.addEventListener("DOMContentLoaded", () => {
