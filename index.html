@@ -5825,5 +5825,14 @@ init();
   </div>
 </div>
 <!-- ===== SETUP MODAL END ===== -->
+ <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("Service Worker geregistreerd"))
+      .catch(err => console.log("Service Worker fout:", err));
+  });
+}
+</script>
 </body>
 </html>
