@@ -1,0 +1,21 @@
+{
+  "name": "Shift-Tap",
+  "short_name": "Shift-Tap",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#12070b",
+  "theme_color": "#12070b",
+  "icons": [
+    {
+      "src": "ST-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "ST-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

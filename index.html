@@ -1,0 +1,5826 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>SHIFT-TAP</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12070b">
+
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+<style>
+
+.app-title-wrap h1{
+  font-family:'Russo One', sans-serif;
+  text-transform:uppercase;
+  transform:skewX(-12deg);
+  
+  margin-top:1px;
+  font-size:36px;
+  line-height:0.2;
+  
+  color:#f2f2f2;
+  font-weight:800;
+  letter-spacing:2px;
+
+  text-shadow:
+    0 0 4px rgba(255,40,40,0.9),
+    0 0 10px rgba(255,0,0,0.7),
+    0 2px 6px rgba(0,0,0,0.85),
+    0 5px 12px rgba(0,0,0,0.8);
+}
+
+:root{
+  --bg:#14080b;
+  --panel:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.10);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.65);
+  --muted2:rgba(255,255,255,.50);
+
+  --green:#32d36e;
+  --red:#ff5b5b;
+  --blue:#3f79ff;
+
+  --shadow:0 14px 40px rgba(0,0,0,.45);
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,#2e0a14 0%,#631021 45%,#4a0c1a 70%,#2e0a14 100%);
+  overflow-x:hidden;
+}
+
+.wrap{max-width:820px;margin:0 auto;padding:18px 16px 28px}
+
+.card{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.05));
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+
+  .row{display:flex;gap:14px;margin-bottom:14px}
+  .sp{height:12px}
+  .hr{height:1px;background:var(--line);margin:14px 0}
+  .muted{color:var(--muted)}
+  .muted2{color:var(--muted2)}
+
+.bigTimer{
+  text-align:center;
+  font-weight:950;
+  font-size:clamp(54px,12vw,92px);
+  letter-spacing:1px;
+}
+
+/* =========================================
+   KNOPPEN: basis (voor de 4 home knoppen)
+   ========================================= */
+.btnHalf{
+  flex:1 1 0;
+  width:0;          
+  min-width:0;
+
+  height:60px;
+  border-radius:999px;
+
+  font-weight:900;
+  font-size:18px;
+
+  border:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:0 26px;
+  white-space:nowrap;
+
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(0,0,0,.22);
+  transition: transform .12s ease;
+}
+  .btnHalf:hover{ transform: translateY(-2px); }
+
+/* Home kleuren */
+  .btnStart{background:var(--green);color:#06140d}
+  .btnPause{background:var(--red);color:#1a0707}
+  .btnRecup{background:#4b77e6;color:#fff}
+
+/* Home Opslaan = wit */
+  .btnSave{background:rgba(255,255,255,.92); color:#111}
+
+/* Kleine layout fixes (optioneel) */
+  .row{ margin-bottom:0; }
+  .sp{ height:12px; }
+
+/* =========================================
+   Cards / entries
+   ========================================= */
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+
+.miniCard{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.miniCard .k{color:var(--muted);font-weight:900;margin-bottom:6px}
+.miniCard .v{font-size:42px;font-weight:950}
+
+.calBadges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+.calBadge{
+  font-size:11px;
+  font-weight:800;
+  padding:4px 8px;
+  border-radius:999px;
+  background: rgba(0,0,0,.25);
+  border: 1px solid rgba(255,255,255,.14);
+  opacity:.95;
+}
+
+.entry{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  border-radius:18px;
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.entry+.entry{margin-top:10px}
+
+.chip{
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  font-weight:950;
+  min-width:72px;
+  text-align:center;
+}
+
+/* =========================================
+   HEADER / ICON BUTTONS
+   ========================================= */
+.top{
+  display:flex;
+  align-items:flex-end;
+  
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+  width:100%;
+}
+.title{
+  min-width:0;
+  width:100%;
+}
+
+.sub{
+  margin-top:-2px;
+  font-size:12px;
+  opacity:.7;
+}
+
+.app-header{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  width:100%;
+}
+.app-header-left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  min-width:0;
+}
+.app-logo{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+  border-radius:12px;
+  flex-shrink:0;
+  margin-top:0px;
+}
+.app-title-wrap{ display:flex; flex-direction:column; min-width:0; 
+
+}
+
+.btnIcon{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  cursor:pointer;
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
+  transition: transform .08s ease;
+}
+.btnIcon:active{ transform:scale(0.98); }
+
+.app-header-actions{
+  width:100%;
+  display:flex;
+  gap:12px;
+}
+.app-header-actions .btnIcon{
+  flex:1;
+  height:44px;
+  border-radius:14px;
+  font-size:20px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  max-width:none;
+}
+
+.btnSmall{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:12px;
+  font-weight:900;
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.btnSmall:active{ transform:scale(0.98); }
+
+.tab{display:block}
+.h2Row{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.h2Row h2{margin:0}
+.badge{
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  font-weight:950;
+}
+.badge.ok{outline:2px solid rgba(50,211,110,.35)}
+.badge.warn{outline:2px solid rgba(255,91,91,.35)}
+.list{margin-top:12px}
+
+.footer{margin-top:16px; text-align:center; color:var(--muted2); font-weight:700}
+
+.btnGhost{
+  background: rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:var(--text);
+  padding:14px 16px;
+  border-radius:16px;
+  font-weight:950;
+  width:100%;
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.btnDanger{
+  background:var(--red);
+  color:#1a0707;
+  border:1px solid rgba(0,0,0,.1);
+}
+
+/* Status */
+.status{
+  display:flex; gap:10px; align-items:center; justify-content:center;
+  margin-top:10px; margin-bottom:12px;
+  color:var(--muted);
+  font-weight:900;
+}
+.iconBox{
+  width:14px; height:14px; border-radius:4px; display:inline-block;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+.iconBox.play{background:var(--green)}
+.iconBox.pause{background:var(--red)}
+.iconBox.stop{background:rgba(255,255,255,.25)}
+
+.timerTopLine{display:flex; justify-content:center; margin-bottom:10px}
+.timerDateValue{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  font-weight:950;
+}
+
+.saldoMain{font-size:28px; font-weight:950}
+.saldoSub{margin-top:8px; font-size:14px; color:var(--muted)}
+.unit{font-size:14px; font-weight:900; color:var(--muted)}
+
+.salpos{outline:2px solid rgba(50,211,110,.35)}
+.salneg{outline:2px solid rgba(255,91,91,.35)}
+.salzero{outline:2px solid rgba(255,255,255,.14)}
+
+.noteLine{color:var(--muted2); font-weight:800}
+
+/* Toast */
+.toast{
+  position:fixed;
+  left:50%;
+  top:90px;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0;
+  pointer-events:none;
+  transition:all .18s ease;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#111;
+  color:#fff;
+  font-weight:950;
+  z-index:120;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+  max-width:90%;
+  text-align:center;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+.toast.ok{
+  background:rgba(50,211,110,.90);
+  color:#000;
+}
+
+.toast.warn{
+  background:rgba(255,155,0,.95);
+  color:#000;
+}
+
+.toast.err{
+  background:rgba(255,91,91,.90);
+  color:#fff;
+}
+/* =========================================
+   MODALS
+   ========================================= */
+.modalBack{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:99;
+}
+.modal{
+  position:relative;
+  width:100%;
+  max-width:680px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:#1a0a10;
+  box-shadow:0 20px 70px rgba(0,0,0,.6);
+  padding:16px;
+}
+.modalActions{
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+
+/* Modal close X */
+.modalCloseBtn{
+  position:absolute;
+  top:14px;
+  right:18px;
+  background:transparent;
+  border:none;
+  font-size:34px;
+  font-weight:900;
+  color: rgba(255,255,255,0.7);
+  cursor:pointer;
+  padding:0;
+  line-height:1;
+  transition:0.2s ease;
+}
+.modalCloseBtn:hover{ color:#ff5b5b; transform:scale(1.15); }
+
+/* Modal alignment clean */
+#modalBack .row2,
+#modalBack .row3{ display:block !important; }
+
+#modalBack .row2 > div,
+#modalBack .row3 > div{
+  width:min(92vw,420px);
+  margin:0 auto 10px auto;
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:12px;
+  align-items:center;
+}
+/* FIX overflow rechts in modal grid */
+#modalBack .row2 > div,
+#modalBack .row3 > div{
+  width:100% !important;        /* ipv min(92vw,420px) */
+  max-width:420px !important;
+}
+
+#modalBack .row2 > div > *,
+#modalBack .row3 > div > *{
+  min-width:0 !important;       /* laat grid items krimpen */
+}
+
+#modalBack select,
+#modalBack input,
+#modalBack textarea{
+  width:100% !important;
+  max-width:100% !important;
+}
+#modalBack .row2 label,
+#modalBack .row3 label{
+  margin:0;
+  text-align:left;
+  white-space:nowrap;
+}
+#modalBack .row2 input,
+#modalBack .row2 select,
+#modalBack .row3 input,
+#modalBack .row3 select{
+  width:100%;
+}
+#modalBack #mNote{ width:100%; box-sizing:border-box; }
+
+@media(max-width:420px){
+  #modalBack .row2 > div,
+  #modalBack .row3 > div{
+    grid-template-columns:120px 1fr;
+  }
+}
+
+/* Dark inputs – overal */
+input, select, textarea{
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 10px;
+  padding: 8px 10px;
+  outline: none;
+}
+input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.55); }
+
+/* Dropdown lijst zelf ook donkerder */
+select option{ background:#1b0b10; color:#fff; }
+
+/* Android date/time dark */
+input[type="date"], input[type="time"], select{ color-scheme: dark; }
+input::-webkit-calendar-picker-indicator{ filter: invert(1); }
+
+/* =========================
+   PDF export dialog (zodat inputs/knoppen zichtbaar zijn)
+   ========================= */
+.pdfDialog::backdrop{
+  background: rgba(0,0,0,.55);
+}
+.pdfDialog{
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.pdfDialog .pdfBox{
+  width: min(92vw, 520px);
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: #1a0a10;
+  color: var(--text);
+  box-shadow: 0 20px 70px rgba(0,0,0,.6);
+  padding: 16px;
+}
+.pdfDialog h3{ margin: 0; font-weight: 950; font-size: 22px; }
+.pdfDialog .radioLine{ display:flex; align-items:center; gap:10px; font-weight: 900; }
+.pdfDialog .row3{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pdfDialog .btnSmall{ height: 44px; padding: 0 14px; border-radius: 14px; }
+
+
+/* Modal save knop (groen pill, rechts) */
+#btnSaveModal,
+#btnSaveVerreken,
+#btnSaveVerrekening{
+  background: linear-gradient(180deg, rgba(50,211,110,.95), rgba(25,170,85,.95));
+  color:#fff;
+  border:0;
+  border-radius:999px;
+  height:56px;
+  padding:0 26px;
+  font-weight:900;
+  font-size:18px;
+  cursor:pointer;
+  transition:0.2s ease;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  margin-left:auto;
+  box-shadow: 0 6px 18px rgba(0,255,120,.20);
+}
+
+#btnSaveModal:hover,
+#btnSaveVerreken:hover,
+#btnSaveVerrekening:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,255,120,.22);
+}
+/* Confirm modal (als je die gebruikt) */
+.appModalOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:10000;
+}
+.appModalOverlay.show{display:flex}
+.appModal{
+  width:100%;
+  max-width:520px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:#1a0a10;
+  box-shadow:0 20px 70px rgba(0,0,0,.6);
+  padding:16px;
+}
+.appModalHeader{font-weight:950; font-size:18px; margin-bottom:10px}
+.appModalBody{color:var(--text); opacity:.9; font-weight:800}
+.appModalActions{display:flex; gap:12px; justify-content:flex-end; margin-top:14px}
+.appModalActions button{width:auto; padding:12px 14px; border-radius:14px; font-weight:950}
+
+.otPos{ color: var(--green) !important; }
+.otNeg{ color: var(--red) !important; }
+.otZero{ color: rgba(255,255,255,.85) !important; }
+/* === Home: probeer alles op 1 scherm te houden (zonder scroll) === */
+
+/* Iets compacter spacing */
+.card{ padding:14px; }
+.row{ margin-bottom:10px; }
+.sp{ height:8px; }
+
+/* Timer iets kleiner op kleine hoogtes */
+.bigTimer{ font-size: clamp(44px, 10.5vw, 92px); }
+
+/* Datumchip iets compacter */
+.timerDateValue{ padding:8px 12px; }
+
+/* Knoppen iets lager */
+.btnHalf{
+  height:56px;
+  font-size:16px;
+}
+
+/* Saldo kaart compacter */
+.miniCard{ padding:12px; }
+.miniCard .v{ font-size:36px; }
+
+/* Extra agressief als hoogte klein is */
+@media (max-height: 740px){
+  .bigTimer{ font-size: clamp(40px, 10vw, 80px); }
+  .btnHalf{ height:52px; }
+  .miniCard .v{ font-size:32px; }
+  .sp{ height:6px; }
+}
+/* ===== Kalender (UI) ===== */
+.calGrid{
+  display:grid;
+  grid-template-columns:repeat(7, 1fr);
+  gap:8px;
+}
+
+
+/* Header (M D W D V Z Z) */
+.calHead{
+  text-align:center;
+  font-weight:950;
+  font-size:12px;
+  color:var(--muted);
+  padding:4px 0;
+  opacity:.9;
+}
+
+/* Lege vakjes */
+.calBlank{
+  opacity:.12;
+  min-height:56px;
+}
+
+/* Dag-cel */
+.calCell{
+  position:relative;           /* nodig voor absolute badges */
+  cursor:pointer;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  border-radius:14px;
+  padding:10px;
+  min-height:56px;
+  overflow:hidden;             /* voorkomt overlap buiten vakje */
+}
+
+/* Dagnummer linksboven */
+.calNum{
+  position:absolute;
+  top:4px;
+  left:4px;
+  font-weight:950;
+  font-size:14px;
+  opacity:.95;
+  z-index:3;
+  pointer-events:none;
+}
+
+/* Type-letter rechtsonder (W/R/Z/V/F) */
+.calTypePill{
+  position:absolute;
+  bottom:4px;
+  right:4px;
+  font-size:11px;
+  font-weight:900;
+  padding:3px 7px;
+  border-radius:999px;
+  background: rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.14);
+  letter-spacing:.5px;
+  z-index:2;
+  pointer-events:none;
+}
+
+/* Werk-uren linksonder (bv 8:30) */
+.calWorkHours{
+  position:absolute;
+  bottom:7px;
+  left:7px;
+  font-size:12px;
+  font-weight:900;
+  opacity:.95;
+  z-index:2;
+  pointer-events:none;
+}
+
+/* 1 kleur per type */
+.calWork{ 
+  background: #2f8f5e;
+}
+
+.calRecup{ 
+  background: #3f79ff;
+}
+
+.calVakantie{ 
+  background: #e6a400;
+}
+
+.calZiekte{ 
+  background: #c94343;
+}
+
+.calFeestdag{ 
+  background: #374151; 
+}
+
+/* Compact op kleine schermhoogte */
+@media (max-height: 760px){
+  #tab3 .card{ padding:12px; }
+  #tab3 .h2Row{ margin-bottom:6px; }
+  #tab3 h2{ font-size:28px; }
+
+  #tab3 .btnSmall{
+    height:44px;
+    padding:0 12px;
+    border-radius:12px;
+  }
+
+  #tab3 .badge{
+    padding:8px 10px;
+    font-size:14px;
+  }
+
+  #tab3 .calGrid{ gap:6px; }
+
+  #tab3 .calCell,
+  #tab3 .calBlank{
+    min-height:46px;
+    padding:8px;
+    border-radius:12px;
+  }
+
+  #tab3 .calHead{
+    font-size:11px;
+    padding:2px 0;
+  }
+
+  #tab3 .calNum{ font-size:13px; }
+  #tab3 .calWorkHours{ font-size:11px; }
+  #tab3 .calTypePill{ font-size:10px; padding:2px 6px; }
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.calLegendBottom{
+  margin-top:20px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:14px;
+  font-weight:900;
+}
+
+.legendItem{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  opacity:.95;
+}
+
+.legendDot{
+  width:28px;
+  height:28px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:950;
+  color:#fff;
+}
+.legendItem{
+  font-size:13px;
+}
+
+.legendDot{
+  width:24px;
+  height:24px;
+  font-size:13px;
+}
+/* ===== Verrekenen modal overlay ===== */
+#verrekenModal{
+  position: fixed;
+  inset: 0;
+  display: none;              /* JS zet dit naar flex */
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 9999;
+
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#verrekenModal .modalCard{
+  position: relative;   /* dit toevoegen */
+}
+/* Verrekenen modal form layout */
+#verrekenModal .modalCard label{
+  display:block;
+  margin-top:12px;
+}
+
+#verrekenModal .modalCard input{
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* de kaart zelf */
+#verrekenModal .modalCard{
+  width: min(92vw, 420px);
+  max-height: 85vh;
+  overflow: auto;
+
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: #1a0a10;
+  box-shadow: 0 20px 70px rgba(0,0,0,.6);
+  padding: 16px;
+}
+.modalCloseX{
+  position:absolute;
+  top:14px;
+  right:18px;
+  background:none;
+  border:none;
+  font-size:28px;
+  font-weight:700;
+  cursor:pointer;
+  color:white;
+}
+.calToday{
+  box-shadow: 0 0 0 2px rgba(255,255,255,.8);
+}
+.calDotVerrek{
+  position:absolute;
+  top:3px;
+  right:3px;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: rgba(0,255,120,.9);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
+}
+.label-with-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.info-icon {
+  font-size: 14px;
+  opacity: 0.7;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.info-icon:hover {
+  opacity: 1;
+}
+.info-bubble{
+  position:absolute;
+  top:28px;
+  left:0;
+  background:#1a0a10;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  font-size:13px;
+  font-weight:700;
+  max-width:220px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+  display:none;
+  z-index:200;
+}
+.info-bubble{
+  white-space: pre-line;
+}
+/* === Recup knop bubble correct uitlijnen === */
+.recupWrap{
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.recupWrap .btnRecup{
+  width: 100%;
+}
+
+.recupWrap .info-icon{
+  margin-left: 8px;
+}
+
+.recupWrap .info-bubble{
+  top: 52px;
+  left: auto;
+  right: 0;
+}
+.setupHint{
+margin-bottom: 16px;
+}
+.setupLangRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin: 10px 0 14px;
+}
+.setupLangLabel{
+  min-width: 70px;
+  opacity:.85;
+}
+.setupLangSelect{
+  flex:1;
+}
+/* ===== Shift-Tap style voor uur/minuut dropdowns ===== */
+.timeSelectRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.timeSelect{
+  height:52px;
+  min-width:68px;
+  padding:0 10px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.10);
+  color:rgba(255,255,255,.92);
+  font-weight:900;
+  font-size:18px;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
+  appearance:auto;
+  -webkit-appearance:menulist;
+  -moz-appearance:menulist;
+  text-align:center;
+}
+
+.timeSelect.small{
+  min-width:74px;
+}
+
+.timeColon{
+  font-weight:900;
+  font-size:22px;
+  color:rgba(255,255,255,.92);
+  line-height:1;
+  transform:translateY(-1px);
+}
+.weekLock img{
+  width:20px;
+  height:20px;
+  vertical-align:middle;
+}
+.h2Row{
+  position:relative;
+
+}
+.lockLegend{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-left:auto;
+}
+
+.lockMini{
+  width:18px;
+  height:18px;
+}
+
+.historyActions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top:10px;
+}
+#bubbleWeekLock{
+  transform:translateX(-40px);
+}
+.historyList > div{
+  display:flex;
+  align-items:center;
+}
+.historyList > div span:last-child{
+  margin-left:auto;
+}
+button,
+.btnSmall,
+.btnGhost,
+.btnGreen,
+.btnDanger,
+.btnIcon{
+  transition: transform .08s ease, box-shadow .08s ease, filter .08s ease;
+}
+
+button:active,
+.btnSmall:active,
+.btnGhost:active,
+.btnGreen:active,
+.btnDanger:active,
+.btnIcon:active{
+  transform: translateY(2px) scale(0.94);
+  filter: brightness(.92);
+  box-shadow: 0 3px 8px rgba(0,0,0,.18);
+}
+
+#btnHome:active,
+#btnOpenHistory:active,
+#btnNavCalendar:active,
+#btnOpenSettings:active{
+  transform:scale(0.97);
+}
+
+#btnHome.active,
+#btnOpenHistory.active,
+#btnNavCalendar.active,
+#btnOpenSettings.active{
+  background:rgba(255,255,255,0.18);
+  box-shadow:0 0 8px rgba(255,255,255,0.35);
+  border-radius:10px;
+}
+#btnVerreken:active,
+#btnAddManual:active{
+  transform: translateY(2px) scale(0.94) !important;
+  filter: brightness(.85) !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,.18) !important;
+}
+#btnVerreken,
+#btnAddManual{
+  transition: transform .08s ease, box-shadow .08s ease, filter .08s ease;
+}
+.bigTimer{
+  color:#D4AF37;
+  letter-spacing:2px;
+  text-shadow:
+    0 2px 2px rgba(0,0,0,.6),
+    0 6px 10px rgba(0,0,0,.7),
+    0 14px 28px rgba(0,0,0,.8);
+}
+.bigTimer{
+  transform: skewX(-8deg);
+}
+#todayWork,
+#vacTaken,
+#weekWork{
+  color:#c0c0c0;
+  text-shadow:
+    0 2px 4px rgba(0,0,0,.6),
+    0 6px 12px rgba(0,0,0,.7);
+}
+.btnStart,
+.btnPause,
+.btnSave,
+.btnRecup{
+  border:1px solid rgba(255,255,255,0.22);
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.15),
+    0 3px 8px rgba(0,0,0,0.28);
+}
+
+
+</style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="top">
+      <div class="title">
+
+        <div class="app-header">
+          <div class="app-header-left">
+            <img src="ST-logo.png" alt="Shift Tap logo" class="app-logo">
+            <div class="app-title-wrap">
+              <h1>Shift-Tap</h1>
+<div class="sub" id="appVersionText"></div>
+            </div>
+          </div>
+
+          <div class="app-header-actions">
+            <button id="btnHome" class="btnIcon" aria-label="Home">🏠</button>
+<button id="btnNavCalendar" class="btnIcon" aria-label="Kalender">📅</button>
+            <button id="btnOpenHistory" class="btnIcon" aria-label="Historiek">📜</button>
+            <button id="btnOpenSettings" class="btnIcon" aria-label="Instellingen">⚙️</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="tab1" class="tab">
+      <div class="card">
+
+        <div class="timerTopLine">
+          <span id="todayPill" class="timerDateValue">-</span>
+        </div>
+
+        <div id="timer" class="bigTimer">00:00:00</div>
+        <div id="status" class="status"></div>
+
+        <div class="row">
+          <button class="btnStart btnHalf" id="btnStart" data-i18n="start">Start</button>
+          <button class="btnPause btnHalf" id="btnPause" data-i18n="pause_stop">Stop</button>
+        </div>
+
+        <div class="sp"></div>
+
+        <div class="row">
+<button class="btnSave btnHalf" id="btnSave" data-i18n="save">Opslaan</button>
+
+<div class="recupWrap">
+  <button class="btnRecup btnHalf" id="btnRecup" data-i18n="recup">Recup</button>
+  <span class="info-icon" id="infoRecup">ⓘ</span>
+  <div class="info-bubble" id="bubbleRecup" data-i18n="recup_info"></div>
+</div>
+        </div>
+
+  <div class="miniCard" style="margin-top:12px;">
+  <div class="k" data-i18n="overtime">Saldo overuren</div>
+  <div id="overtimeSaldo" class="v" style="font-size:28px; font-weight:900; margin-top:6px;">0:00</div>
+<div class="label-with-info" style="justify-content:flex-end; margin-top:14px;">
+  <button class="btnSmall" id="btnVerreken" type="button" data-i18n="settle">Verrekenen</button>
+  <span class="info-icon" id="infoVerreken">ⓘ</span>
+  <div class="info-bubble" id="bubbleVerreken" data-i18n="settle_info"></div>
+</div>
+</div>
+<!-- ===== Verrekenen modal ===== -->
+<div id="verrekenModal" class="modalBack" style="display:none;">
+  <div class="modalCard">
+  <button id="btnCloseVerreken" class="modalCloseX" type="button">✕</button>
+ <h2 data-i18n="overtime_settled">Overuren verrekend</h2>
+<p class="modalHint" data-i18n="settle_hint">
+  Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.
+</p>
+
+ <label for="verrekenAmount" data-i18n="hours_amount_hhmm">Aantal uren (HH:MM)</label>
+ <input id="verrekenAmount" type="text"
+       inputmode="numeric"
+       maxlength="5"
+       placeholder="00:00">
+       
+
+<label for="verrekenDate" data-i18n="lbl_date">Datum</label>
+    <input id="verrekenDate" type="date">
+    <div class="modalActions">
+<button type="button" id="btnSaveVerrekening" class="btnGreen" data-i18n="save">Opslaan</button>
+</div>
+
+ 
+  </div>
+</div>
+<div class="grid3" style="margin-top:12px;">
+  <div class="miniCard">
+    <div class="k" data-i18n="today_work">Vandaag</div>
+    <div class="v" id="todayWork">0:00</div>
+  </div>
+  <div class="miniCard">
+    <div class="k" data-i18n="week_work">Deze week</div>
+    <div class="v" id="weekWork">0:00</div>
+  </div>
+</div>
+<div class="miniCard" style="margin-top:12px; position:relative;">
+  <div class="k" data-i18n="vac_taken">Opgenomen vakantie</div>
+  <div class="v" id="vacTaken">0</div>
+</div>
+
+    </div>
+</div>
+<!-- ================= TAB 2 ================= -->
+<div id="tab2" class="tab" style="display:none;">
+  <div class="card">
+
+    <div class="h2Row">
+      <h2 data-i18n="history_title">Historiek</h2>
+    </div>
+
+    <div class="historyActions">
+      <button class="btnSmall" id="btnAddManual"
+        data-i18n="manual" type="button">+ Handmatig</button>
+
+      <button class="btnSmall" id="btnExportPdf"
+        data-i18n="pdf_export_btn"
+        data-i18n-aria="pdf_export_btn_aria"
+        aria-label=""
+        type="button">📄 PDF</button>
+
+      <div class="label-with-info lockLegend">
+        <span class="info-icon" id="infoWeekLock">ⓘ</span>
+
+        <img src="lock_open.svg" class="lockMini" alt="">
+
+
+        <div class="info-bubble"
+             id="bubbleWeekLock"
+             data-i18n="week_lock_info"
+             data-i18n-html="1">
+        </div>
+      </div>
+    </div>
+
+    <div class="muted" data-i18n="history_hint" data-i18n-html="1">
+      Vergeten uit te tikken?<br>Voeg handmatig toe.
+    </div>
+
+    <div class="list" id="historyList"></div>
+
+  </div>
+</div>
+
+<!-- ================= TAB 3 ================= -->
+<div id="tab3" class="tab" style="display:none;">
+  <div class="card">
+    <div class="h2Row">
+ <div class="label-with-info" style="margin-bottom:8px;">
+  <h2 data-i18n="calendar" style="margin:0;">Kalender</h2>
+  <span class="info-icon" id="infoCalendar">ⓘ</span>
+  <div class="info-bubble" id="bubbleCalendar" data-i18n="calendar_info"></div>
+</div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btnSmall" id="calPrev" type="button">◀</button>
+        <span class="badge" id="calLabel">-</span>
+        <button class="btnSmall" id="calNext" type="button">▶</button>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div id="calGrid" class="calGrid"></div>
+
+<div class="calLegendBottom">
+  <div class="legendItem">
+    <span class="legendDot calWork" data-letter-type="Werk"></span>
+    <span data-i18n="work">Werk</span>
+  </div>
+
+  <div class="legendItem">
+    <span class="legendDot calRecup" data-letter-type="Recup"></span>
+    <span data-i18n="recup">Recup</span>
+  </div>
+
+  <div class="legendItem">
+    <span class="legendDot calFeestdag" data-letter-type="Feestdag"></span>
+    <span data-i18n="holiday">Feestdag</span>
+  </div>
+
+  <div class="legendItem">
+    <span class="legendDot calZiekte" data-letter-type="Ziekte"></span>
+    <span data-i18n="sick">Ziekte</span>
+  </div>
+
+  <div class="legendItem">
+    <span class="legendDot calVakantie" data-letter-type="Vakantie"></span>
+    <span data-i18n="vacation">Vakantie</span>
+  </div>
+</div>
+  </div>
+</div>
+
+<!-- ================= TAB 4 ================= -->
+<div id="tab4" class="tab" style="display:none;">
+  <div class="card">
+
+    <div class="h2Row">
+      <span class="badge" id="onlineBadge" data-i18n="status_online">Status: -</span>
+    </div>
+
+    <div class="hr"></div>
+
+
+    <!-- Taal -->
+    <label data-i18n="language">Taal</label>
+    <button id="btnLangOpen" type="button" class="btnSmall" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+      <span id="langCurrentLabel">Nederlands</span>
+      <span aria-hidden="true">▾</span>
+    </button>
+
+    <div class="sp"></div>
+
+<label id="lblEmployeeName" data-i18n="employee_name_label">
+  Naam werknemer
+</label>
+<input 
+  type="text" 
+  id="employeeName" 
+  placeholder="Jouw naam"
+  data-i18n-placeholder="employee_name_ph"
+/>
+
+<div class="sp"></div>
+
+<label id="lblEmployerName" data-i18n="employer_name_label">
+  Naam werkgever
+</label>
+<input 
+  type="text" 
+  id="employerName" 
+  placeholder="Naam werkgever"
+  data-i18n-placeholder="employer_name_ph"
+/>
+<div class="sp"></div>
+
+<!-- Start saldo -->
+<div class="label-with-info">
+<label data-i18n="start_saldo">
+  Start saldo overuren (u:min)
+</label>
+  <span class="info-icon" id="infoStartSaldo">ⓘ</span>
+<div class="info-bubble" id="bubbleStartSaldo" data-i18n="start_saldo_info"></div>
+</div>
+
+<div class="timeSelectRow">
+<select id="startSaldoH" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option>
+<option>04</option><option>05</option><option>06</option><option>07</option>
+<option>08</option><option>09</option><option>10</option><option>11</option>
+<option>12</option><option>13</option><option>14</option><option>15</option>
+<option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option>
+<option>24</option><option>25</option><option>26</option><option>27</option>
+<option>28</option><option>29</option><option>30</option><option>31</option>
+<option>32</option><option>33</option><option>34</option><option>35</option>
+<option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option>
+<option>44</option><option>45</option><option>46</option><option>47</option>
+<option>48</option><option>49</option><option>50</option><option>51</option>
+<option>52</option><option>53</option><option>54</option><option>55</option>
+<option>56</option><option>57</option><option>58</option><option>59</option>
+<option>60</option><option>61</option><option>62</option><option>63</option>
+<option>64</option><option>65</option><option>66</option><option>67</option>
+<option>68</option><option>69</option><option>70</option><option>71</option>
+<option>72</option><option>73</option><option>74</option><option>75</option>
+<option>76</option><option>77</option><option>78</option><option>79</option>
+<option>80</option><option>81</option><option>82</option><option>83</option>
+<option>84</option><option>85</option><option>86</option><option>87</option>
+<option>88</option><option>89</option><option>90</option><option>91</option>
+<option>92</option><option>93</option><option>94</option><option>95</option>
+<option>96</option><option>97</option><option>98</option><option>99</option>
+<option>100</option>
+  </select>
+  <span class="timeColon">:</span>
+<select id="startSaldoM" class="timeSelect">
+  <option>00</option>
+  <option>01</option>
+  <option>02</option>
+  <option>03</option>
+  <option>04</option>
+  <option>05</option>
+  <option>06</option>
+  <option>07</option>
+  <option>08</option>
+  <option>09</option>
+  <option>10</option>
+  <option>11</option>
+  <option>12</option>
+  <option>13</option>
+  <option>14</option>
+  <option>15</option>
+  <option>16</option>
+  <option>17</option>
+  <option>18</option>
+  <option>19</option>
+  <option>20</option>
+  <option>21</option>
+  <option>22</option>
+  <option>23</option>
+  <option>24</option>
+  <option>25</option>
+  <option>26</option>
+  <option>27</option>
+  <option>28</option>
+  <option>29</option>
+  <option>30</option>
+  <option>31</option>
+  <option>32</option>
+  <option>33</option>
+  <option>34</option>
+  <option>35</option>
+  <option>36</option>
+  <option>37</option>
+  <option>38</option>
+  <option>39</option>
+  <option>40</option>
+  <option>41</option>
+  <option>42</option>
+  <option>43</option>
+  <option>44</option>
+  <option>45</option>
+  <option>46</option>
+  <option>47</option>
+  <option>48</option>
+  <option>49</option>
+  <option>50</option>
+  <option>51</option>
+  <option>52</option>
+  <option>53</option>
+  <option>54</option>
+  <option>55</option>
+  <option>56</option>
+  <option>57</option>
+  <option>58</option>
+  <option>59</option>
+
+  </select>
+</div>
+
+<div class="sp"></div>
+
+    <!-- Pauze -->
+<div class="label-with-info">
+  <label for="pauseMin" data-i18n="default_pause">
+    Standaard pauze (min)
+  </label>
+  <span class="info-icon" id="infoDefaultBreak">ⓘ</span>
+  <div class="info-bubble" id="bubbleDefaultBreak" data-i18n="default_break_info"></div>
+</div>
+<select id="pauseMin" class="timeSelect">
+  <option value="0">0</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+  <option value="25">25</option>
+  <option value="30" selected>30</option>
+  <option value="35">35</option>
+  <option value="40">40</option>
+  <option value="45">45</option>
+  <option value="50">50</option>
+  <option value="55">55</option>
+  <option value="60">60</option>
+</select>
+
+    <div class="hr"></div>
+
+    <!-- Normale werkdag -->
+<div class="label-with-info">
+<label data-i18n="norm_day">
+    Duur normale werkdag (u:min)
+  </label>
+  <span class="info-icon" id="infoNormDay">ⓘ</span>
+  <div class="info-bubble" id="bubbleNormDay" data-i18n="norm_day_info"></div>
+</div>
+<div class="timeSelectRow">
+
+  <select id="normDayH" class="timeSelect">
+    <option>00</option><option>01</option><option>02</option><option>03</option>
+    <option>04</option><option>05</option><option>06</option><option>07</option>
+    <option>08</option><option>09</option><option>10</option><option>11</option>
+    <option>12</option><option>13</option><option>14</option><option>15</option>
+    <option>16</option><option>17</option><option>18</option><option>19</option>
+    <option>20</option><option>21</option><option>22</option><option>23</option>
+  </select>
+
+  <span class="timeColon">:</span>
+
+  <select id="normDayM" class="timeSelect">
+    <option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+    <option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+    <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+    <option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+    <option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+    <option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+    <option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+    <option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+    <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+    <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+    <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+    <option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+  </select>
+
+</div>
+
+    <div class="row" style="margin-top:16px;">
+      <button class="btnGhost" id="btnSaveSettings" data-i18n="settings">
+        Opslaan
+      </button>
+    </div>
+
+    <div class="hr"></div>
+
+    <!-- Cloud -->
+    <div class="h2Row">
+      <div>
+        <div class="muted" style="font-weight:950;" data-i18n="cloud_title">
+          Google login + Cloud sync
+        </div>
+<div class="muted2" id="loginNote"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <button class="btnGhost" id="btnGoogleLogin" data-i18n="login_google">
+        Inloggen met Google
+      </button>
+      <button class="btnGhost" id="btnGoogleLogout" style="display:none;" data-i18n="logout_google">
+        Uitloggen
+      </button>
+    </div>
+
+
+    <div class="sp"></div>
+
+    <div class="row">
+      <button class="btnGhost" id="btnCloudPull" data-i18n="cloud_download">
+        Cloud → toestel
+      </button>
+      <button class="btnGhost" id="btnCloudPush" data-i18n="cloud_upload">
+        Toestel → cloud
+      </button>
+    </div>
+
+
+    <div class="footer">
+      Shift-Tap – Made by <b>Kim Gijs</b>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+  <div class="modalBack" id="modalBack">
+<div class="modal">
+  <div class="h2Row" style="align-items:center; gap:10px;">
+    <div>
+      <h3 id="modalTitle" data-i18n="modal_add_title">Handmatig toevoegen</h3>
+      <div class="muted2" data-i18n="modal_hint" style="font-weight:600; margin-top:6px;">
+        Vergeet uit te tikken? Voeg gewoon de juiste tijden toe.
+      </div>
+    </div>
+
+<button class="modalCloseBtn" id="btnCloseModal" type="button">×</button>
+  </div>
+
+  <div class="sp"></div>
+
+  <div class="row2">
+    <div>
+      <label for="mDate" data-i18n="lbl_date">Datum</label>
+      <input id="mDate" type="date">
+    </div>
+
+    <div>
+      <label for="mType" data-i18n="lbl_type">Type</label>
+<select id="mType">
+  <option value="Werk" data-i18n="work_label">Werk</option>
+  <option value="Recup" data-i18n="recup">Recup</option>
+  <option value="Ziekte" data-i18n="sick">Ziekte</option>
+  <option value="Vakantie" data-i18n="vacation">Vakantie</option>
+  <option value="Feestdag" data-i18n="holiday">Feestdag</option>
+</select>
+    </div>
+  </div>
+
+<div class="row3">
+  <div>
+    <label data-i18n="lbl_start">Start (HH:MM)</label>
+    <div class="timeSelectRow">
+<select id="mStartH" class="timeSelect">
+        <option>00</option><option>01</option><option>02</option><option>03</option>
+        <option>04</option><option>05</option><option>06</option><option>07</option>
+        <option>08</option><option>09</option><option>10</option><option>11</option>
+        <option>12</option><option>13</option><option>14</option><option>15</option>
+        <option>16</option><option>17</option><option>18</option><option>19</option>
+        <option>20</option><option>21</option><option>22</option><option>23</option>
+      </select>
+<span class="timeColon">:</span>
+<select id="mStartM" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+<option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+<option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+<option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+<option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+<option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+<option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+<option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+<option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label data-i18n="lbl_end">Einde (HH:MM)</label>
+<div class="timeSelectRow">
+<select id="mEndH" class="timeSelect">
+        <option>00</option><option>01</option><option>02</option><option>03</option>
+        <option>04</option><option>05</option><option>06</option><option>07</option>
+        <option>08</option><option>09</option><option>10</option><option>11</option>
+        <option>12</option><option>13</option><option>14</option><option>15</option>
+        <option>16</option><option>17</option><option>18</option><option>19</option>
+        <option>20</option><option>21</option><option>22</option><option>23</option>
+      </select>
+<span class="timeColon">:</span>
+<select id="mEndM" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+<option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+<option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+<option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+<option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+<option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+<option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+<option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+<option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label for="mPause" data-i18n="lbl_pause">Pauze (min)</label>
+    <select id="mPause">
+      <option value="0">0</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30" selected>30</option>
+      <option value="35">35</option>
+      <option value="40">40</option>
+      <option value="45">45</option>
+      <option value="50">50</option>
+      <option value="55">55</option>
+      <option value="60">60</option>
+    </select>
+  </div>
+</div>
+
+  <div class="sp"></div>
+
+  <label for="mNote" data-i18n="lbl_note">Opmerking (optioneel)</label>
+  <textarea id="mNote" rows="3" data-i18n-placeholder="ph_note"
+    placeholder="bv. Garage na rit, file, wachten op klant..."></textarea>
+    
+  <div class="modalActions">
+
+<button class="btnGreen" id="btnSaveModal" type="button" data-i18n="save"></button>
+
+  </div>
+</div>
+    </div>
+<!-- Firebase CDN (mag blijven staan, ook al gebruik je het nog niet actief) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+</div>  <!-- einde van je wrap / tabs -->
+
+<!-- App modal overlay -->
+<div id="appModalOverlay" class="appModalOverlay" aria-hidden="true">
+  <div class="appModal">
+    <div id="appModalBody" class="appModalBody"></div>
+    <div class="appModalActions">
+      <button id="appModalCancel" class="btnSmall" data-i18n="cancel">Annuleren</button>
+      <button id="appModalOk" class="btnSmall" data-i18n="ok">OK</button>
+    </div>
+  </div>
+</div>
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- ===== Dag detail overlay ===== -->
+<div id="dayOverlay" class="overlay" style="display:none;">
+  <div class="modal">
+    <div class="modalTop">
+      <div class="modalTitle" id="dayTitle">-</div>
+      <button class="btnIcon" id="dayClose" type="button">✕</button>
+    </div>
+
+    <div class="hr"></div>
+    <div id="dayBody" class="modalBody"></div>
+    <div class="hr"></div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+<button class="btnSmall" id="dayEdit" type="button"
+        data-i18n="edit_btn" data-i18n-html="1"
+        data-i18n-aria="edit_aria" aria-label="Bewerken">✎ Bewerken</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+
+
+window.onerror = function(message, source, lineno, colno, error){
+  alert(
+    "JS fout:\n" +
+    message +
+    "\nBron: " + source +
+    "\nLijn: " + lineno + ":" + colno
+  );
+  return false;
+};
+
+  /* =========================
+     ShiftTap + + + setuppage
+     ========================= */
+  const APP_ID = "shifttap";
+const APP_CHANNEL = "stable_met_gmail_pdf_setuppagev1";
+const APP_VERSION = "2.0.4";
+
+
+
+const STORE_KEY = `${APP_ID}_state_${APP_CHANNEL}`;
+const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
+
+// Expose for extra modules (bv. pdf-export.js)
+window.SHIFTTAP_STORE_KEY = STORE_KEY;
+
+const NORM_MIN  = 0;
+const RECUP_MIN = 0;
+
+// Setup flag (per channel)
+const SETUP_KEY = `${APP_ID}_setupDone_${APP_CHANNEL}`;
+
+function isSetupDone(){
+  return localStorage.getItem(SETUP_KEY) === "1";
+}
+function markSetupDone(){
+  localStorage.setItem(SETUP_KEY, "1");
+}
+
+// =========================
+// Cloud sync (Google login) via Firebase
+// Setup (phone-friendly):
+// - Create Firebase project
+// - Enable Authentication -> Google
+// - Create Firestore database
+// - Paste firebaseConfig below
+// =========================
+
+
+// Firebase config is not a secret, but Firestore rules must be locked.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCkK45tqlORcpyIkVVsD5sJA6CRx4guad0",
+  authDomain: "shifttap-cloud.firebaseapp.com",
+  projectId: "shifttap-cloud",
+  storageBucket: "shifttap-cloud.firebasestorage.app",
+  messagingSenderId: "818538130643",
+  appId: "1:818538130643:web:2614157b0d6a767deb3826"
+};
+
+let fbApp = null;
+let fbAuth = null;
+let fbDb = null;
+
+function firebaseConfigured(){
+  return !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId);
+}
+
+
+async function ensureFirebase(){
+  if(!firebaseConfigured()) return false;
+  if(fbApp && fbAuth && fbDb) return true;
+
+  fbApp = firebase.initializeApp(FIREBASE_CONFIG);
+  fbAuth = firebase.auth();
+  fbDb = firebase.firestore();
+
+  await fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  return true;
+}
+
+/* =========================
+   Cloud sync (Google login)
+   - Mobile friendly: redirect login
+   ========================= */
+const elLoginNote     = document.getElementById("loginNote") || null;
+const btnGoogleLogin  = document.getElementById("btnGoogleLogin") || null;
+const btnGoogleLogout = document.getElementById("btnGoogleLogout") || null;
+const btnCloudPull    = document.getElementById("btnCloudPull") || null;
+const btnCloudPush    = document.getElementById("btnCloudPush") || null;
+
+function setCloudUiEnabled(enabled){
+  if(btnGoogleLogin)  btnGoogleLogin.disabled  = !enabled;
+  if(btnGoogleLogout) btnGoogleLogout.disabled = !enabled;
+  if(btnCloudPull)    btnCloudPull.disabled    = !enabled;
+  if(btnCloudPush)    btnCloudPush.disabled    = !enabled;
+}
+window.showStartSaldoInfo = function(){
+  alert(t("start_saldo_info"));
+};
+
+function setLoginUi(user){
+  const loggedIn = !!user;
+  if(btnGoogleLogin)  btnGoogleLogin.style.display  = loggedIn ? "none" : "inline-flex";
+  if(btnGoogleLogout) btnGoogleLogout.style.display = loggedIn ? "inline-flex" : "none";
+  if(elLoginNote){
+    elLoginNote.textContent = loggedIn
+      ? `✅ ${t("cloud_logged_in")} ${user.email || user.displayName || "Google"}`
+      : t("cloud_not_logged");
+}
+}
+
+
+
+
+
+
+  let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+  /* =========================
+     i18n (3-talig)
+     ========================= */
+  const LANG = {
+
+nl: {
+  // --- Modal (handmatig) ---
+  history_title: "Historiek",
+  history_hint: "Vergeten uit te tikken?<br>Voeg handmatig toe.",
+  modal_add_title: "Handmatig toevoegen",
+  modal_edit_title: "Entry bewerken",
+  modal_hint: "Vergeet uit te tikken? Voeg gewoon de juiste tijden toe.",
+  btn_close: "Sluiten",
+  btn_save: "Opslaan",
+  btn_delete: "Verwijderen",
+  btn_add_manual: "Toevoegen",
+  no_entries: "Geen ingevulde data gevonden.",
+  week: "Week",
+  lbl_date: "Datum",
+  lbl_type: "Type",
+  lbl_start: "Start (HH:MM)",
+  lbl_end: "Einde (HH:MM)",
+  lbl_pause: "Pauze (min)",
+  lbl_note: "Opmerking (optioneel)",
+  ph_note: "bv. Garage na rit, file, wachten op klant...",
+
+  // --- Errors ---
+  err_choose_date: "Kies een datum.",
+  err_fill_times: "Vul start en einde in (of kies Recup).",
+  err_start_saldo_format: "Start saldo moet in formaat u:min zijn, bv 60:00",
+  err_normday_format: "Norm dag moet in formaat u:min zijn, bv 07:30",
+  err_bad_json: "Ongeldig JSON bestand.",
+  err_timer_short: "Timer is te kort. Gebruik START of + Handmatig.",
+  confirm_delete_entry: "Deze entry verwijderen?",
+
+  // --- General / UI ---
+  tab_day: "Dag-Shift",
+  tab_history: "Historiek",
+  calendar: "Kalender",
+  language: "Taal",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Opslaan",
+  manual: "+ Handmatig",
+  cancel: "Annuleren",
+  ok: "OK",
+
+  status_busy: "Bezig...",
+  status_paused: "Gepauzeerd",
+  status_not_started: "Niet gestart",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+  week_locked: "Week is vergrendeld",
+
+  today_work: "Vandaag",
+  week_work: "Deze week",
+  vac_taken: "Opgenomen vakantie",
+  overtime: "Saldo overuren",
+  overtime_settled: "Overuren verrekend",
+  minutes: "min",
+  hours: "u",
+  days: "dag",
+
+  // --- Types / labels ---
+  work: "Werk",
+  work_label: "WERK",
+  recup: "Recup",
+  recup_line: "RECUP - gaat van overuren af",
+  sick: "Ziekte",
+  vacation: "Vakantie",
+  holiday: "Feestdag",
+  net_line: "netto",
+  pause_line: "pauze",
+
+  // --- Detail ---
+  day_no_entry: "Geen invoer op deze dag.",
+  edit_btn: "✎ Bewerken",
+  edit_aria: "Bewerken",
+  note_label: "Opmerking",
+
+  // --- Verrekening ---
+  settle: "Verrekenen",
+  settle_hint: "Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.",
+  verrek_none: "Geen verrekening gevonden op die dag.",
+  verrek_deleted: "Verrekening verwijderd ✓",
+  reconciled: "Verrekend",
+  reconciled_remove: "Verrekening verwijderen",
+  hours_amount_hhmm: "Aantal uren (HH:MM)",
+
+  // --- Settings ---
+  settings: "Opslaan",
+  settings_saved: "Instellingen opgeslagen",
+  start_saldo: "Start saldo overuren (u:min)",
+  default_pause: "Standaard pauze (min)",
+  norm_day: "Duur normale werkdag (u:min)",
+
+  // --- Backup ---
+  backup: "Backup",
+  backup_last: "Laatste backup",
+  backup_never: "nooit",
+  backup_tip: "Tip: Maak regelmatig backup.",
+  import_json: "Import JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "PDF export",
+  pdf_title: "PDF export",
+  pdf_month: "Maand",
+  pdf_dates: "Datums",
+  pdf_from: "Van",
+  pdf_to: "Tot",
+  make_pdf: "Maak PDF",
+
+  // --- Cloud ---
+  cloud_title: "Google login + Cloud sync",
+  cloud_not_available: "Nog niet mogelijk.",
+  login_google: "Inloggen met Google",
+  logout_google: "Uitloggen",
+  cloud_download: "Herstel v Backup",
+  cloud_upload: "Backup Maken",
+  cloud_logged_in: "Ingelogd:",
+  cloud_not_logged: "Niet ingelogd.",
+  cloud_login_error: "Google login fout",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Naam werknemer",
+  employee_name_ph: "Jouw naam",
+  employer_name_label: "Naam werkgever",
+  employer_name_ph: "Naam werkgever",
+
+  // --- Setup modal ---
+  setup_title: "Welkom bij Shift-Tap 👋",
+  setup_intro: "Werkuren, recup en overuren zonder gedoe. Stel eerst even je basisinstellingen in.",
+  setup_lang: "Taal",
+  setup_normday: "Normale werkdag (uren)",
+  setup_norm_hint: "Voorbeeld: 07:30 of 08:00",
+  setup_pause: "Pauze (minuten)",
+  setup_pause_hint: "Dit is uw standaard pauze, deze wordt automatisch afgetrokken.",
+  setup_note: "Je kan deze instellingen later altijd aanpassen bij Instellingen.",
+  setup_done: "Klaar voor gebruik",
+
+  // --- Info bubbles ---
+  calendar_info: "Hier krijg je een overzicht per dag. Je ziet wanneer je recup, ziekte, vakantie, feestdag had of gewerkt hebt.\nVerrekeningen worden weergegeven met een groen bolletje.\nTik op een dag om details te bekijken of iets toe te voegen.",
+  settle_info: "Gebruik deze knop wanneer overuren zijn uitbetaald. Het ingegeven aantal uren wordt van je overurensaldo afgetrokken.",
+  norm_day_info: "Dit is het aantal uren dat je normaal per werkdag moet presteren. Pauzes reken je hier niet mee. Alles daarboven telt als overuren.",
+  start_saldo_info: "Dit is het aantal overuren dat je al had vóór deze periode.",
+  default_break_info: "Deze pauze wordt automatisch afgetrokken van je gewerkte tijd wanneer je een dag opslaat. Dit geldt zowel voor de timer als voor handmatige invoer.",
+  recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken.",
+  setup_fill_fields: "Vul beide velden correct in.",
+  setup_set_normday: "Stel eerst je normale werkdag in.",
+  week_lock_info: "Groen = open.<br>Rood = vergrendeld.<br>Verwijderen en bewerken zijn afgeschermd.<br>Tik op het icoon om te ontgrendelen.",
+  // --- Cloud status / backup extra ---
+  cloud_not_configured: "Cloud niet geconfigureerd.",
+  cloud_not_configured_status: "Cloud: niet geconfigureerd.",
+  firebase_not_configured: "Nog niet mogelijk (Firebase niet geconfigureerd).",
+
+  login_required_google: "Log eerst in met Google.",
+  login_failed: "Inloggen mislukt",
+  logout_failed: "Uitloggen mislukt",
+  logged_out: "Uitgelogd.",
+
+  cloud_loaded: "Cloud geladen",
+  cloud_updated: "Cloud bijgewerkt",
+
+  cloud_backup_success: "Backup naar cloud gelukt",
+  cloud_upload_failed: "Cloud upload mislukt",
+
+  cloud_download_failed: "Cloud download mislukt",
+  cloud_backup_invalid: "Cloud-backup is ongeldig.",
+  cloud_backup_not_found: "Geen cloud-backup gevonden.",
+
+  cloud_restore_confirm: "Cloud → toestel: dit overschrijft je data op dit toestel. Doen?",
+  cloud_to_device_success: "Cloud → toestel gelukt",
+
+  download_running: "Download bezig...",
+  upload_running: "Upload bezig..."
+
+},
+
+it: {
+  // --- Modal (manuale) ---
+  history_title: "Cronologia",
+  history_hint: "Hai dimenticato di timbrare?<br>Aggiungi manualmente.",
+  modal_add_title: "Aggiungi manualmente",
+  modal_edit_title: "Modifica voce",
+  modal_hint: "Hai dimenticato di timbrare? Inserisci semplicemente gli orari corretti.",
+  btn_close: "Chiudi",
+  btn_save: "Salva",
+  btn_delete: "Elimina",
+  btn_add_manual: "Aggiungi",
+  no_entries: "Nessun dato inserito.",
+  week: "Settimana",
+  lbl_date: "Data",
+  lbl_type: "Tipo",
+  lbl_start: "Inizio (HH:MM)",
+  lbl_end: "Fine (HH:MM)",
+  lbl_pause: "Pausa (min)",
+  lbl_note: "Nota (opzionale)",
+  ph_note: "es. Garage dopo il giro, traffico, attesa cliente...",
+
+  // --- Errors ---
+  err_choose_date: "Scegli una data.",
+  err_fill_times: "Inserisci inizio e fine (o scegli Recupero).",
+  err_start_saldo_format: "Il saldo iniziale deve essere nel formato h:mm, es. 60:00",
+  err_normday_format: "La giornata normale deve essere nel formato h:mm, es. 7:30",
+  err_bad_json: "File JSON non valido.",
+  err_timer_short: "Il timer è troppo breve. Usa START o + Manuale.",
+  confirm_delete_entry: "Eliminare questa voce?",
+
+  // --- General / UI ---
+  tab_day: "Giornata",
+  tab_history: "Cronologia",
+  calendar: "Calendario",
+  language: "Lingua",
+
+  start: "Avvia",
+  pause_stop: "Stop",
+  save: "Salva",
+  manual: "+ Manuale",
+  cancel: "Annulla",
+  ok: "OK",
+
+  status_busy: "In corso...",
+  status_paused: "In pausa",
+  status_not_started: "Non avviato",
+  status_online: "Stato: online",
+  status_offline: "Stato: offline",
+ week_locked: "La settimana è bloccata",
+  today_work: "Oggi",
+  week_work: "Questa settimana",
+  vac_taken: "Ferie utilizzate",
+  overtime: "Saldo straordinari",
+  overtime_settled: "Straordinari compensati",
+  minutes: "min",
+  hours: "h",
+  days: "giorno",
+
+  // --- Types / labels ---
+  work: "Lavoro",
+  work_label: "LAVORO",
+  recup: "Recupero",
+  recup_line: "RECUPERO - sottratto dagli straordinari",
+  sick: "Malattia",
+  vacation: "Vacanza",
+  holiday: "Festivo",
+  net_line: "netto",
+  pause_line: "pausa",
+
+  // --- Detail ---
+  day_no_entry: "Nessuna voce per questo giorno.",
+  edit_btn: "✎ Modifica",
+  edit_aria: "Modifica",
+  note_label: "Nota",
+
+  // --- Verrekening ---
+  settle: "Compensa",
+  settle_hint: "Hai ricevuto il pagamento degli straordinari? Registralo qui per sottrarlo dal saldo.",
+  verrek_none: "Nessuna compensazione trovata in questo giorno.",
+  verrek_deleted: "Compensazione eliminata ✓",
+  reconciled: "Compensato",
+  reconciled_remove: "Rimuovi compensazione",
+  hours_amount_hhmm: "Numero di ore (HH:MM)",
+
+  // --- Settings ---
+  settings: "Salva",
+  settings_saved: "Impostazioni salvate",
+  start_saldo: "Saldo iniziale straordinari (h:mm)",
+  default_pause: "Pausa predefinita (min)",
+  norm_day: "Durata giornata lavorativa (h:mm)",
+
+  // --- Backup ---
+  backup: "Backup",
+  backup_last: "Ultimo backup",
+  backup_never: "mai",
+  backup_tip: "Suggerimento: esegui regolarmente un backup.",
+  import_json: "Importa JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Esporta PDF",
+  pdf_title: "Esportazione PDF",
+  pdf_month: "Mese",
+  pdf_dates: "Date",
+  pdf_from: "Da",
+  pdf_to: "A",
+  make_pdf: "Crea PDF",
+
+  // --- Cloud ---
+  cloud_title: "Accesso Google + sincronizzazione cloud",
+  cloud_not_available: "Non ancora disponibile.",
+  login_google: "Accedi con Google",
+  logout_google: "Disconnetti",
+  cloud_download: "Ripristina backup",
+  cloud_upload: "Crea backup",
+  cloud_logged_in: "Connesso:",
+  cloud_not_logged: "Non connesso.",
+  cloud_login_error: "Errore di accesso Google",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Nome dipendente",
+  employee_name_ph: "Il tuo nome",
+  employer_name_label: "Nome datore di lavoro",
+  employer_name_ph: "Nome datore di lavoro",
+
+  // --- Setup modal ---
+  setup_title: "Benvenuto in Shift-Tap 👋",
+  setup_intro: "Ore di lavoro, recupero e straordinari senza complicazioni. Configura prima le impostazioni di base.",
+  setup_lang: "Lingua",
+  setup_normday: "Giornata lavorativa normale (ore)",
+  setup_norm_hint: "Esempio: 07:30 o 08:00",
+  setup_pause: "Pausa (minuti)",
+  setup_pause_hint: "Questa è la pausa standard che verrà sottratta automaticamente.",
+  setup_note: "Puoi sempre modificare queste impostazioni più tardi nelle Impostazioni.",
+  setup_done: "Pronto all'uso",
+
+  // --- Info bubbles ---
+  calendar_info: "Qui hai una panoramica giornaliera. Vedi quando hai avuto recupero, malattia, ferie, festivo o hai lavorato.\nLe compensazioni sono indicate con un punto verde.\nTocca un giorno per vedere i dettagli o aggiungere una voce.",
+  settle_info: "Usa questo pulsante quando gli straordinari sono stati pagati. Il numero di ore inserito verrà sottratto dal saldo straordinari.",
+  norm_day_info: "Questo è il numero di ore che normalmente devi lavorare in un giorno. Le pause non sono incluse. Tutto ciò che supera questo conta come straordinario.",
+  start_saldo_info: "Questo è il saldo di straordinari che avevi prima di questo periodo.",
+  default_break_info: "Questa pausa viene automaticamente sottratta dal tempo lavorato quando salvi una giornata. Vale sia per il timer che per le inserzioni manuali.",
+  recup_info: "Usa Recupero quando prendi un giorno libero utilizzando straordinari accumulati. Questo giorno verrà sottratto dal saldo straordinari.",
+
+  setup_fill_fields: "Compila correttamente entrambi i campi.",
+  setup_set_normday: "Imposta prima la tua giornata lavorativa normale.",
+  week_lock_info: "Verde = aperto.<br>Rosso = bloccato.<br>Eliminazione e modifica disabilitate.<br>Tocca l’icona per sbloccare.",
+  // --- Cloud status / backup extra ---
+  cloud_not_configured: "Cloud non configurato.",
+  cloud_not_configured_status: "Cloud: non configurato.",
+  firebase_not_configured: "Non ancora disponibile (Firebase non configurato).",
+
+  login_required_google: "Accedi prima con Google.",
+  login_failed: "Accesso non riuscito",
+  logged_out: "Disconnesso.",
+  logout_failed: "Disconnessione non riuscita",
+
+  logged_in: "Accesso effettuato",
+  not_logged_in: "Non connesso.",
+
+  cloud_loaded: "Cloud caricato",
+  cloud_updated: "Cloud aggiornato",
+
+  cloud_backup_success: "Backup nel cloud riuscito",
+  cloud_upload_failed: "Caricamento cloud non riuscito",
+
+  cloud_download_failed: "Download cloud non riuscito",
+  cloud_backup_invalid: "Il backup cloud non è valido.",
+  cloud_backup_not_found: "Nessun backup cloud trovato.",
+
+  cloud_restore_confirm: "Cloud → dispositivo: questo sovrascriverà i dati su questo dispositivo. Continuare?",
+  cloud_to_device_success: "Cloud → dispositivo completato",
+
+  download_running: "Download in corso...",
+  upload_running: "Caricamento in corso..."
+},
+
+en: {
+
+  // ===== General navigation =====
+  calendar: "Calendar",
+  history_title: "History",
+  tab_day: "Day Shift",
+  tab_history: "History",
+  language: "Language",
+
+  // ===== General buttons =====
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Save",
+  manual: "+ Manual",
+  cancel: "Cancel",
+  ok: "OK",
+  btn_close: "Close",
+  btn_save: "Save",
+  btn_delete: "Delete",
+  btn_add_manual: "Add manual",
+  no_entries: "No entries yet.",
+
+  // ===== Manual modal =====
+  modal_add_title: "Add manually",
+  modal_edit_title: "Edit entry",
+  modal_hint: "Forgot to clock out? Just add the correct times.",
+  history_hint: "Forgot to clock out?<br>Add it manually.",
+  week: "Week",
+  lbl_date: "Date",
+  lbl_type: "Type",
+  lbl_start: "Start (HH:MM)",
+  lbl_end: "End (HH:MM)",
+  lbl_pause: "Break (min)",
+  lbl_note: "Note (optional)",
+  ph_note: "e.g. Garage after route, traffic, waiting for customer...",
+
+  // ===== Employee / Employer =====
+  employee_name_label: "Employee name",
+  employee_name_ph: "Your name",
+  employer_name_label: "Employer name",
+  employer_name_ph: "Employer name",
+
+  // ===== PDF =====
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Export PDF",
+  pdf_title: "PDF export",
+  pdf_month: "Month",
+  pdf_dates: "Dates",
+  pdf_from: "From",
+  pdf_to: "To",
+  make_pdf: "Make PDF",
+
+  // ===== Cloud =====
+  cloud_title: "Google login + Cloud sync",
+  cloud_not_available: "Not available yet.",
+  login_google: "Login with Google",
+  logout_google: "Logout",
+  cloud_download: "Restore backup",
+  cloud_upload: "Create backup",
+  cloud_logged_in: "Logged in:",
+  cloud_not_logged: "Not logged in.",
+  cloud_login_error: "Google login error",
+  week_locked: "Week is locked",
+
+  // ===== Backup =====
+  backup: "Backup",
+  backup_last: "Last backup",
+  backup_never: "never",
+  backup_tip: "Tip: Make regular backups.",
+  import_json: "Import JSON",
+
+  // ===== Overtime / Settlement =====
+  overtime: "Overtime balance",
+  overtime_settled: "Overtime settled",
+  settle: "Deduct",
+  settle_hint: "Have your overtime hours been paid out? Record them here to deduct them from your balance.",
+  verrek_none: "No settlement found on that day.",
+  verrek_deleted: "Settlement removed ✓",
+  reconciled: "Reconciled",
+  reconciled_remove: "Remove reconciliation",
+  hours_amount_hhmm: "Number of hours (HH:MM)",
+
+  // ===== Status =====
+  status_busy: "Running...",
+  status_paused: "Paused",
+  status_not_started: "Not started",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+
+  // ===== Work statistics =====
+  today_work: "Today",
+  week_work: "This week",
+  vac_taken: "Vacation taken",
+  minutes: "min",
+  hours: "h",
+  days: "day",
+
+  // ===== Types =====
+  work: "Work",
+  work_label: "WORK",
+  recup: "Comp Day",
+  recup_line: "COMP DAY - subtracts from overtime",
+  sick: "Sick leave",
+  vacation: "Vacation",
+  holiday: "Public holiday",
+  net_line: "net",
+  pause_line: "break",
+
+  // ===== Settings =====
+  settings: "Save",
+  settings_saved: "Settings saved",
+  start_saldo: "Start overtime balance (h:mm)",
+  default_pause: "Default break (min)",
+  norm_day: "Normal workday duration (h:mm)",
+
+  // ===== Errors =====
+  err_choose_date: "Choose a date.",
+  err_fill_times: "Fill in start and end (or choose Comp Day).",
+  err_start_saldo_format: "Start balance must be in h:mm format, e.g. 60:00",
+  err_normday_format: "Daily norm must be in h:mm format, e.g. 7:30",
+  err_bad_json: "Invalid JSON file.",
+  err_timer_short: "Timer is too short. Use START or + Manual.",
+
+  // ===== Day detail =====
+  day_no_entry: "No entry on this day.",
+  edit_btn: "✎ Edit",
+  edit_aria: "Edit",
+  note_label: "Note",
+
+  // ===== Setup modal =====
+  setup_title: "Welcome to Shift-Tap 👋",
+  setup_intro: "Work hours, recup and overtime without hassle. First set your basic settings.",
+  setup_lang: "Language",
+  setup_normday: "Normal workday (hours)",
+  setup_norm_hint: "Example: 07:30 or 08:00",
+  setup_pause: "Break (minutes)",
+  setup_pause_hint: "This is your default break and will be automatically deducted.",
+  setup_note: "You can always change these settings later in Settings.",
+  setup_done: "Ready to use",
+
+  // ===== Info bubbles =====
+  calendar_info: "Here you get a daily overview. You can see when you had a comp day, sick leave, vacation, public holiday or worked.\nSettlements are indicated with a green dot.\nTap a day to view details or add an entry.",
+  settle_info: "Use this button when overtime hours have been paid out. The entered number of hours will be deducted from your overtime balance.",
+  norm_day_info: "This is the number of hours you are expected to work on a normal day. Breaks are not included. Anything above this counts as overtime.",
+  start_saldo_info: "This is the overtime balance you already had before this period.",
+  default_break_info: "This break is automatically deducted from your worked time when you save a day. This applies to both the timer and manual entries.",
+  recup_info: "Use Comp Day when you take a full day off using accumulated overtime. This day will be deducted from your overtime balance.",
+  setup_fill_fields: "Fill in both fields correctly.",
+ setup_set_normday: "Set your normal workday first.",
+ week_lock_info: "Green = open.<br>Red = locked.<br>Deleting and editing are disabled.<br>Tap the icon to unlock.",
+ // --- Cloud status / backup extra ---
+  cloud_not_configured: "Cloud not configured.",
+  cloud_not_configured_status: "Cloud: not configured.",
+  firebase_not_configured: "Not available yet (Firebase not configured).",
+
+  login_required_google: "Please log in with Google first.",
+  login_failed: "Login failed",
+  logged_out: "Logged out.",
+  logout_failed: "Logout failed",
+
+  logged_in: "Logged in",
+  not_logged_in: "Not logged in.",
+
+  cloud_loaded: "Cloud loaded",
+  cloud_updated: "Cloud updated",
+
+  cloud_backup_success: "Backup to cloud successful",
+  cloud_upload_failed: "Cloud upload failed",
+
+  cloud_download_failed: "Cloud download failed",
+  cloud_backup_invalid: "Cloud backup is invalid.",
+  cloud_backup_not_found: "No cloud backup found.",
+
+  cloud_restore_confirm: "Cloud → device: this will overwrite the data on this device. Continue?",
+  cloud_to_device_success: "Cloud → device successful",
+confirm_delete_entry: "Delete this entry?",
+  download_running: "Downloading...",
+  upload_running: "Uploading..."
+ 
+},
+
+hu: {
+  // --- Modal (manual) ---
+  history_title: "Előzmények",
+  history_hint: "Elfelejtettél kijelentkezni?<br>Add hozzá kézzel.",
+  modal_add_title: "Kézi hozzáadás",
+  modal_edit_title: "Bejegyzés szerkesztése",
+  modal_hint: "Elfelejtettél kijelentkezni? Csak add meg a helyes időket.",
+  btn_close: "Bezárás",
+  btn_save: "Mentés",
+  btn_delete: "Törlés",
+  btn_add_manual: "Hozzáadás",
+  no_entries: "Nem található adat.",
+  week: "Hét",
+  lbl_date: "Dátum",
+  lbl_type: "Típus",
+  lbl_start: "Kezdés (ÓÓ:PP)",
+  lbl_end: "Vége (ÓÓ:PP)",
+  lbl_pause: "Szünet (perc)",
+  lbl_note: "Megjegyzés (opcionális)",
+  ph_note: "pl. garázs a fuvar után, dugó, várakozás az ügyfélre...",
+
+  // --- Errors ---
+  err_choose_date: "Válassz dátumot.",
+  err_fill_times: "Add meg a kezdést és a végét (vagy válaszd a szabadnapot).",
+  err_start_saldo_format: "A kezdő egyenleg formátuma ó:pp kell legyen, pl. 60:00",
+  err_normday_format: "A napi norma formátuma ó:pp kell legyen, pl. 07:30",
+  err_bad_json: "Érvénytelen JSON fájl.",
+  err_timer_short: "Az időzítő túl rövid. Használd a START vagy + Kézi opciót.",
+  confirm_delete_entry: "Törlöd ezt a bejegyzést?",
+
+  // --- General / UI ---
+  tab_day: "Munkanap",
+  tab_history: "Előzmények",
+  calendar: "Naptár",
+  language: "Nyelv",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Mentés",
+  manual: "+ Kézi",
+  cancel: "Mégse",
+  ok: "OK",
+
+  status_busy: "Fut...",
+  status_paused: "Szüneteltetve",
+  status_not_started: "Nem indult el",
+  status_online: "Állapot: online",
+  status_offline: "Állapot: offline",
+  week_locked: "A hét zárolva",
+
+  today_work: "Ma",
+  week_work: "Ez a hét",
+  vac_taken: "Kivett szabadság",
+  overtime: "Túlóra egyenleg",
+  overtime_settled: "Túlóra elszámolva",
+  minutes: "perc",
+  hours: "óra",
+  days: "nap",
+
+  // --- Types / labels ---
+  work: "Munka",
+  work_label: "MUNKA",
+  recup: "Szabadnap",
+  recup_line: "SZABADNAP - levonva a túlórából",
+  sick: "Betegség",
+  vacation: "Szabadság",
+  holiday: "Ünnepnap",
+  net_line: "nettó",
+  pause_line: "szünet",
+
+  // --- Detail ---
+  day_no_entry: "Nincs bejegyzés ezen a napon.",
+  edit_btn: "✎ Szerkesztés",
+  edit_aria: "Szerkesztés",
+  note_label: "Megjegyzés",
+
+  // --- Settlement ---
+  settle: "Elszámolás",
+  settle_hint: "Kifizették a túlórákat? Rögzítsd itt, hogy levonódjanak az egyenlegből.",
+  verrek_none: "Nincs elszámolás ezen a napon.",
+  verrek_deleted: "Elszámolás törölve ✓",
+  reconciled: "Elszámolva",
+  reconciled_remove: "Elszámolás törlése",
+  hours_amount_hhmm: "Órák száma (ÓÓ:PP)",
+
+  // --- Settings ---
+  settings: "Mentés",
+  settings_saved: "Beállítások mentve",
+  start_saldo: "Kezdő túlóra egyenleg (ó:perc)",
+  default_pause: "Alapértelmezett szünet (perc)",
+  norm_day: "Normál munkanap hossza (ó:perc)",
+
+  // --- Backup ---
+  backup: "Biztonsági mentés",
+  backup_last: "Utolsó mentés",
+  backup_never: "soha",
+  backup_tip: "Tipp: készíts rendszeresen biztonsági mentést.",
+  import_json: "JSON import",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "PDF export",
+  pdf_title: "PDF export",
+  pdf_month: "Hónap",
+  pdf_dates: "Dátumok",
+  pdf_from: "Kezd",
+  pdf_to: "Vége",
+  make_pdf: "PDF készítése",
+
+  // --- Cloud ---
+  cloud_title: "Google bejelentkezés + felhő szinkron",
+  cloud_not_available: "Még nem elérhető.",
+  login_google: "Bejelentkezés Google-lel",
+  logout_google: "Kijelentkezés",
+  cloud_download: "Mentés visszaállítása",
+  cloud_upload: "Mentés készítése",
+  cloud_logged_in: "Bejelentkezve:",
+  cloud_not_logged: "Nincs bejelentkezve.",
+  cloud_login_error: "Google bejelentkezési hiba",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Dolgozó neve",
+  employee_name_ph: "A te neved",
+  employer_name_label: "Munkáltató neve",
+  employer_name_ph: "Munkáltató neve",
+
+  // --- Setup modal ---
+  setup_title: "Üdv a Shift-Tap alkalmazásban 👋",
+  setup_intro: "Munkaidő, szabadnap és túlóra egyszerűen. Először állítsd be az alapbeállításokat.",
+  setup_lang: "Nyelv",
+  setup_normday: "Normál munkanap (óra)",
+  setup_norm_hint: "Példa: 07:30 vagy 08:00",
+  setup_pause: "Szünet (perc)",
+  setup_pause_hint: "Ez az alapértelmezett szünet, amely automatikusan levonásra kerül.",
+  setup_note: "Ezeket a beállításokat később bármikor módosíthatod.",
+  setup_done: "Készen áll a használatra",
+
+  // --- Info bubbles ---
+  calendar_info: "Itt napi áttekintést kapsz. Láthatod mikor volt szabadnapod, betegszabadságod, szabadságod vagy munkád.\nAz elszámolások zöld ponttal jelennek meg.\nÉrints meg egy napot a részletekhez vagy új bejegyzéshez.",
+  settle_info: "Használd ezt a gombot amikor a túlórákat kifizették. A megadott órák levonásra kerülnek az egyenlegből.",
+  norm_day_info: "Ez az a munkaidő, amit egy normál munkanapon teljesítened kell. A szünetek nem számítanak bele. Ami efölött van, túlórának számít.",
+  start_saldo_info: "Ez a túlórák száma, amivel már rendelkeztél a periódus előtt.",
+  default_break_info: "Ez a szünet automatikusan levonásra kerül a munkaidőből a nap mentésekor. Ez érvényes az időzítőre és a kézi bejegyzésekre is.",
+  recup_info: "Használd a Szabadnap opciót amikor egy teljes napot veszel ki a felhalmozott túlórákból. Ez levonódik a túlóra egyenlegből.",
+  setup_fill_fields: "Töltse ki mindkét mezőt helyesen.",
+setup_set_normday: "Először állítsa be a normál munkanapot.",
+week_lock_info: "Zöld = nyitva.<br>Piros = zárolva.<br>Törlés és szerkesztés letiltva.<br>Érintsd meg az ikont a feloldáshoz.",
+// --- Cloud status / backup extra ---
+  cloud_not_configured: "A felhő nincs beállítva.",
+  cloud_not_configured_status: "Felhő: nincs beállítva.",
+  firebase_not_configured: "Még nem érhető el (a Firebase nincs beállítva).",
+
+  login_required_google: "Először jelentkezz be Google-lel.",
+  login_failed: "Bejelentkezés sikertelen",
+  logged_out: "Kijelentkezve.",
+  logout_failed: "Kijelentkezés sikertelen",
+
+  logged_in: "Bejelentkezve",
+  not_logged_in: "Nincs bejelentkezve.",
+
+  cloud_loaded: "Felhő betöltve",
+  cloud_updated: "Felhő frissítve",
+
+  cloud_backup_success: "Felhőmentés sikeres",
+  cloud_upload_failed: "Felhő feltöltés sikertelen",
+
+  cloud_download_failed: "A felhő letöltése sikertelen",
+  cloud_backup_invalid: "A felhőmentés érvénytelen.",
+  cloud_backup_not_found: "Nem található felhőmentés.",
+
+  cloud_restore_confirm: "Felhő → eszköz: ez felülírja az adatokat ezen az eszközön. Folytatod?",
+  cloud_to_device_success: "Felhő → eszköz sikeres",
+
+  download_running: "Letöltés folyamatban...",
+  upload_running: "Feltöltés folyamatban..."
+
+},
+
+de: {
+
+  history_title: "Verlauf",
+  history_hint: "Vergessen auszuticken?<br>Manuell hinzufügen.",
+  modal_add_title: "Manuell hinzufügen",
+  modal_edit_title: "Eintrag bearbeiten",
+  modal_hint: "Vergessen auszuticken? Füge einfach die richtigen Zeiten hinzu.",
+  btn_close: "Schließen",
+  btn_save: "Speichern",
+  btn_delete: "Löschen",
+  btn_add_manual: "Hinzufügen",
+  no_entries: "Keine Daten gefunden.",
+  week: "Woche",
+  lbl_date: "Datum",
+  lbl_type: "Typ",
+  lbl_start: "Start (HH:MM)",
+  lbl_end: "Ende (HH:MM)",
+  lbl_pause: "Pause (Min)",
+  lbl_note: "Notiz (optional)",
+  ph_note: "z.B. Garage nach Tour, Stau, warten auf Kunde...",
+
+  err_choose_date: "Datum wählen.",
+  err_fill_times: "Start und Ende ausfüllen (oder Freizeitausgleich wählen).",
+  err_start_saldo_format: "Startsaldo muss im Format h:mm sein, z.B. 60:00",
+  err_normday_format: "Normtag muss im Format h:mm sein, z.B. 07:30",
+  err_bad_json: "Ungültige JSON Datei.",
+  err_timer_short: "Timer ist zu kurz. Verwende START oder + Manuell.",
+  confirm_delete_entry: "Diesen Eintrag löschen?",
+
+  tab_day: "Arbeitstag",
+  tab_history: "Verlauf",
+  calendar: "Kalender",
+  language: "Sprache",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Speichern",
+  manual: "+ Manuell",
+  cancel: "Abbrechen",
+  ok: "OK",
+
+  status_busy: "Läuft...",
+  status_paused: "Pausiert",
+  status_not_started: "Nicht gestartet",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+  week_locked: "Woche ist gesperrt",
+
+  today_work: "Heute",
+  week_work: "Diese Woche",
+  vac_taken: "Urlaub genommen",
+  overtime: "Überstunden Saldo",
+  overtime_settled: "Überstunden verrechnet",
+  minutes: "min",
+  hours: "Std",
+  days: "Tag",
+
+  work: "Arbeit",
+  work_label: "ARBEIT",
+  recup: "Ausgleich",
+  recup_line: "Ausgleich - wird von Überstunden abgezogen",
+  sick: "Krank",
+  vacation: "Urlaub",
+  holiday: "Feiertag",
+  net_line: "netto",
+  pause_line: "Pause",
+
+  day_no_entry: "Keine Einträge an diesem Tag.",
+  edit_btn: "✎ Bearbeiten",
+  edit_aria: "Bearbeiten",
+  note_label: "Notiz",
+
+  settle: "Verrechnen",
+  settle_hint: "Überstunden ausbezahlt bekommen? Trage sie hier ein, um sie vom Saldo abzuziehen.",
+  verrek_none: "Keine Verrechnung an diesem Tag gefunden.",
+  verrek_deleted: "Verrechnung gelöscht ✓",
+  reconciled: "Verrechnet",
+  reconciled_remove: "Verrechnung entfernen",
+  hours_amount_hhmm: "Stundenanzahl (HH:MM)",
+
+  settings: "Speichern",
+  settings_saved: "Einstellungen gespeichert",
+  start_saldo: "Startsaldo Überstunden (h:min)",
+  default_pause: "Standardpause (Min)",
+  norm_day: "Normale Arbeitszeit pro Tag (h:min)",
+
+  backup: "Backup",
+  backup_last: "Letztes Backup",
+  backup_never: "nie",
+  backup_tip: "Tipp: Regelmäßig Backup erstellen.",
+  import_json: "JSON importieren",
+
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "PDF Export",
+  pdf_title: "PDF Export",
+  pdf_month: "Monat",
+  pdf_dates: "Daten",
+  pdf_from: "Von",
+  pdf_to: "Bis",
+  make_pdf: "PDF erstellen",
+
+  cloud_title: "Google Login + Cloud Sync",
+  cloud_not_available: "Noch nicht verfügbar.",
+  login_google: "Mit Google anmelden",
+  logout_google: "Abmelden",
+  cloud_download: "Backup wiederherstellen",
+  cloud_upload: "Backup erstellen",
+  cloud_logged_in: "Angemeldet:",
+  cloud_not_logged: "Nicht angemeldet.",
+  cloud_login_error: "Google Login Fehler",
+
+  employee_name_label: "Name Mitarbeiter",
+  employee_name_ph: "Dein Name",
+  employer_name_label: "Name Arbeitgeber",
+  employer_name_ph: "Name Arbeitgeber",
+
+  setup_title: "Willkommen bei Shift-Tap 👋",
+  setup_intro: "Arbeitszeit, Freizeitausgleich und Überstunden ohne Aufwand. Richte zuerst deine Grundeinstellungen ein.",
+  setup_lang: "Sprache",
+  setup_normday: "Normale Arbeitszeit (Stunden)",
+  setup_norm_hint: "Beispiel: 07:30 oder 08:00",
+  setup_pause: "Pause (Minuten)",
+  setup_pause_hint: "Dies ist deine Standardpause und wird automatisch abgezogen.",
+  setup_note: "Du kannst diese Einstellungen später jederzeit ändern.",
+  setup_done: "Bereit",
+
+  calendar_info: "Hier bekommst du eine Tagesübersicht. Du siehst wann du Freizeitausgleich, Krankheit, Urlaub, Feiertag hattest oder gearbeitet hast.\nVerrechnungen werden mit einem grünen Punkt angezeigt.\nTippe auf einen Tag um Details zu sehen oder etwas hinzuzufügen.",
+  settle_info: "Verwende diese Taste wenn Überstunden ausbezahlt wurden. Die eingegebene Stundenanzahl wird vom Überstunden-Saldo abgezogen.",
+  norm_day_info: "Dies ist die Anzahl Stunden die du normalerweise pro Arbeitstag leisten musst. Pausen werden hier nicht mitgerechnet. Alles darüber zählt als Überstunden.",
+  start_saldo_info: "Dies ist die Anzahl Überstunden die du vor diesem Zeitraum bereits hattest.",
+  default_break_info: "Diese Pause wird automatisch von deiner Arbeitszeit abgezogen wenn du einen Tag speicherst. Dies gilt sowohl für den Timer als auch für manuelle Einträge.",
+  recup_info: "Verwende Freizeitausgleich wenn du einen ganzen Tag mit angesammelten Überstunden kompensierst. Dieser Tag wird vom Überstunden-Saldo abgezogen.",
+  setup_fill_fields: "Füllen Sie beide Felder korrekt aus.",
+setup_set_normday: "Stellen Sie zuerst Ihren normalen Arbeitstag ein.",
+week_lock_info: "Grün = offen.<br>Rot = gesperrt.<br>Löschen und Bearbeiten sind deaktiviert.<br>Tippe auf das Symbol zum Entsperren.",
+// --- Cloud status / backup extra ---
+  cloud_not_configured: "Cloud nicht konfiguriert.",
+  cloud_not_configured_status: "Cloud: nicht konfiguriert.",
+  firebase_not_configured: "Noch nicht verfügbar (Firebase nicht konfiguriert).",
+
+  login_required_google: "Bitte zuerst mit Google anmelden.",
+  login_failed: "Anmeldung fehlgeschlagen",
+  logged_out: "Abgemeldet.",
+  logout_failed: "Abmeldung fehlgeschlagen",
+
+  logged_in: "Angemeldet",
+  not_logged_in: "Nicht angemeldet.",
+
+  cloud_loaded: "Cloud geladen",
+  cloud_updated: "Cloud aktualisiert",
+
+  cloud_backup_success: "Cloud-Backup erfolgreich",
+  cloud_upload_failed: "Cloud-Upload fehlgeschlagen",
+
+  cloud_download_failed: "Cloud-Download fehlgeschlagen",
+  cloud_backup_invalid: "Cloud-Backup ist ungültig.",
+  cloud_backup_not_found: "Kein Cloud-Backup gefunden.",
+
+  cloud_restore_confirm: "Cloud → Gerät: Dies überschreibt die Daten auf diesem Gerät. Fortfahren?",
+  cloud_to_device_success: "Cloud → Gerät erfolgreich",
+
+  download_running: "Download läuft...",
+  upload_running: "Upload läuft..."
+
+},
+
+pl: {
+  // --- Modal (handmatig) ---
+  history_title: "Historia",
+  history_hint: "Zapomniałeś się wylogować?<br>Dodaj ręcznie.",
+  modal_add_title: "Dodaj ręcznie",
+  modal_edit_title: "Edytuj wpis",
+  modal_hint: "Zapomniałeś się wylogować? Dodaj właściwe godziny.",
+  btn_close: "Zamknij",
+  btn_save: "Zapisz",
+  btn_delete: "Usuń",
+  btn_add_manual: "Dodaj",
+  no_entries: "Nie znaleziono danych.",
+  week: "Tydzień",
+  lbl_date: "Data",
+  lbl_type: "Typ",
+  lbl_start: "Start (GG:MM)",
+  lbl_end: "Koniec (GG:MM)",
+  lbl_pause: "Przerwa (min)",
+  lbl_note: "Notatka (opcjonalnie)",
+  ph_note: "np. garaż po trasie, korek, oczekiwanie na klienta...",
+
+  // --- Errors ---
+  err_choose_date: "Wybierz datę.",
+  err_fill_times: "Wprowadź start i koniec (lub wybierz dzień odbioru).",
+  err_start_saldo_format: "Saldo początkowe musi mieć format g:mm, np. 60:00",
+  err_normday_format: "Norma dnia musi mieć format g:mm, np. 07:30",
+  err_bad_json: "Nieprawidłowy plik JSON.",
+  err_timer_short: "Timer jest zbyt krótki. Użyj START lub + Ręcznie.",
+  confirm_delete_entry: "Usunąć ten wpis?",
+
+  // --- General / UI ---
+  tab_day: "Dzień pracy",
+  tab_history: "Historia",
+  calendar: "Kalendarz",
+  language: "Język",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Zapisz",
+  manual: "+ Ręcznie",
+  cancel: "Anuluj",
+  ok: "OK",
+
+  status_busy: "W toku...",
+  status_paused: "Wstrzymane",
+  status_not_started: "Nie rozpoczęto",
+  status_online: "Status: online",
+  status_offline: "Status: offline",
+  week_locked: "Tydzień jest zablokowany",
+
+  today_work: "Dzisiaj",
+  week_work: "Ten tydzień",
+  vac_taken: "Wykorzystany urlop",
+  overtime: "Saldo nadgodzin",
+  overtime_settled: "Nadgodziny rozliczone",
+  minutes: "min",
+  hours: "godz.",
+  days: "dzień",
+
+  // --- Types / labels ---
+  work: "Praca",
+  work_label: "PRACA",
+  recup: "Odbiór",
+  recup_line: "ODBÓR - odejmowany od nadgodzin",
+  sick: "Chorobowe",
+  vacation: "Urlop",
+  holiday: "Święto",
+  net_line: "netto",
+  pause_line: "przerwa",
+
+  // --- Detail ---
+  day_no_entry: "Brak wpisu w tym dniu.",
+  edit_btn: "✎ Edytuj",
+  edit_aria: "Edytuj",
+  note_label: "Notatka",
+
+  // --- Verrekening ---
+  settle: "Rozlicz",
+  settle_hint: "Otrzymałeś wypłatę za nadgodziny? Zarejestruj je tutaj, aby odjąć je od salda.",
+  verrek_none: "Nie znaleziono rozliczenia w tym dniu.",
+  verrek_deleted: "Rozliczenie usunięte ✓",
+  reconciled: "Rozliczone",
+  reconciled_remove: "Usuń rozliczenie",
+  hours_amount_hhmm: "Liczba godzin (GG:MM)",
+
+  // --- Settings ---
+  settings: "Zapisz",
+  settings_saved: "Ustawienia zapisane",
+  start_saldo: "Saldo początkowe nadgodzin (g:min)",
+  default_pause: "Domyślna przerwa (min)",
+  norm_day: "Normalny dzień pracy (g:min)",
+
+  // --- Backup ---
+  backup: "Kopia zapasowa",
+  backup_last: "Ostatnia kopia",
+  backup_never: "nigdy",
+  backup_tip: "Wskazówka: regularnie twórz kopię zapasową.",
+  import_json: "Importuj JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Eksport PDF",
+  pdf_title: "Eksport PDF",
+  pdf_month: "Miesiąc",
+  pdf_dates: "Daty",
+  pdf_from: "Od",
+  pdf_to: "Do",
+  make_pdf: "Utwórz PDF",
+
+  // --- Cloud ---
+  cloud_title: "Logowanie Google + synchronizacja w chmurze",
+  cloud_not_available: "Jeszcze niedostępne.",
+  login_google: "Zaloguj się przez Google",
+  logout_google: "Wyloguj",
+  cloud_download: "Przywróć kopię zapasową",
+  cloud_upload: "Utwórz kopię zapasową",
+  cloud_logged_in: "Zalogowano:",
+  cloud_not_logged: "Nie zalogowano.",
+  cloud_login_error: "Błąd logowania Google",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Imię pracownika",
+  employee_name_ph: "Twoje imię",
+  employer_name_label: "Nazwa pracodawcy",
+  employer_name_ph: "Nazwa pracodawcy",
+
+  // --- Setup modal ---
+  setup_title: "Witamy w Shift-Tap 👋",
+  setup_intro: "Godziny pracy, odbiór i nadgodziny bez problemów. Najpierw ustaw podstawowe ustawienia.",
+  setup_lang: "Język",
+  setup_normday: "Normalny dzień pracy (godziny)",
+  setup_norm_hint: "Przykład: 07:30 lub 08:00",
+  setup_pause: "Przerwa (minuty)",
+  setup_pause_hint: "To jest twoja domyślna przerwa i zostanie automatycznie odjęta.",
+  setup_note: "Te ustawienia możesz później zawsze zmienić w ustawieniach.",
+  setup_done: "Gotowe do użycia",
+
+  // --- Info bubbles ---
+  calendar_info: "Tutaj masz przegląd każdego dnia. Widzisz kiedy miałeś odbiór, chorobowe, urlop, święto lub pracowałeś.\nRozliczenia są oznaczone zieloną kropką.\nDotknij dnia aby zobaczyć szczegóły lub coś dodać.",
+  settle_info: "Użyj tego przycisku gdy nadgodziny zostały wypłacone. Wpisana liczba godzin zostanie odjęta od salda nadgodzin.",
+  norm_day_info: "To liczba godzin które normalnie musisz przepracować w ciągu dnia. Przerwy nie są wliczane. Wszystko powyżej liczy się jako nadgodziny.",
+  start_saldo_info: "To liczba nadgodzin które miałeś przed tym okresem.",
+  default_break_info: "Ta przerwa jest automatycznie odejmowana od przepracowanego czasu podczas zapisu dnia. Dotyczy to zarówno timera jak i wpisów ręcznych.",
+  recup_info: "Użyj Odbioru gdy bierzesz cały dzień wolny w ramach zgromadzonych nadgodzin. Ten dzień zostanie odjęty od salda nadgodzin.",
+  setup_fill_fields: "Wypełnij poprawnie oba pola.",
+setup_set_normday: "Najpierw ustaw normalny dzień pracy.",
+week_lock_info: "Zielony = otwarte.<br>Czerwony = zablokowane.<br>Usuwanie i edycja są zablokowane.<br>Dotknij ikonę, aby odblokować.",
+// --- Cloud status / backup extra ---
+  cloud_not_configured: "Chmura nie jest skonfigurowana.",
+  cloud_not_configured_status: "Chmura: brak konfiguracji.",
+  firebase_not_configured: "Jeszcze niedostępne (Firebase nie jest skonfigurowany).",
+
+  login_required_google: "Najpierw zaloguj się przez Google.",
+  login_failed: "Logowanie nie powiodło się",
+  logged_out: "Wylogowano.",
+  logout_failed: "Wylogowanie nie powiodło się",
+
+  logged_in: "Zalogowano",
+  not_logged_in: "Nie zalogowano.",
+
+  cloud_loaded: "Chmura załadowana",
+  cloud_updated: "Chmura zaktualizowana",
+
+  cloud_backup_success: "Kopia zapasowa w chmurze utworzona",
+  cloud_upload_failed: "Przesyłanie do chmury nie powiodło się",
+
+  cloud_download_failed: "Pobieranie z chmury nie powiodło się",
+  cloud_backup_invalid: "Kopia zapasowa w chmurze jest nieprawidłowa.",
+  cloud_backup_not_found: "Nie znaleziono kopii zapasowej w chmurze.",
+
+  cloud_restore_confirm: "Chmura → urządzenie: to nadpisze dane na tym urządzeniu. Kontynuować?",
+  cloud_to_device_success: "Chmura → urządzenie zakończone sukcesem",
+
+  download_running: "Trwa pobieranie...",
+  upload_running: "Trwa przesyłanie..."
+},
+
+es: {
+  // --- Modal (manual) ---
+  history_title: "Historial",
+  history_hint: "¿Olvidaste fichar la salida?<br>Añádelo manualmente.",
+  modal_add_title: "Añadir manualmente",
+  modal_edit_title: "Editar entrada",
+  modal_hint: "¿Olvidaste fichar la salida? Solo añade las horas correctas.",
+  btn_close: "Cerrar",
+  btn_save: "Guardar",
+  btn_delete: "Eliminar",
+  btn_add_manual: "Añadir",
+  no_entries: "No se encontraron datos.",
+  week: "Semana",
+  lbl_date: "Fecha",
+  lbl_type: "Tipo",
+  lbl_start: "Inicio (HH:MM)",
+  lbl_end: "Fin (HH:MM)",
+  lbl_pause: "Pausa (min)",
+  lbl_note: "Nota (opcional)",
+  ph_note: "p. ej. garaje después de la ruta, atasco, esperando al cliente...",
+
+  // --- Errors ---
+  err_choose_date: "Elige una fecha.",
+  err_fill_times: "Introduce inicio y fin (o elige día de recuperación).",
+  err_start_saldo_format: "El saldo inicial debe tener formato h:mm, por ej. 60:00",
+  err_normday_format: "La jornada normal debe tener formato h:mm, por ej. 07:30",
+  err_bad_json: "Archivo JSON no válido.",
+  err_timer_short: "El temporizador es demasiado corto. Usa START o + Manual.",
+  confirm_delete_entry: "¿Eliminar esta entrada?",
+
+  // --- General / UI ---
+  tab_day: "Día laboral",
+  tab_history: "Historial",
+  calendar: "Calendario",
+  language: "Idioma",
+
+  start: "Start",
+  pause_stop: "Stop",
+  save: "Guardar",
+  manual: "+ Manual",
+  cancel: "Cancelar",
+  ok: "OK",
+
+  status_busy: "En curso...",
+  status_paused: "Pausado",
+  status_not_started: "No iniciado",
+  status_online: "Estado: online",
+  status_offline: "Estado: offline",
+  week_locked: "La semana está bloqueada",
+
+  today_work: "Hoy",
+  week_work: "Esta semana",
+  vac_taken: "Vacaciones tomadas",
+  overtime: "Saldo de horas extra",
+  overtime_settled: "Horas extra liquidadas",
+  minutes: "min",
+  hours: "h",
+  days: "día",
+
+  // --- Types / labels ---
+  work: "Trabajo",
+  work_label: "TRABAJO",
+  recup: "Recuperación",
+  recup_line: "RECUPERACIÓN - se descuenta de las horas extra",
+  sick: "Baja médica",
+  vacation: "Vacaciones",
+  holiday: "Festivo",
+  net_line: "neto",
+  pause_line: "pausa",
+
+  // --- Detail ---
+  day_no_entry: "No hay entradas en este día.",
+  edit_btn: "✎ Editar",
+  edit_aria: "Editar",
+  note_label: "Nota",
+
+  // --- Settlement ---
+  settle: "Liquidar",
+  settle_hint: "¿Te han pagado horas extra? Regístralas aquí para descontarlas de tu saldo.",
+  verrek_none: "No se encontró ninguna liquidación en ese día.",
+  verrek_deleted: "Liquidación eliminada ✓",
+  reconciled: "Liquidado",
+  reconciled_remove: "Eliminar liquidación",
+  hours_amount_hhmm: "Número de horas (HH:MM)",
+
+  // --- Settings ---
+  settings: "Guardar",
+  settings_saved: "Ajustes guardados",
+  start_saldo: "Saldo inicial de horas extra (h:min)",
+  default_pause: "Pausa predeterminada (min)",
+  norm_day: "Duración normal de la jornada (h:min)",
+
+  // --- Backup ---
+  backup: "Copia de seguridad",
+  backup_last: "Última copia",
+  backup_never: "nunca",
+  backup_tip: "Consejo: haz copias de seguridad regularmente.",
+  import_json: "Importar JSON",
+
+  // --- PDF export ---
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Exportar PDF",
+  pdf_title: "Exportación PDF",
+  pdf_month: "Mes",
+  pdf_dates: "Fechas",
+  pdf_from: "Desde",
+  pdf_to: "Hasta",
+  make_pdf: "Crear PDF",
+
+  // --- Cloud ---
+  cloud_title: "Inicio de sesión con Google + sincronización en la nube",
+  cloud_not_available: "Aún no disponible.",
+  login_google: "Iniciar sesión con Google",
+  logout_google: "Cerrar sesión",
+  cloud_download: "Restaurar copia",
+  cloud_upload: "Crear copia",
+  cloud_logged_in: "Conectado:",
+  cloud_not_logged: "No conectado.",
+  cloud_login_error: "Error de inicio de sesión con Google",
+
+  // --- Employer/Employee ---
+  employee_name_label: "Nombre del empleado",
+  employee_name_ph: "Tu nombre",
+  employer_name_label: "Nombre del empleador",
+  employer_name_ph: "Nombre del empleador",
+
+  // --- Setup modal ---
+  setup_title: "Bienvenido a Shift-Tap 👋",
+  setup_intro: "Horas de trabajo, recuperación y horas extra sin complicaciones. Configura primero tus ajustes básicos.",
+  setup_lang: "Idioma",
+  setup_normday: "Jornada normal (horas)",
+  setup_norm_hint: "Ejemplo: 07:30 o 08:00",
+  setup_pause: "Pausa (minutos)",
+  setup_pause_hint: "Esta es tu pausa predeterminada y se descontará automáticamente.",
+  setup_note: "Siempre puedes cambiar estos ajustes más tarde en Configuración.",
+  setup_done: "Listo para usar",
+
+  // --- Info bubbles ---
+  calendar_info: "Aquí tienes una vista general por día. Ves cuándo tuviste recuperación, baja médica, vacaciones, festivo o trabajaste.\nLas liquidaciones se muestran con un punto verde.\nToca un día para ver detalles o añadir algo.",
+  settle_info: "Usa este botón cuando se hayan pagado horas extra. El número de horas introducido se descontará de tu saldo de horas extra.",
+  norm_day_info: "Este es el número de horas que normalmente debes trabajar por día. Las pausas no se cuentan aquí. Todo lo que supere esto cuenta como horas extra.",
+  start_saldo_info: "Este es el número de horas extra que ya tenías antes de este período.",
+  default_break_info: "Esta pausa se descuenta automáticamente del tiempo trabajado al guardar un día. Esto se aplica tanto al temporizador como a las entradas manuales.",
+  recup_info: "Usa Recuperación cuando tomes un día completo compensado con horas extra acumuladas. Este día se descontará de tu saldo de horas extra.",
+  setup_fill_fields: "Complete correctamente ambos campos.",
+setup_set_normday: "Primero configure su jornada laboral normal.",
+week_lock_info: "Verde = abierto.<br>Rojo = bloqueado.<br>Eliminar y editar están desactivados.<br>Toca el icono para desbloquear.",
+// --- Cloud status / backup extra ---
+  cloud_not_configured: "La nube no está configurada.",
+  cloud_not_configured_status: "Nube: no configurada.",
+  firebase_not_configured: "Aún no disponible (Firebase no configurado).",
+
+  login_required_google: "Primero inicia sesión con Google.",
+  login_failed: "Error al iniciar sesión",
+  logged_out: "Sesión cerrada.",
+  logout_failed: "Error al cerrar sesión",
+
+  logged_in: "Conectado",
+  not_logged_in: "No conectado.",
+
+  cloud_loaded: "Nube cargada",
+  cloud_updated: "Nube actualizada",
+
+  cloud_backup_success: "Copia en la nube creada",
+  cloud_upload_failed: "Error al subir a la nube",
+
+  cloud_download_failed: "Error al descargar desde la nube",
+  cloud_backup_invalid: "La copia en la nube no es válida.",
+  cloud_backup_not_found: "No se encontró ninguna copia en la nube.",
+
+  cloud_restore_confirm: "Nube → dispositivo: esto sobrescribirá los datos de este dispositivo. ¿Continuar?",
+  cloud_to_device_success: "Nube → dispositivo completado",
+
+  download_running: "Descargando...",
+  upload_running: "Subiendo..."
+},
+
+fr: {
+
+  // ===== Navigation générale =====
+  calendar: "Calendrier",
+  history_title: "Historique",
+  tab_day: "Jour de travail",
+  tab_history: "Historique",
+  language: "Langue",
+
+  // ===== Boutons généraux =====
+  start: "Démarrer",
+  pause_stop: "Arrêter",
+  save: "Enregistrer",
+  manual: "+ Manuel",
+  cancel: "Annuler",
+  ok: "OK",
+  btn_close: "Fermer",
+  btn_save: "Enregistrer",
+  btn_delete: "Supprimer",
+  btn_add_manual: "Ajouter",
+  no_entries: "Aucune entrée pour l’instant.",
+
+  // ===== Modal manuel =====
+  modal_add_title: "Ajout manuel",
+  modal_edit_title: "Modifier l’entrée",
+  modal_hint: "Tu as oublié de pointer ? Ajoute simplement les bonnes heures.",
+  history_hint: "Tu as oublié de pointer ?<br>Ajoute-le manuellement.",
+  week: "Semaine",
+  lbl_date: "Date",
+  lbl_type: "Type",
+  lbl_start: "Début (HH:MM)",
+  lbl_end: "Fin (HH:MM)",
+  lbl_pause: "Pause (min)",
+  lbl_note: "Remarque (optionnel)",
+  ph_note: "ex. Garage après tournée, embouteillage, attente client...",
+
+  // ===== Employé / Employeur =====
+  employee_name_label: "Nom de l'employé",
+  employee_name_ph: "Ton nom",
+  employer_name_label: "Nom de l'employeur",
+  employer_name_ph: "Nom de l'employeur",
+
+  // ===== PDF =====
+  pdf_export_btn: "📄 PDF",
+  pdf_export_btn_aria: "Exporter PDF",
+  pdf_title: "Export PDF",
+  pdf_month: "Mois",
+  pdf_dates: "Dates",
+  pdf_from: "De",
+  pdf_to: "À",
+  make_pdf: "Créer PDF",
+
+  // ===== Cloud =====
+  cloud_title: "Connexion Google + synchronisation cloud",
+  cloud_not_available: "Pas encore disponible.",
+  login_google: "Connexion Google",
+  logout_google: "Déconnexion",
+  cloud_download: "Restaurer",
+  cloud_upload: "Sauvegarde",
+  cloud_logged_in: "Connecté :",
+  cloud_not_logged: "Non connecté.",
+  cloud_login_error: "Erreur de connexion Google",
+  week_locked: "La semaine est verrouillée",
+
+  // ===== Sauvegarde =====
+  backup: "Sauvegarde",
+  backup_last: "Dernière sauvegarde",
+  backup_never: "jamais",
+  backup_tip: "Astuce : faites régulièrement une sauvegarde.",
+  import_json: "Importer JSON",
+
+  // ===== Heures sup / Régularisation =====
+  overtime: "Solde heures sup",
+  overtime_settled: "Heures supplémentaires réglées",
+  settle: "Compenser",
+  settle_hint: "Des heures supplémentaires ont été payées ? Enregistre-les ici pour les déduire de ton solde.",
+  verrek_none: "Aucune régularisation trouvée ce jour-là.",
+  verrek_deleted: "Régularisation supprimée ✓",
+  reconciled: "Régularisé",
+  reconciled_remove: "Supprimer la régularisation",
+  hours_amount_hhmm: "Nombre d'heures (HH:MM)",
+
+  // ===== Statut =====
+  status_busy: "En cours...",
+  status_paused: "En pause",
+  status_not_started: "Pas encore démarré",
+  status_online: "Statut : en ligne",
+  status_offline: "Statut : hors ligne",
+
+  // ===== Statistiques =====
+  today_work: "Aujourd’hui",
+  week_work: "Cette semaine",
+  vac_taken: "Congés pris",
+  minutes: "min",
+  hours: "h",
+  days: "jour",
+
+  // ===== Types =====
+  work: "Travail",
+  work_label: "TRAVAIL",
+  recup: "Jour de récup",
+  recup_line: "JOUR DE RÉCUP - déduit des heures sup",
+  sick: "Maladie",
+  vacation: "Vacances",
+  holiday: "Jour férié",
+  net_line: "net",
+  pause_line: "pause",
+
+  // ===== Settings =====
+  settings: "Enregistrer",
+  settings_saved: "Enregistrer",
+  start_saldo: "Solde initial heures sup (h:mm)",
+  default_pause: "Pause par défaut (min)",
+  norm_day: "Durée normale de travail (h:mm)",
+
+  // ===== Erreurs =====
+  err_choose_date: "Choisis une date.",
+  err_fill_times: "Remplis début et fin (ou choisis Jour de récup).",
+  err_start_saldo_format: "Le solde initial doit être au format h:mm, ex. 60:00",
+  err_normday_format: "La norme/jour doit être au format h:mm, ex. 7:30",
+  err_bad_json: "Fichier JSON invalide.",
+  err_timer_short: "Le timer est trop court. Utilise DÉMARRER ou + Manuel.",
+
+  // ===== Détail du jour =====
+  day_no_entry: "Aucune entrée ce jour-là.",
+  edit_btn: "✎ Modifier",
+  edit_aria: "Modifier",
+  note_label: "Remarque",
+
+  // ===== Setup modal (ENKEL 1x) =====
+  setup_title: "Bienvenue sur Shift-Tap 👋",
+  setup_intro: "Heures de travail, récup et heures supplémentaires sans tracas. Configure d'abord tes réglages de base.",
+  setup_lang: "Langue",
+  setup_normday: "Journée normale (heures)",
+  setup_norm_hint: "Exemple : 07:30 ou 08:00",
+  setup_pause: "Pause (minutes)",
+  setup_pause_hint: "Ceci est votre pause standard, elle sera automatiquement déduite.",
+  setup_note: "Vous pouvez toujours modifier ces paramètres plus tard dans les paramètres.",
+  setup_done: "Prêt à l’emploi",
+
+  // ===== Info bubbles =====
+  calendar_info: "Ici tu as une vue par jour. Tu vois quand tu avais un jour de récup, maladie, vacances, jour férié ou travaillé.\nLes régularisations sont indiquées par un point vert.\nAppuie sur un jour pour voir les détails ou ajouter une entrée.",
+  settle_info: "Utilise ce bouton lorsque des heures supplémentaires ont été payées. Le nombre d’heures saisi sera déduit de ton solde d’heures supplémentaires.",
+  norm_day_info: "C'est le nombre d'heures que tu dois normalement prester par jour. Les pauses ne sont pas comprises. Tout ce qui dépasse compte comme heures supplémentaires.",
+  start_saldo_info: "Il s'agit du solde d'heures supplémentaires que tu avais avant cette période.",
+  default_break_info: "Cette pause est automatiquement déduite de ton temps de travail lorsque tu enregistres une journée. Cela s'applique aussi bien au timer qu'aux entrées manuelles.",
+  recup_info: "Utilise Jour de récup lorsque tu prends une journée complète en compensation d’heures supplémentaires. Cette journée sera déduite de ton solde d’heures supplémentaires.",
+  setup_fill_fields: "Remplissez correctement les deux champs.",
+setup_set_normday: "Définissez d'abord votre journée de travail normale.",
+week_lock_info: "Vert = ouvert.<br>Rouge = verrouillé.<br>Suppression et modification désactivées.<br>Appuyez sur l’icône pour déverrouiller.",
+// --- Cloud status / backup extra ---
+  cloud_not_configured: "Cloud non configuré.",
+  cloud_not_configured_status: "Cloud : non configuré.",
+  firebase_not_configured: "Pas encore disponible (Firebase non configuré).",
+
+  login_required_google: "Connecte-toi d’abord avec Google.",
+  login_failed: "Échec de la connexion",
+  logged_out: "Déconnecté.",
+  logout_failed: "Échec de la déconnexion",
+
+  logged_in: "Connecté",
+  not_logged_in: "Non connecté.",
+
+  cloud_loaded: "Cloud chargé",
+  cloud_updated: "Cloud mis à jour",
+
+  cloud_backup_success: "Sauvegarde cloud réussie",
+  cloud_upload_failed: "Échec de l’envoi vers le cloud",
+confirm_delete_entry: "Supprimer cette entrée ?",
+  cloud_download_failed: "Échec du téléchargement depuis le cloud",
+  cloud_backup_invalid: "La sauvegarde cloud est invalide.",
+  cloud_backup_not_found: "Aucune sauvegarde cloud trouvée.",
+
+  cloud_restore_confirm: "Cloud → appareil : ceci écrasera les données sur cet appareil. Continuer ?",
+  cloud_to_device_success: "Cloud → appareil réussi",
+
+  download_running: "Téléchargement en cours...",
+  upload_running: "Envoi en cours..."
+
+}
+  };
+  function checkMissingTranslations(){
+  const base = LANG.nl;
+  const langs = Object.keys(LANG);
+  let result = "";
+
+  langs.forEach(lang=>{
+    if(lang === "nl") return;
+
+    const missing = [];
+
+    Object.keys(base).forEach(key=>{
+      if(!(key in LANG[lang])){
+        missing.push(key);
+      }
+    });
+
+    if(missing.length){
+      result += "❌ " + lang + ": " + missing.join(", ") + "\n";
+    }else{
+      result += "✅ " + lang + " OK\n";
+    }
+  });
+
+  alert(result);
+}
+
+/* =========================
+   i18n engine
+   ========================= */
+let currentLang = localStorage.getItem("lang") || "nl";
+if(!LANG[currentLang]) currentLang = "nl";
+
+function t(key){
+  return LANG[currentLang]?.[key] ?? key;
+}
+
+function applyLang(){
+
+  // gewone tekst
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.dataset.i18n;
+    if(el.dataset.i18nHtml) el.innerHTML = t(key);
+    else el.textContent = t(key);
+  });
+
+  // placeholders
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
+    const key = el.dataset.i18nPlaceholder;
+    el.setAttribute("placeholder", t(key));
+  });
+
+  // aria-label (voor icon knoppen zoals bewerken)
+  document.querySelectorAll("[data-i18n-aria]").forEach(el=>{
+    const key = el.dataset.i18nAria;
+    el.setAttribute("aria-label", t(key));
+  });
+
+
+
+  function updateLangLabel(){
+    const lbl = document.getElementById("langCurrentLabel");
+    if(lbl) lbl.textContent = getLangName(currentLang);
+  }
+
+  updateLangLabel();
+
+  // 👇 BELANGRIJK: dynamische content opnieuw tekenen
+  if(typeof renderHistory === "function") renderHistory();
+}
+function openLangModal(){
+  const overlay  = document.getElementById("appModalOverlay");
+  const body     = document.getElementById("appModalBody");
+  const btnCancel= document.getElementById("appModalCancel");
+  const btnOk    = document.getElementById("appModalOk");
+
+  if(!overlay || !body || !btnCancel) return;
+
+  const current = currentLang || localStorage.getItem("lang") || "nl";
+
+  // buttons (we kiezen meteen, geen OK nodig)
+  btnCancel.style.display = "inline-flex";
+  btnCancel.setAttribute("data-i18n","cancel");
+  if(btnOk) btnOk.style.display = "none";
+
+  body.innerHTML = `
+    <div style="font-size:28px; font-weight:800; margin-bottom:12px;">${t("language")}</div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+${["nl","en","fr","de","pl","es","hu","it"].map(code => `
+        <button type="button" class="btnSmall" data-langpick="${code}"
+          style="display:flex; justify-content:space-between; align-items:center; padding:14px 16px;">
+          <span>${getLangName(code)}</span>
+          <span style="opacity:${code===current?1:0.2}; font-weight:900;">●</span>
+        </button>
+      `).join("")}
+    </div>
+  `;
+
+  body.querySelectorAll("[data-langpick]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const code = b.getAttribute("data-langpick") || "nl";
+      currentLang = code;
+      localStorage.setItem("lang", currentLang);
+
+      // als je state/settings gebruikt, proberen we die ook bij te houden
+      try{
+        if(typeof state !== "undefined" && state?.settings){
+          state.settings.lang = currentLang;
+          if(typeof saveState === "function") saveState();
+        }
+      }catch(e){}
+
+      applyLang();       // vertaalt alles + zet label goed
+      updateLangLabel(); // extra zekerheid
+      closeAppModal();
+    });
+  });
+
+  applyLang(); // zodat "Annuleren" correct vertaalt
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+}
+
+function closeAppModal(){
+  const overlay = document.getElementById("appModalOverlay");
+  const btnOk = document.getElementById("appModalOk");
+  const btnCancel = document.getElementById("appModalCancel");
+
+  if(!overlay) return;
+
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden","true");
+
+  // knoppen terug normaal zetten
+  if(btnOk) btnOk.style.display = "inline-flex";
+  if(btnCancel) btnCancel.style.display = "inline-flex";
+}
+
+document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal);
+const verrekenInput = document.getElementById("verrekenAmount");
+
+verrekenInput?.addEventListener("input", (e) => {
+  let v = e.target.value.replace(/\D/g, ""); // enkel cijfers
+  if(v.length > 4) v = v.slice(0,4);
+
+  if(v.length >= 3){
+    let uren = v.slice(0,2);
+    let min = v.slice(2);
+
+    if(parseInt(min) > 59){
+      min = "59";
+    }
+
+    v = uren + ":" + min;
+  }
+
+  e.target.value = v;
+});
+
+  
+  /* =========================
+     Toast + Confirm
+     ========================= */
+  function showToast(message, type="warn"){
+    const el = document.getElementById("toast");
+    if(!el) return;
+    el.textContent = message;
+    el.className = "toast " + type;
+    el.classList.add("show");
+    setTimeout(() => el.classList.remove("show"), 2200);
+  }
+
+  function openConfirm(message, onOk){
+    const overlay = document.getElementById("appModalOverlay");
+    const body    = document.getElementById("appModalBody");
+    const btnOk   = document.getElementById("appModalOk");
+    const btnCan  = document.getElementById("appModalCancel");
+
+    if(!overlay || !btnOk || !btnCan){
+      if(confirm(message)){
+        if(typeof onOk === "function") onOk();
+      }
+      return;
+    }
+
+    if(body) body.textContent = message;
+    overlay.classList.add("show");
+
+    const cleanup = () => {
+      overlay.classList.remove("show");
+      btnOk.onclick = null;
+      btnCan.onclick = null;
+      overlay.onclick = null;
+      document.removeEventListener("keydown", escHandler);
+    };
+
+    const escHandler = (e) => { if(e.key === "Escape") cleanup(); };
+
+    btnOk.onclick = () => { cleanup(); if(typeof onOk === "function") onOk(); };
+    btnCan.onclick = () => cleanup();
+    overlay.onclick = (e) => { if(e.target === overlay) cleanup(); };
+    document.addEventListener("keydown", escHandler);
+  }
+
+  /* =========================
+     State + Meta defaults
+     ========================= */
+  const defaultState = () => ({
+  settings: { 
+    startSaldoMin: 0, 
+    normDayMin: NORM_MIN, 
+    lang: "nl",
+    employeeName: "",
+    employerName: ""
+  },
+  timer:    { running: false, startMs: null, accMs: 0 },
+  entries:  [],
+  verrekeningen: [],          
+  overtimePaidMinutes: 0      
+});
+
+  const defaultMeta = () => ({
+    lastBackupAt:   null,
+    lastBackupName: null
+  });
+
+  function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return defaultState();
+    const s = JSON.parse(raw);
+
+s.settings = s.settings || {};
+
+if(typeof s.settings.startSaldoMin !== "number")
+  s.settings.startSaldoMin = 0;
+
+if(typeof s.settings.normDayMin !== "number")
+  s.settings.normDayMin = NORM_MIN;
+
+if(typeof s.settings.lang !== "string")
+  s.settings.lang = "nl";
+
+if(typeof s.settings.employeeName !== "string")
+  s.settings.employeeName = "";
+
+if(typeof s.settings.employerName !== "string")
+  s.settings.employerName = "";
+    if(!s.timer)    
+      s.timer = { running:false, startMs:null, accMs:0 };
+
+    if(!Array.isArray(s.entries)) 
+      s.entries = [];
+
+    if(!Array.isArray(s.verrekeningen)) 
+      s.verrekeningen = [];
+
+    if(typeof s.overtimePaidMinutes !== "number") 
+      s.overtimePaidMinutes = 0;
+
+    return s;
+  }catch(e){ 
+    return defaultState(); 
+  }
+}
+
+  function loadMeta(){
+    try{
+      const raw = localStorage.getItem(META_KEY);
+      if(!raw) return defaultMeta();
+      const m = JSON.parse(raw);
+      return m || defaultMeta();
+    }catch(e){ return defaultMeta(); }
+  }
+
+  let state = loadState();
+  let meta  = loadMeta();
+
+let cloudPushTimeout = null;
+
+function scheduleCloudPush(){
+  if(!fbAuth || !fbAuth.currentUser) return;
+
+  if(cloudPushTimeout){
+    clearTimeout(cloudPushTimeout);
+  }
+
+  cloudPushTimeout = setTimeout(()=>{
+    cloudPush().catch(console.error);
+  }, 5000);
+}
+
+  function saveState(){ 
+  localStorage.setItem(STORE_KEY, JSON.stringify(state)); 
+}
+  function saveMeta(){ localStorage.setItem(META_KEY, JSON.stringify(meta)); }
+
+  /* =========================
+     DOM refs
+     ========================= */
+  const elTodayPill       = document.getElementById("todayPill");
+  const elTimer           = document.getElementById("timer");
+  const elStatus          = document.getElementById("status");
+  const elPauseMin        = document.getElementById("pauseMin");
+  const elNormDayH = document.getElementById("normDayH");
+const elNormDayM = document.getElementById("normDayM");
+
+  const elTodayWork       = document.getElementById("todayWork");
+  const elWeekWork        = document.getElementById("weekWork");
+  const elOvertimeSaldo   = document.getElementById("overtimeSaldo");
+const elVacTaken = document.getElementById("vacTaken");
+
+  const elHistoryList     = document.getElementById("historyList");
+
+  const btnStart          = document.getElementById("btnStart");
+  const btnPause          = document.getElementById("btnPause");
+  const btnSave           = document.getElementById("btnSave");
+  const btnRecup          = document.getElementById("btnRecup");
+
+  const btnAddManual      = document.getElementById("btnAddManual");
+  const elOnlineBadge     = document.getElementById("onlineBadge");
+  const elLastBackupText  = document.getElementById("lastBackupText");
+  const btnBackupNow      = document.getElementById("btnBackupNow");
+  const elStartSaldoH = document.getElementById("startSaldoH");
+  const elStartSaldoM = document.getElementById("startSaldoM");
+
+const infoStartSaldo = document.getElementById("infoStartSaldo");
+const bubbleStartSaldo = document.getElementById("bubbleStartSaldo");
+const infoRecup = document.getElementById("infoRecup");
+const bubbleRecup = document.getElementById("bubbleRecup");
+const infoNormDay = document.getElementById("infoNormDay");
+const bubbleNormDay = document.getElementById("bubbleNormDay");
+const infoDefaultBreak = document.getElementById("infoDefaultBreak");
+const bubbleDefaultBreak = document.getElementById("bubbleDefaultBreak");
+const infoCalendar = document.getElementById("infoCalendar");
+const bubbleCalendar = document.getElementById("bubbleCalendar");
+const infoWeekLock = document.getElementById("infoWeekLock");
+const bubbleWeekLock = document.getElementById("bubbleWeekLock");
+const infoVerreken = document.getElementById("infoVerreken");
+const bubbleVerreken = document.getElementById("bubbleVerreken");
+
+infoStartSaldo?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleStartSaldo) return;
+
+  const isOpen = bubbleStartSaldo.style.display === "block";
+  closeAllBubbles();
+  bubbleStartSaldo.style.display = isOpen ? "none" : "block";
+});
+infoRecup?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleRecup) return;
+
+  const isOpen = bubbleRecup.style.display === "block";
+  closeAllBubbles();
+  bubbleRecup.style.display = isOpen ? "none" : "block";
+});
+infoWeekLock?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleWeekLock) return;
+
+  const isOpen = bubbleWeekLock.style.display === "block";
+  closeAllBubbles();
+  bubbleWeekLock.style.display = isOpen ? "none" : "block";
+});
+
+infoCalendar?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleCalendar) return;
+
+  const isOpen = bubbleCalendar.style.display === "block";
+  closeAllBubbles();
+  bubbleCalendar.style.display = isOpen ? "none" : "block";
+});
+
+infoVerreken?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleVerreken) return;
+
+  const isOpen = bubbleVerreken.style.display === "block";
+  closeAllBubbles();
+  bubbleVerreken.style.display = isOpen ? "none" : "block";
+});
+infoDefaultBreak?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleDefaultBreak) return;
+
+  const isOpen = bubbleDefaultBreak.style.display === "block";
+  closeAllBubbles();
+  bubbleDefaultBreak.style.display = isOpen ? "none" : "block";
+});
+infoNormDay?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleNormDay) return;
+
+  const isOpen = bubbleNormDay.style.display === "block";
+  closeAllBubbles();
+  bubbleNormDay.style.display = isOpen ? "none" : "block";
+});
+
+function closeAllBubbles(){
+  if(bubbleStartSaldo) bubbleStartSaldo.style.display = "none";
+  if(bubbleCalendar) bubbleCalendar.style.display = "none";
+  if(bubbleVerreken) bubbleVerreken.style.display = "none";
+  if(bubbleNormDay) bubbleNormDay.style.display = "none";
+  if(bubbleDefaultBreak) bubbleDefaultBreak.style.display = "none";
+  if(bubbleRecup) bubbleRecup.style.display = "none";
+  if(bubbleWeekLock) bubbleWeekLock.style.display = "none";
+}
+
+document.addEventListener("click", closeAllBubbles);
+
+  const btnSaveSettings   = document.getElementById("btnSaveSettings");
+
+  const fileImport2       = document.getElementById("fileImport2");
+
+  const modalBack         = document.getElementById("modalBack");
+  const modalTitle        = document.getElementById("modalTitle");
+  const btnCloseModal     = document.getElementById("btnCloseModal");
+  const btnSaveModal      = document.getElementById("btnSaveModal");
+  const btnDeleteInModal  = document.getElementById("btnDeleteInModal");
+  const mDate             = document.getElementById("mDate");
+  const mType             = document.getElementById("mType");
+  const mStartH = document.getElementById("mStartH");
+const mStartM = document.getElementById("mStartM");
+const mEndH   = document.getElementById("mEndH");
+const mEndM   = document.getElementById("mEndM");
+  const mPause            = document.getElementById("mPause");
+  const mNote             = document.getElementById("mNote");
+  const elCalGrid  = document.getElementById("calGrid");
+  const elCalLabel = document.getElementById("calLabel");
+  const btnCalPrev = document.getElementById("calPrev");
+  const btnCalNext = document.getElementById("calNext");
+
+  /* =========================
+     Boot lang from settings
+     ========================= */
+  currentLang = state.settings?.lang || currentLang || "nl";
+  /* =========================
+     Tabs navigation
+     ========================= */
+     function updateNavActive(tabId){
+  const navMap = {
+    tab1: document.getElementById("btnHome"),
+    tab2: document.getElementById("btnOpenHistory"),
+    tab3: document.getElementById("btnNavCalendar"),
+    tab4: document.getElementById("btnOpenSettings")
+  };
+
+  Object.values(navMap).forEach(btn => btn?.classList.remove("active"));
+  navMap[tabId]?.classList.add("active");
+}
+
+  function showTab(id){
+    document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
+    const target = document.getElementById(id);
+    if(target) target.style.display = "block";
+    
+    updateNavActive(id);
+    
+  }
+  /* ===== Dag-detail (UI refs) ===== */
+const dayOverlay  = document.getElementById("dayOverlay");
+const dayTitle    = document.getElementById("dayTitle");
+const dayBody     = document.getElementById("dayBody");
+const dayClose    = document.getElementById("dayClose");
+const dayEdit     = document.getElementById("dayEdit");
+const verrekenModal = document.getElementById("verrekenModal");
+
+
+
+document.getElementById("btnVerreken")?.addEventListener("click", () => {
+  const d = document.getElementById("verrekenDate");
+  if(d) d.value = ymd(new Date());
+
+  const a = document.getElementById("verrekenAmount");
+  if(a && !a.value) a.value = "0:00";
+
+  if(verrekenModal) verrekenModal.style.display = "flex";
+});
+
+document.getElementById("btnCloseVerreken")?.addEventListener("click", () => {
+  if(verrekenModal) verrekenModal.style.display = "none";
+});
+
+// klik op de donkere achtergrond = sluiten
+verrekenModal?.addEventListener("click", (e) => {
+  if(e.target === verrekenModal) verrekenModal.style.display = "none";
+});
+
+function getLangName(code){
+  if(code === "nl") return "🇳🇱 Nederlands";
+  if(code === "en") return "🇬🇧 English";
+  if(code === "fr") return "🇫🇷 Français";
+  if(code === "de") return "🇩🇪 Deutsch";
+  if(code === "pl") return "🇵🇱 Polski";
+  if(code === "es") return "🇪🇸 Español";
+  if(code === "hu") return "🇭🇺 Magyar";
+  if(code === "it") return "🇮🇹 Italiano";
+  return code;
+}
+
+function setLang(code){
+  currentLang = code;
+
+  localStorage.setItem("lang", code);
+
+  try {
+    if (window.state?.settings) {
+      state.settings.lang = code;
+      if (typeof saveState === "function") saveState();
+    }
+  } catch(e){}
+
+  if (typeof applyLang === "function") applyLang();
+
+  const lbl = document.getElementById("langCurrentLabel");
+  if (lbl) lbl.textContent = getLangName(code);
+}
+
+function openLangModal(){
+  const overlay = document.getElementById("appModalOverlay");
+  const body    = document.getElementById("appModalBody");
+  const btnCancel = document.getElementById("appModalCancel");
+  const btnOk     = document.getElementById("appModalOk");
+
+  if(!overlay || !body){
+    alert("Modal ontbreekt: appModalOverlay/appModalBody");
+    return;
+  }
+
+  const current = localStorage.getItem("lang") || window.currentLang || "nl";
+
+  body.innerHTML = `
+<div style="font-size:26px;font-weight:800;margin-bottom:12px;">${t("language")}</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+    ${["nl","en","fr","de","pl","es","hu","it"].map(code => `
+        <button type="button" class="btnSmall" data-langpick="${code}"
+          style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+          <span>${getLangName(code)}</span>
+          <span style="opacity:${code===current?1:0.2};font-weight:900;">●</span>
+        </button>
+      `).join("")}
+    </div>
+  `;
+
+  if(btnOk) btnOk.style.display = "none";
+
+  if(btnCancel){
+    btnCancel.style.display = "inline-flex";
+    btnCancel.onclick = () => {
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden","true");
+      if(btnOk) btnOk.style.display = "inline-flex";
+    };
+  }
+
+  body.querySelectorAll("[data-langpick]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      setLang(b.getAttribute("data-langpick"));
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden","true");
+      if(btnOk) btnOk.style.display = "inline-flex";
+    });
+  });
+
+  overlay.style.display = "flex";
+  overlay.setAttribute("aria-hidden","false");
+}
+
+document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal)
+  document.getElementById("btnOpenHistory")?.addEventListener("click", () => showTab("tab2"));
+  document.getElementById("btnHome")?.addEventListener("click", () => showTab("tab1"));
+  document.getElementById("btnOpenSettings")?.addEventListener("click", () => showTab("tab4"));
+document.getElementById("btnNavCalendar")?.addEventListener("click", () => {
+  showTab("tab3");
+  renderCalendar();
+});
+  btnCalPrev?.addEventListener("click", ()=>{
+  calMonth--;
+  if(calMonth < 0){
+    calMonth = 11;
+    calYear--;
+  }
+  renderCalendar();
+});
+
+btnCalNext?.addEventListener("click", ()=>{
+  calMonth++;
+  if(calMonth > 11){
+    calMonth = 0;
+    calYear++;
+  }
+  renderCalendar();
+});
+
+  /* =========================
+     Helpers
+     ========================= */
+  const pad2 = n => String(n).padStart(2,"0");
+  const ymd  = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  
+  const dmy  = d => `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+  function calLocale(){
+  return currentLang==="fr" ? "fr-FR"
+    : currentLang==="en" ? "en-GB"
+    : currentLang==="de" ? "de-DE"
+    : currentLang==="pl" ? "pl-PL"
+    : currentLang==="es" ? "es-ES"
+    : currentLang==="hu" ? "hu-HU"
+    : currentLang==="it" ?  "it-IT"
+    : "nl-BE";
+}
+  
+function escapeHtml(str){
+  if(!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function typeAbbr(type){
+  const abbr = {
+    nl: { Werk:"",  Recup:"",   Ziekte:"", Vakantie:"", Feestdag:"" },
+    fr: { Werk:"", Recup:"", Ziekte:"", Vakantie:"", Feestdag:"" },
+    en: { Werk:"",  Recup:"",  Ziekte:"", Vakantie:"", Feestdag:"" },
+    de:{Werk:"",Recup:"",Ziekte:"",Vakantie:"",Feestdag:""},
+    it:{Werk:"",Recup:"",Ziekte:"",Vakantie:"",Feestdag:""},
+    es:{Werk:"",Recup:"",Ziekte:"",Vakantie:"",Feestdag:""},
+    pl:{Werk:"",Recup:"",Ziekte:"",Vakantie:"",Feestdag:""},
+    hu:{Werk:"",Recup:"",Ziekte:"",Vakantie:"",Feestdag:""}
+  };
+
+  const map = abbr[currentLang] || abbr.nl;
+  return map[type] || "";
+}
+
+function updateLegendLetters(){
+  document.querySelectorAll("[data-letter-type]").forEach(el=>{
+    const type = el.dataset.letterType;
+    el.textContent = typeAbbr(type);
+  });
+}
+
+  function dayHeaders(){
+  // Maandag eerst
+  if(currentLang==="fr") return ["L","M","M","J","V","S","D"];
+  if(currentLang==="en") return ["M","T","W","T","F","S","S"];
+  if(currentLang==="de") return ["M","D","M","D","F","S","S"];
+  if(currentLang==="pl") return ["P","W","Ś","C","P","S","N"];
+  if(currentLang==="es") return ["L","M","X","J","V","S","D"];
+  if(currentLang==="hu") return ["H","K","S","C","P","S","V"];
+  if(currentLang==="it") return ["L","M","M","G","V","S","D"];
+  return ["M","D","W","D","V","Z","Z"]; // Nederlands
+}
+
+  function entryForDate(dateStr){
+    // 1 entry per datum: neem de “laatste” (createdAt) als er toch meerdere zouden zijn
+    const list = state.entries
+      .filter(e=>!e.deletedAt && e.date===dateStr)
+      .slice()
+      .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    return list[0] || null;
+  }
+
+  function calClassForType(type){
+    if(type==="Werk") return "calWork";
+    if(type==="Recup") return "calRecup";
+    if(type==="Vakantie") return "calVakantie";
+    if(type==="Ziekte") return "calZiekte";
+    if(type==="Feestdag") return "calFeestdag";
+    return "";
+  }
+
+  function calInfoText(e){
+  if(!e) return "";
+
+  if(e.type === "Werk"){
+    return `${formatHM(e.netMin||0)}`;
+  }
+
+  const map = {
+    "Recup": "recup",
+    "Ziekte": "sick",
+    "Vakantie": "vacation",
+    "Feestdag": "holiday"
+  };
+
+  const key = map[e.type];
+  if(key) return t(key).toUpperCase();
+
+  return (e.type || "").toUpperCase();
+}
+function getIsoWeekNumber(dateObj){
+  const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  }
+  
+function renderCalendar(){
+  if(!elCalGrid || !elCalLabel) return;
+
+  const first = new Date(calYear, calMonth, 1);
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+  // maandag = 0
+  const startDay = (first.getDay() + 6) % 7;
+
+  elCalLabel.textContent = first.toLocaleDateString(calLocale(), { month:"long", year:"numeric" });
+  elCalGrid.innerHTML = "";
+
+  // Headers (M D W D V Z Z)
+  dayHeaders().forEach(ch=>{
+    const hd = document.createElement("div");
+    hd.className = "calHead";
+    hd.textContent = ch;
+    elCalGrid.appendChild(hd);
+  });
+
+  // blanks vóór dag 1
+  for(let i=0;i<startDay;i++){
+    const blank = document.createElement("div");
+    blank.className = "calBlank";
+    elCalGrid.appendChild(blank);
+  }
+
+  for(let day=1; day<=daysInMonth; day++){
+    const dateObj = new Date(calYear, calMonth, day);
+    const dateStr = ymd(dateObj);
+    const e = entryForDate(dateStr);
+
+const cell = document.createElement("div");
+
+// class + kleur
+cell.className = "calCell";
+
+if(dateStr === ymd(new Date())){
+  cell.classList.add("calToday");
+}
+
+if(e){
+  const cls = calClassForType(e.type);
+  if(cls) cell.classList.add(cls);
+}else{
+  cell.classList.add("calEmpty");
+}
+
+    // type letter
+    const pill = e ? `<div class="calTypePill">${typeAbbr(e.type)}</div>` : "";
+
+    // uren tonen (alleen bij werk)
+    const hours = "";
+
+    // verrekening dot (ook als er geen entry is)
+    const vMins = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
+      .filter(v => !v.deletedAt && v.date === dateStr)
+      .reduce((s,x)=> s + (x.minutes||0), 0);
+
+    const dot = vMins > 0
+  ? `<span class="calDotVerrek" title="${t("reconciled")}: ${formatHM(vMins)}"></span>`
+  : "";
+
+const weekNr = (dateObj.getDay() === 1)
+  ? `<div style="position:absolute; left:4px; bottom:4px; font-size:10px; opacity:.6; font-weight:900;">${getIsoWeekNumber(dateObj)}</div>`
+  : "";
+
+cell.innerHTML = `
+  ${pill}
+  <div class="calNum">${day}</div>
+  ${hours}
+  ${dot}
+  ${weekNr}
+`;
+
+cell.addEventListener("click", () => openDayDetail(dateStr));
+elCalGrid.appendChild(cell);
+  }
+}
+
+function closeDayDetail(){
+  if(dayOverlay) dayOverlay.style.display = "none";
+}
+
+function formatHM(min){
+  const sign = min < 0 ? "-" : "";
+  const a = Math.abs(min);
+  const h = Math.floor(a/60);
+  const m = a%60;
+  return `${sign}${h}:${pad2(m)}`;
+}
+
+// ===== TOEVOEGING VERREKENINGEN START =====
+// ---- verrekening verwijderen (enkel LAATSTE verrekening van die dag) ----
+function undoVerrekeningForDate(ymdStr){
+  const arr = Array.isArray(state.verrekeningen) ? state.verrekeningen : [];
+
+  // pak alle verrekeningen van die datum
+  const matches = arr
+    .map((v, idx) => ({ v, idx }))
+    .filter(x => x.v && x.v.date === ymdStr);
+
+  if(matches.length === 0){
+    showToast(t("verrek_none"), "warn");
+    return;
+  }
+
+  // verwijder enkel de meest recente (hoogste createdAt)
+  matches.sort((a,b) => (b.v.createdAt||0) - (a.v.createdAt||0));
+  const removeIdx = matches[0].idx;
+
+  arr.splice(removeIdx, 1);
+
+  state.verrekeningen = arr;
+
+  // totaal opnieuw uitrekenen (veiligste)
+  state.overtimePaidMinutes = arr.reduce((sum, v) => sum + (v.minutes || 0), 0);
+
+  saveState();
+  showToast(t("verrek_deleted"), "ok");
+  renderAll();
+  openDayDetail(ymdStr);
+}
+// ===== TOEVOEGING VERREKENINGEN END =====
+
+function openDayDetail(ymdStr){
+  const e = entryForDate(ymdStr);
+
+  const vMins = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
+    .filter(v => !v.deletedAt && v.date === ymdStr)
+    .reduce((sum, v) => sum + (v.minutes || 0), 0);
+
+  if(dayTitle){
+    dayTitle.textContent = dmy(new Date(ymdStr));
+    dayTitle.dataset.ymd = ymdStr;
+  }
+
+  if(dayBody) dayBody.innerHTML = "";
+
+  // GEEN entry: toch tonen als er verrekend is
+  if(!e){
+    if(dayBody){
+      dayBody.innerHTML = (vMins > 0)
+   ? `
+  <b>${t("reconciled")}</b><br>${formatHM(vMins)}
+  <div style="margin-top:12px;">
+    <button type="button" class="btnGhostSmall" id="btnUndoVerrek">
+      ${t("reconciled_remove")}
+    </button>
+  </div>
+`
+: t("day_no_entry");
+    }
+    if(dayEdit) dayEdit.style.display = "none";
+    if(dayOverlay) dayOverlay.style.display = "flex";
+
+    if(vMins > 0){
+      document.getElementById("btnUndoVerrek")?.addEventListener("click", () => undoVerrekeningForDate(ymdStr));
+    }
+// ===== TOEVOEGING DAGDETAIL START =====
+if(dayBody){
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btnSmall";
+  btn.textContent = t("btn_add_manual");
+  btn.style.marginTop = "12px";
+
+  btn.addEventListener("click", () => {
+    const mDate = document.getElementById("mDate");
+    if(mDate) mDate.value = ymdStr;
+
+    const modalBack = document.getElementById("modalBack");
+    if(modalBack) modalBack.style.display = "flex";
+    const dayOverlay = document.getElementById("dayOverlay");
+if(dayOverlay) dayOverlay.style.display = "none";
+  });
+
+  dayBody.appendChild(btn);
+}
+// ===== TOEVOEGING DAGDETAIL END =====
+    return;
+  }
+
+  if(dayEdit) dayEdit.style.display = "inline-block";
+
+  const noteLine = e.note
+    ? `<br><br><b>${t("note_label")}:</b><br>${escapeHtml(e.note)}`
+    : "";
+
+  // ===== WERK =====
+  if(e.type === "Werk"){
+    const start = e.start || "";
+    const end   = e.end || "";
+    const pause = (e.pauseMin || 0);
+    const net   = formatHM(e.netMin || 0);
+
+    if(dayBody) dayBody.innerHTML =
+      `<b>${t("work_label")}</b><br>
+       ${start}${end ? "–"+end : ""}<br>
+       ${t("pause_line")}: ${pause} ${t("min")}<br>
+       ${t("net_line")}: ${net}
+       ${noteLine}`;
+  }
+
+  // ===== RECUP =====
+  else if(e.type === "Recup"){
+    const hm = formatHM(e.netMin || 0);
+    if(dayBody) dayBody.innerHTML =
+      `<b>${t("recup")}</b><br>
+       ${t("recup_line")} (${hm})
+       ${noteLine}`;
+  }
+
+  // ===== ANDERE TYPES =====
+  else{
+    const map = { "Ziekte":"sick", "Vakantie":"vacation", "Feestdag":"holiday" };
+    const key = map[e.type];
+    const label = key ? t(key) : e.type;
+
+    if(dayBody) dayBody.innerHTML =
+      `<b>${escapeHtml(label)}</b>
+       ${noteLine}`;
+  }
+
+// ===== VERREKEND TONEN + UNDO =====
+if(vMins > 0 && dayBody){
+  dayBody.innerHTML += `
+    <hr>
+    <div class="verrekRow">
+      <div><b>${t("reconciled")}</b><br>${formatHM(vMins)}</div>
+      <button type="button" class="btnGhostSmall" id="btnUndoVerrek">${t("reconciled_remove")}</button>
+    </div>
+  `;
+  document.getElementById("btnUndoVerrek")?.addEventListener("click", () => undoVerrekeningForDate(ymdStr));
+}
+
+if(dayOverlay) dayOverlay.style.display = "flex";
+}
+
+// =========================
+// HELPERS
+// =========================
+function formatHMS(ms){
+  const totalSec = Math.floor(ms/1000);
+  const h = Math.floor(totalSec/3600);
+  const m = Math.floor((totalSec%3600)/60);
+  const s = totalSec%60;
+  return `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
+}
+
+function todayISO(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function parseVerrekenToMinutes(str){
+  const s = (str || "").trim();
+  if(!s.includes(":")) return 0;
+
+  const [hRaw, mRaw] = s.split(":");
+  const h = parseInt(hRaw || "0", 10);
+  const m = parseInt(mRaw || "0", 10);
+
+  if(Number.isNaN(h) || Number.isNaN(m)) return 0;
+  if(m < 0 || m > 59) return 0;
+
+  return h * 60 + m;
+}
+
+function parseHM(str){
+  const s = String(str).trim();
+  const hm = s.match(/^(\d+)\s*:\s*([0-5]\d)$/);
+  if(hm) return parseInt(hm[1],10)*60 + parseInt(hm[2],10);
+  if(/^\d+$/.test(s)) return parseInt(s,10);
+  return null;
+}
+
+function timeToMin(t){
+  if(!t) return null;
+  const [hh,mm] = t.split(":").map(x=>parseInt(x,10));
+  if(Number.isNaN(hh)||Number.isNaN(mm)) return null;
+  return hh*60+mm;
+}
+
+function minToTime(min){
+  const h = Math.floor(min/60);
+  const m = min%60;
+  return `${pad2(h)}:${pad2(m)}`;
+}
+
+function clamp(n,a,b){
+  return Math.max(a, Math.min(b,n));
+}
+
+function uid(){
+  return Math.random().toString(36).slice(2,10)
+    + "-" + Date.now().toString(36);
+}
+
+function setSaldoColor(el, min){
+  if(!el) return;
+  el.classList.remove("salpos","salneg","salzero");
+  if(min > 0) el.classList.add("salpos");
+  else if(min < 0) el.classList.add("salneg");
+  else el.classList.add("salzero");
+}
+
+function verrekeningenForDate(ymd){
+  const arr = Array.isArray(state.verrekeningen)
+    ? state.verrekeningen
+    : [];
+  return arr.filter(v => v.date === ymd);
+}
+
+function hmFromMinutes(mins){
+  const h = Math.floor(mins/60);
+  const m = Math.abs(mins % 60);
+  return `${h}:${String(m).padStart(2,"0")}`;
+}
+  /* =========================
+     Timer + Status
+     ========================= */
+  let interval = null;
+
+  function currentElapsedMs(){
+    if(state.timer.running && state.timer.startMs!=null){
+      return state.timer.accMs + (Date.now() - state.timer.startMs);
+    }
+    return state.timer.accMs || 0;
+  }
+
+  function updateTimerUI(){
+    if(elTimer) elTimer.textContent = formatHMS(currentElapsedMs());
+  }
+
+  function setStatus(mode){
+    if(!elStatus) return;
+
+    const label =
+      mode === "playing" ? t("status_busy") :
+      mode === "paused"  ? t("status_paused") :
+                           t("status_not_started");
+
+    const cls =
+      mode === "playing" ? "play" :
+      mode === "paused"  ? "pause" :
+                           "stop";
+
+    elStatus.innerHTML = `<span class="iconBox ${cls}"></span><span>${label}</span>`;
+  }
+
+  function startTimer(){
+    if(state.timer.running) return;
+    state.timer.running = true;
+    state.timer.startMs = Date.now();
+    if(!interval) interval = setInterval(()=>{ updateTimerUI(); saveState(); }, 250);
+    setStatus("playing");
+    saveState();
+  }
+
+  function pauseTimer(){
+    if(!state.timer.running) return;
+    const now = Date.now();
+    state.timer.accMs += (now - state.timer.startMs);
+    state.timer.running = false;
+    state.timer.startMs = null;
+    setStatus("paused");
+    updateTimerUI();
+    saveState();
+  }
+
+  function resetTimer(){
+    state.timer.running = false;
+    state.timer.startMs = null;
+    state.timer.accMs = 0;
+    updateTimerUI();
+    setStatus("stopped");
+    saveState();
+  }
+
+  /* =========================
+     Totals
+     ========================= */
+  function weekStart(d = new Date()){
+    const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const day = (dd.getDay()+6)%7;
+    dd.setDate(dd.getDate()-day);
+    dd.setHours(0,0,0,0);
+    return dd;
+  }
+
+  function inSameWeek(dateYMD){
+    const ws = weekStart(new Date());
+    const we = new Date(ws); we.setDate(ws.getDate()+7);
+    const d = new Date(dateYMD+"T00:00:00");
+    return d>=ws && d<we;
+  }
+
+  function workNetForDate(dateYMD){
+    return state.entries
+      .filter(e=>!e.deletedAt && e.date===dateYMD && e.type==="Werk")
+      .reduce((a,e)=>a + (e.netMin||0), 0);
+  }
+  function vacationDaysTaken(){
+  const year = new Date().getFullYear();
+  const prefix = year + "-"; // omdat datum = "YYYY-MM-DD"
+
+  const set = new Set();
+
+  state.entries.forEach(e=>{
+    if(
+      !e.deletedAt &&
+      e.type === "Vakantie" &&
+      typeof e.date === "string" &&
+      e.date.startsWith(prefix)
+    ){
+      set.add(e.date); // telt per unieke dag
+    }
+  });
+
+  return set.size;
+}
+
+  function overtimeSaldoMin(){
+    const start = state.settings.startSaldoMin || 0;
+    const normDay = state.settings.normDayMin ?? NORM_MIN;
+    const days = [...new Set(state.entries.filter(e=>!e.deletedAt).map(e=>e.date))].sort();
+
+  let sum = start - (state.overtimePaidMinutes || 0);
+    for(const day of days){
+      const hasWork = state.entries.some(e=>!e.deletedAt && e.date===day && e.type==="Werk");
+      const workNet = workNetForDate(day);
+      if(hasWork) sum += (workNet - normDay);
+
+      const recups = state.entries.filter(e=>!e.deletedAt && e.date===day && e.type==="Recup").length;
+      if(recups>0) sum += (-normDay * recups);
+    }
+    return sum;
+  }
+
+  /* =========================
+     Actions
+     ========================= */
+  function saveWorkEntry(){
+    const ms = currentElapsedMs();
+    if(ms < 1000){
+      showToast(t("err_timer_short"), "warn");
+      return;
+    }
+
+    const pause = clamp(parseInt(elPauseMin?.value||"0",10)||0, 0, 600);
+    const now = new Date();
+    const date = ymd(now);
+
+    const durMin = Math.max(0, Math.round(ms/60000));
+    const netMin = Math.max(0, durMin - pause);
+
+    const endMin = now.getHours()*60 + now.getMinutes();
+    const startDate = new Date(now.getTime() - ms);
+    const startMin = startDate.getHours()*60 + startDate.getMinutes();
+
+    state.entries.unshift({
+      id: uid(), date, type:"Werk",
+      start: minToTime(startMin), end: minToTime(endMin),
+      pauseMin: pause, netMin, createdAt: Date.now()
+    });
+
+    saveState();
+    resetTimer();
+    showToast(`${t("save")} ✓`, "ok");
+    renderAll();
+  }
+
+  function msgRecupConfirm(){
+  const mins = (state.settings?.normDayMin ?? NORM_MIN);
+  const hh = Math.floor(mins / 60);
+  const mm = mins % 60;
+
+  
+  const nl = `${hh}u${mm.toString().padStart(2,"0")}`;
+const fr = `${hh}h${mm.toString().padStart(2,"0")}`;
+const en = `${hh}:${mm.toString().padStart(2,"0")}`;
+const de = `${hh}Std ${mm.toString().padStart(2,"0")}`;
+const pl = `${hh}g${mm.toString().padStart(2,"0")}`;
+const es = `${hh}h ${mm.toString().padStart(2,"0")}`;
+const hu = `${hh}ó${mm.toString().padStart(2,"0")}`;
+const it = `${hh}h${mm.toString().padStart(2,"0")}`;
+
+  const hasNorm = mins > 0;
+
+if(currentLang === "fr"){
+  return hasNorm
+    ? `Ajouter un jour de récup pour ${dmy(new Date())} ?\nCela déduit ${fr} de vos heures sup.`
+    : `Ajouter un jour de récup pour ${dmy(new Date())} ?`;
+}
+if(currentLang === "it"){
+  return hasNorm
+    ? `Aggiungere un giorno di recupero per ${dmy(new Date())}?\nQuesto sottrae ${it} dalle tue ore straordinarie.`
+    : `Aggiungere un giorno di recupero per ${dmy(new Date())}?`;
+}
+
+if(currentLang === "en"){
+  return hasNorm
+    ? `Add comp day for ${dmy(new Date())}?\nThis subtracts ${en} from your overtime.`
+    : `Add comp day for ${dmy(new Date())}?`;
+}
+
+if(currentLang === "de"){
+  return hasNorm
+    ? `Recup-Tag hinzufügen für ${dmy(new Date())}?\nDies zieht ${de} von deinen Überstunden ab.`
+    : `Recup-Tag hinzufügen für ${dmy(new Date())}?`;
+}
+
+if(currentLang === "pl"){
+  return hasNorm
+    ? `Dodać odbiór za ${dmy(new Date())}?\nTo odejmie ${pl} z twoich nadgodzin.`
+    : `Dodać odbiór za ${dmy(new Date())}?`;
+}
+
+if(currentLang === "es"){
+  return hasNorm
+    ? `¿Agregar día de recup para ${dmy(new Date())}?\nEsto restará ${es} de tus horas extra.`
+    : `¿Agregar día de recup para ${dmy(new Date())}?`;
+}
+
+if(currentLang === "hu"){
+  return hasNorm
+    ? `Hozzáadod a szabadnapot erre a napra: ${dmy(new Date())}?\nEz levon ${hu}-t a túlóráidból.`
+    : `Hozzáadod a szabadnapot erre a napra: ${dmy(new Date())}?`;
+}
+
+return hasNorm
+  ? `Recup toevoegen voor ${dmy(new Date())}?\nDit trekt ${nl} af van je overuren.`
+  : `Recup toevoegen voor ${dmy(new Date())}?`;
+   }
+
+  function addRecup(){
+    openConfirm(msgRecupConfirm(), () => {
+      state.entries.unshift({
+        id: uid(), date: ymd(new Date()), type:"Recup",
+        start:null, end:null, pauseMin:0, netMin: (state.settings?.normDayMin ?? NORM_MIN), createdAt: Date.now()
+      });
+      saveState();
+      showToast(`${t("recup")} ✓`, "ok");
+      renderAll();
+    });
+  }
+
+/* =========================
+   Modal (manual add/edit)
+   ========================= */
+let editingId = null;
+
+function openModal(mode, entry=null){
+
+  if(mode === "edit" && entry?.date){
+    const weekInfo = getWeekInfo(entry.date);
+    if(isWeekLocked(weekInfo.key)){
+      showToast(t("week_locked"));
+      return;
+    }
+  }
+  editingId = entry ? entry.id : null;
+
+  if(modalTitle){
+    modalTitle.textContent = mode==="edit" ? t("modal_edit_title") : t("modal_add_title");
+  }
+
+  if(btnDeleteInModal){
+    btnDeleteInModal.style.display = mode==="edit" ? "inline-block" : "none";
+  }
+
+  if(mDate) mDate.value = entry?.date || ymd(new Date());
+  if(mType) mType.value = entry?.type || "Werk";
+
+  const effType = entry?.type || (mType ? mType.value : "Werk");
+  const isZeroType = (effType === "Ziekte" || effType === "Vakantie" || effType === "Feestdag");
+
+  if(effType === "Recup" || isZeroType){
+    if(mStartH){ mStartH.value = "00"; mStartH.disabled = true; }
+    if(mStartM){ mStartM.value = "00"; mStartM.disabled = true; }
+    if(mEndH){ mEndH.value = "00"; mEndH.disabled = true; }
+    if(mEndM){ mEndM.value = "00"; mEndM.disabled = true; }
+    if(mPause){ mPause.value = 0; mPause.disabled = true; }
+  }else{
+    const startVal = entry?.start || "06:00";
+    const endVal   = entry?.end   || "14:00";
+
+    const [sh, sm] = startVal.split(":");
+    const [eh, em] = endVal.split(":");
+
+    if(mStartH){ mStartH.value = sh || "06"; mStartH.disabled = false; }
+    if(mStartM){ mStartM.value = sm || "00"; mStartM.disabled = false; }
+    if(mEndH){ mEndH.value = eh || "14"; mEndH.disabled = false; }
+    if(mEndM){ mEndM.value = em || "00"; mEndM.disabled = false; }
+    if(mPause){ mPause.value = entry?.pauseMin ?? 30; mPause.disabled = false; }
+  }
+
+  if(mNote) mNote.value = entry?.note || "";
+
+  if(modalBack) modalBack.style.display = "flex";
+  applyLang();
+}
+
+function closeModal(){
+  if(modalBack) modalBack.style.display = "none";
+  editingId = null;
+}
+
+function netFromFields(type, start, end, pauseMin){
+  // Deze types tellen niet mee als werkuren (0 min)
+  if(type === "Ziekte" || type === "Vakantie" || type === "Feestdag"){
+    return 0;
+  }
+
+  // Recup = volledige normale werkdag
+  if(type === "Recup"){
+    return state?.settings?.normDayMin ?? NORM_MIN;
+  }
+
+  const s = timeToMin(start);
+  const e = timeToMin(end);
+  if(s == null || e == null) return null;
+
+  let dur = e - s;
+  if(dur < 0) dur += 24 * 60;
+
+  return Math.max(0, dur - pauseMin);
+}
+
+function saveModal(){
+  const date = mDate?.value;
+  const type = mType?.value || "Werk";
+  
+  // 🔒 week lock check
+  if(date){
+    const weekInfo = getWeekInfo(date);
+    if(isWeekLocked(weekInfo.key)){
+      showToast(t("week_locked"));
+      return;
+    }
+  }
+
+  // lees velden (mag leeg zijn bij sommige types)
+  let start = `${mStartH?.value || "00"}:${mStartM?.value || "00"}`;
+  let end   = `${mEndH?.value || "00"}:${mEndM?.value || "00"}`;
+  let pauseMin = clamp(parseInt(mPause?.value || "0", 10) || 0, 0, 600);
+
+  if(!date){
+    showToast(t("err_choose_date"));
+    return;
+  }
+
+  const isZeroType = (type === "Ziekte" || type === "Vakantie" || type === "Feestdag");
+
+  // Zero-types en recup hebben geen tijden nodig
+  if(type === "Recup" || isZeroType){
+    start = null;
+    end = null;
+    pauseMin = 0;
+  }
+
+  const netMin = netFromFields(type, start, end, pauseMin);
+
+  if(netMin == null){
+    showToast(t("err_fill_times"));
+    return;
+  }
+
+  if(editingId){
+    const idx = state.entries.findIndex(e=>e.id===editingId);
+    if(idx === -1) return;
+
+    state.entries[idx] = {
+      ...state.entries[idx],
+      date,
+      type,
+      start: (type==="Recup" || isZeroType) ? null : start,
+      end:   (type==="Recup" || isZeroType) ? null : end,
+      pauseMin: (type==="Recup" || isZeroType) ? 0 : pauseMin,
+      netMin,
+      note: (mNote?.value || "").trim()
+    };
+  }else{
+    state.entries.unshift({
+      id: uid(),
+      date,
+      type,
+      start: (type==="Recup" || isZeroType) ? null : start,
+      end:   (type==="Recup" || isZeroType) ? null : end,
+      pauseMin: (type==="Recup" || isZeroType) ? 0 : pauseMin,
+      netMin,
+      note: (mNote?.value || "").trim(),
+      createdAt: Date.now()
+    });
+  }
+
+  saveState();
+  closeModal();
+  showToast("OK ✓", "ok");
+  renderAll();
+}
+
+mType?.addEventListener("change", ()=>{
+  const v = mType.value;
+  const isZeroType = (v === "Ziekte" || v === "Vakantie" || v === "Feestdag");
+
+  if(v === "Recup" || isZeroType){
+
+    if(mStartH){ mStartH.value = "00"; mStartH.disabled = true; }
+    if(mStartM){ mStartM.value = "00"; mStartM.disabled = true; }
+
+    if(mEndH){ mEndH.value = "00"; mEndH.disabled = true; }
+    if(mEndM){ mEndM.value = "00"; mEndM.disabled = true; }
+
+    if(mPause){ mPause.value = 0; mPause.disabled = true; }
+
+  }else{
+
+    if(mStartH){ mStartH.disabled = false; if(!mStartH.value) mStartH.value = "08"; }
+    if(mStartM){ mStartM.disabled = false; if(!mStartM.value) mStartM.value = "00"; }
+
+    if(mEndH){ mEndH.disabled = false; if(!mEndH.value) mEndH.value = "15"; }
+    if(mEndM){ mEndM.disabled = false; if(!mEndM.value) mEndM.value = "30"; }
+
+    if(mPause){ mPause.disabled = false; if(!mPause.value) mPause.value = 30; }
+
+  }
+});
+
+function deleteEditing(){
+  if(!editingId) return;
+
+  const entry = state.entries.find(e => e.id === editingId);
+  if(!entry) return;
+
+  const weekInfo = getWeekInfo(entry.date);
+if(isWeekLocked(weekInfo.key)){
+  showToast(t("week_locked"));
+  return;
+}
+  openConfirm(t("confirm_delete_entry"), () => {
+    const idx = state.entries.findIndex(e=>e.id===editingId);
+    if(idx>=0) state.entries[idx].deletedAt = Date.now();
+    saveState();
+    closeModal();
+    renderAll();
+  });
+}
+/* =========================
+   History rendering
+   ========================= */
+function entryTitle(e){
+  const d = new Date(e.date);
+  const loc =
+    currentLang==="fr" ? "fr-FR" :
+    currentLang==="en" ? "en-GB" :
+    currentLang==="de" ? "de-DE" :
+    currentLang==="pl" ? "pl-PL" :
+    currentLang==="es" ? "es-ES" :
+    currentLang==="hu" ? "hu-HU" :
+    currentLang==="it" ? "it-IT" :
+    "nl-BE";
+  return d.toLocaleDateString(loc);
+}
+
+function entrySubtitle(e){
+  const noteLine = e.note ? `<br><br><span class="noteLine">📝 ${e.note}</span>` : "";
+
+  const vMins = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
+    .filter(v => !v.deletedAt && v.date === e.date)
+    .reduce((s,x)=> s + (x.minutes||0), 0);
+
+  const verrekenLine = vMins > 0
+    ? `<br><br><span class="noteLine">🟢 ${t("reconciled")}: ${formatHM(vMins)}</span>`
+    : "";
+
+  if(e.type==="Recup"){
+    return `${t("recup").toUpperCase()}<br>${t("recup_line")} (${formatHM(e.netMin||0)})${noteLine}${verrekenLine}`;
+  }
+
+  if(e.type==="Ziekte" || e.type==="Vakantie" || e.type==="Feestdag"){
+    const map = { "Ziekte":"sick", "Vakantie":"vacation", "Feestdag":"holiday" };
+    const key = map[e.type];
+    return `${(key ? t(key) : e.type).toUpperCase()}${noteLine}${verrekenLine}`;
+  }
+
+  return `${t("work_label")}<br>
+${e.start || "-"}-${e.end || "-"}<br>
+${t("net_line")} ${formatHM(e.netMin||0)}<br>
+${t("pause_line")} ${e.pauseMin||0} ${t("minutes")}${noteLine}${verrekenLine}`;
+}
+
+function entryChip(e){
+  return formatHM(e.netMin || 0);
+}
+
+function getWeekInfo(dateStr){
+  const d = new Date(dateStr);
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+
+  return {
+    year: date.getUTCFullYear(),
+    week: weekNo,
+    key: `${date.getUTCFullYear()}-W${String(weekNo).padStart(2,"0")}`
+  };
+}
+function isWeekLocked(weekKey){
+  return meta?.weekLocks?.[weekKey] === true;
+}
+
+function toggleWeekLock(weekKey){
+  if(!meta.weekLocks) meta.weekLocks = {};
+
+  if(meta.weekLocks[weekKey]){
+    delete meta.weekLocks[weekKey];
+  }else{
+    meta.weekLocks[weekKey] = true;
+  }
+
+  saveMeta();
+  renderHistory();
+}
+function renderHistory(){
+  if(!elHistoryList) return;
+
+  const list = state.entries
+    .filter(e=>!e.deletedAt)
+    .slice()
+    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  if(list.length===0){
+    elHistoryList.innerHTML = `
+      <div class="muted" style="font-weight:950; margin-top:12px;">
+        ${t("no_entries")}
+      </div>
+    `;
+    return;
+  }
+
+  const groups = {};
+  list.forEach(e=>{
+    const info = getWeekInfo(e.date);
+ if(!groups[info.key]){
+  groups[info.key] = {
+    key: info.key,
+    year: info.year,
+    week: info.week,
+    items: []
+  };
+}
+    groups[info.key].items.push(e);
+  });
+
+  const orderedWeeks = Object.values(groups).sort((a,b)=>{
+    if(b.year !== a.year) return b.year - a.year;
+    return b.week - a.week;
+  });
+
+  elHistoryList.innerHTML = "";
+
+  orderedWeeks.forEach(group=>{
+    const wrap = document.createElement("div");
+    wrap.style.marginTop = "12px";
+
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "btnGhost";
+    head.style.display = "flex";
+    head.style.justifyContent = "space-between";
+    head.style.alignItems = "center";
+    head.style.width = "100%";
+    head.style.marginBottom = "10px";
+    head.innerHTML = `
+<span>${t("week")} ${group.week}</span>
+
+<span style="margin-left:auto; display:flex; align-items:center; gap:10px;">
+  <span class="weekLock" data-week="${group.key}" style="cursor:pointer;">
+    ${isWeekLocked(group.key)
+      ? '<img src="lock_close.svg" style="width:20px;height:20px;">'
+      : '<img src="lock_open.svg" style="width:20px;height:20px;">'}
+  </span>
+
+  <span style="opacity:.75;">${group.items.length}</span>
+</span>
+`;
+
+    const body = document.createElement("div");
+    body.style.display = "none";
+
+    head.addEventListener("click", ()=>{
+      body.style.display = body.style.display === "none" ? "block" : "none";
+    });
+    const lock = head.querySelector(".weekLock");
+
+lock?.addEventListener("click",(ev)=>{
+  ev.stopPropagation();
+
+  const weekKey = lock.dataset.week;
+  const locked = isWeekLocked(weekKey);
+
+  if(locked){
+    openConfirm("Week ontgrendelen?", ()=>{
+      toggleWeekLock(weekKey);
+    });
+  }else{
+    openConfirm("Week vergrendelen?", ()=>{
+      toggleWeekLock(weekKey);
+    });
+  }
+});
+
+    group.items.forEach(e=>{
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `
+        <div class="left">
+          <div class="t1">${entryTitle(e)}</div>
+          <div class="t2">${entrySubtitle(e)}</div>
+        </div>
+        <div class="right">
+          <div class="chip">${entryChip(e)}</div>
+          <button class="btnSmall"
+                  data-act="edit"
+                  data-i18n-aria="btn_edit"
+                  aria-label="">
+            ✎
+          </button>
+          <button class="btnSmall btnDanger" data-act="del">X</button>
+        </div>
+      `;
+
+      div.querySelector('[data-act="edit"]')?.addEventListener("click", ()=>{
+  const weekInfo = getWeekInfo(e.date);
+
+if(isWeekLocked(weekInfo.key)){
+  showToast(t("week_locked"));
+  return;
+}
+
+  openModal("edit", e);
+});
+
+div.querySelector('[data-act="del"]')?.addEventListener("click", ()=>{
+  const weekInfo = getWeekInfo(e.date);
+
+if(isWeekLocked(weekInfo.key)){
+  showToast(t("week_locked"));
+  return;
+}
+
+  openConfirm(t("confirm_delete_entry"), () => {
+    const idx = state.entries.findIndex(x=>x.id===e.id);
+    if(idx>=0) state.entries[idx].deletedAt = Date.now();
+    saveState();
+    renderAll();
+  });
+});
+        
+
+      body.appendChild(div);
+    });
+
+    wrap.appendChild(head);
+    wrap.appendChild(body);
+    elHistoryList.appendChild(wrap);
+  });
+}
+  /* =========================
+     Backup meta
+     ========================= */
+  function renderBackupMeta(){
+    if(!elLastBackupText) return;
+
+    if(meta.lastBackupAt){
+      const d = new Date(meta.lastBackupAt);
+      const txt = `${dmy(d)} ${pad2(d.getHours())}:${pad2(d.getMinutes())} (${meta.lastBackupName||t("backup")})`;
+      elLastBackupText.textContent = `${t("backup_last")}: ${txt}`;
+    }else{
+      elLastBackupText.textContent = `${t("backup_last")}: ${t("backup_never")}`;
+    }
+  }
+
+  function setLastBackup(at, name){
+    meta.lastBackupAt = at;
+    meta.lastBackupName = name;
+    saveMeta();
+  }
+
+  function exportJSON(withDownloadName=null){
+    const data = JSON.stringify({state, meta}, null, 2);
+    const blob = new Blob([data], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+
+    const name = withDownloadName || `shift-tap-backup-${ymd(new Date())}.json`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    setLastBackup(Date.now(), name);
+    renderBackupMeta();
+  }
+
+  function importJSON(file){
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const parsed = JSON.parse(reader.result);
+        if(parsed && parsed.state && parsed.meta){
+          state = parsed.state;
+          meta  = parsed.meta;
+        }else if(parsed && parsed.settings && parsed.entries){
+          state = parsed;
+          meta  = { lastBackupAt:null, lastBackupName:null };
+        }else{
+          showToast(t("err_bad_json"), "err");
+          return;
+        }
+
+        if(!state.settings) state.settings = { startSaldoMin:0, normDayMin:NORM_MIN, lang:"nl" };
+        if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
+        if(!Array.isArray(state.entries)) state.entries = [];
+        if(!meta) meta = { lastBackupAt:null, lastBackupName:null, lastAutoBackupAt:null };
+        if(!("lastAutoBackupAt" in meta)) meta.lastAutoBackupAt = null;
+        if(!meta.weekLocks) meta.weekLocks = {};
+
+        saveState(); saveMeta();
+        renderAll();
+        showToast("Import ✓", "ok");
+      }catch(e){
+        showToast(t("err_bad_json"), "err");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  
+
+/* =========================
+   Google login + Cloud sync (Firebase)
+   ========================= */
+
+/**
+ * Belangrijk:
+ * - Deze app draait als PWA (GitHub Pages / HTTPS).
+ * - Voor Google login moet je in Firebase Console bij Authentication → Settings
+ *   je domein toevoegen aan "Authorized domains" (bv. <user>.github.io).
+ * - Als dat niet klopt, zie je hieronder een duidelijke foutmelding.
+ */
+
+const elCloudStatus = document.getElementById("cloudStatus");
+
+function setCloudStatus(txt){
+  if(elCloudStatus) elCloudStatus.textContent = txt || "—";
+}
+
+function currentUser(){
+  try{
+    return fbAuth?.currentUser || null;
+  }catch(e){
+    return null;
+  }
+}
+
+function backupObject(){
+  return {
+    state,
+    meta,
+    cloud: {
+      appId: APP_ID,
+      channel: APP_CHANNEL,
+      version: APP_VERSION,
+      exportedAt: Date.now()
+    }
+  };
+}
+
+function cloudDocRef(uid){
+  // 1 doc per user per app/channel
+  const docId = `${APP_ID}_${APP_CHANNEL}`;
+  return fbDb.collection("users").doc(uid).collection("apps").doc(docId);
+}
+
+/* ---------- Redirect result (mobiel/PWA) ---------- */
+async function handleRedirectLoginResult(){
+  if(!(await ensureFirebase())){
+    setCloudStatus(t("cloud_not_configured_status"));
+    setCloudUiEnabled(false);
+    return;
+  }
+
+  const elLoginNote = document.getElementById("loginNote");
+
+  try {
+    const res = await fbAuth.getRedirectResult();
+
+    if (res && res.user) {
+      showToast(`✅ ${t("cloud_logged_in")} ${res.user.email || "Google"}`, "ok");
+    }
+  } catch (e) {
+    console.error("getRedirectResult:", e);
+
+    const code = e?.code ? String(e.code) : "login-error";
+    showToast(`❌ ${t("cloud_login_error")} (${code})`, "warn");
+    setCloudStatus(`❌ ${t("cloud_login_error")}: ${code}`);
+
+    if (elLoginNote) {
+      elLoginNote.textContent = `❌ ${t("cloud_login_error")}: ${code}`;
+    }
+  }
+}
+
+/* ---------- Login / Logout ---------- */
+async function loginGoogle(){
+  if(!(await ensureFirebase())){
+    showToast(t("cloud_not_configured"), "warn");
+    return;
+  }
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await fbAuth.signInWithPopup(provider);
+  }catch(e){
+    if (e && (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user")) {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await fbAuth.signInWithRedirect(provider);
+      return;
+    }
+    console.error("loginGoogle:", e);
+    showToast("❌ " + t("login_failed"), "warn");
+  }
+}
+
+async function logoutGoogle(){
+  if(!(await ensureFirebase())) return;
+  try{
+    await fbAuth.signOut();
+    showToast(t("logged_out"), "ok");
+  }catch(e){
+    console.error("logoutGoogle:", e);
+    showToast("❌ " + t("logout_failed"), "warn");
+  }
+}
+
+/* ---------- Cloud push / pull ---------- */
+async function cloudPush(){
+  if(!(await ensureFirebase())){
+    showToast(t("cloud_not_configured"), "warn");
+    return;
+  }
+  const u = currentUser();
+  if(!u){
+    showToast(t("login_required_google"), "warn");
+    return;
+  }
+
+  try{
+    showToast("⬆️ " + t("upload_running"), "ok");
+    const payload = backupObject();
+    await cloudDocRef(u.uid).set({
+      payload,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge:true });
+
+    setCloudStatus(`✅ ${t("cloud_updated")} (${u.email || "Google"})`);
+showToast("✅ " + t("cloud_backup_success"), "ok");
+}catch(err){
+  console.error(err);
+  showToast("❌ " + t("cloud_upload_failed"), "warn");
+  }
+}
+
+async function cloudPull(){
+  if(!(await ensureFirebase())){
+    showToast(t("cloud_not_configured"), "warn");
+    return;
+  }
+  const u = currentUser();
+  if(!u){
+    showToast(t("login_required_google"), "warn");
+    return;
+  }
+
+
+try{
+  showToast("⬇️ " + t("download_running"), "ok");
+  const snap = await cloudDocRef(u.uid).get();
+  if(!snap.exists){
+    showToast(t("cloud_backup_not_found"), "warn");
+    return;
+  }
+
+    const payload = snap.data()?.payload || null;
+if(!payload?.state){
+  showToast(t("cloud_backup_invalid"), "warn");
+  return;
+}
+
+    openConfirm(t("cloud_restore_confirm"), ()=>{
+      state = payload.state;
+      meta  = payload.meta || meta;
+
+      // safety defaults
+      if(!state.settings) state.settings = { startSaldoMin:0, normDayMin:NORM_MIN, lang:"nl" };
+      if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
+      if(!Array.isArray(state.entries)) state.entries = [];
+      if(!Array.isArray(state.verrekeningen)) state.verrekeningen = [];
+      if(typeof state.overtimePaidMinutes !== "number") state.overtimePaidMinutes = 0;
+      if(!meta) meta = { lastBackupAt:null, lastBackupName:null };
+
+      saveState();
+      saveMeta();
+      renderAll();
+
+      setCloudStatus(`⬇️ ${t("cloud_loaded")} (${u.email || "Google"})`);
+showToast("✅ " + t("cloud_to_device_success"), "ok");
+    });
+  }catch(err){
+    console.error(err);
+    showToast("❌ " + t("cloud_download_failed"), "warn");
+  }
+}
+async function maybeAutoBackupOnOpen(){
+  try{
+    if(!(await ensureFirebase())) return;
+
+    const u = currentUser();
+    if(!u) return;
+
+    const now = Date.now();
+    const last = Number(meta?.lastAutoBackupAt || 0);
+    const DAY = 24 * 60 * 60 * 1000;
+
+    if(last && (now - last) < DAY) return;
+
+    await cloudPush();
+
+    meta.lastAutoBackupAt = now;
+    saveMeta();
+
+    console.log("Auto backup uitgevoerd");
+  }catch(err){
+    console.error("Auto backup mislukt", err);
+  }
+}
+/* ---------- UI wiring ---------- */
+function bindCloudButtons(){
+  btnGoogleLogin?.addEventListener("click", ()=> loginGoogle().catch(console.error));
+  btnGoogleLogout?.addEventListener("click", ()=> logoutGoogle().catch(console.error));
+  btnCloudPush?.addEventListener("click", ()=> cloudPush().catch(console.error));
+  btnCloudPull?.addEventListener("click", ()=> cloudPull().catch(console.error));
+}
+
+async function wireCloudAuthUI(){
+  // knoppen standaard uit tot we Firebase zeker hebben
+  setCloudUiEnabled(false);
+
+  if(!(await ensureFirebase())){
+    setCloudStatus(t("cloud_not_configured_status"));
+    if(elLoginNote) elLoginNote.textContent = t("firebase_not_configured");
+    return;
+  }
+
+  // Vanaf hier: Firebase OK
+  setCloudUiEnabled(true);
+  setCloudStatus(t("not_logged_in"));
+
+  // 1x listener (blijft actief)
+  fbAuth.onAuthStateChanged((u)=>{
+    setLoginUi(u);
+
+    if(u){
+      setCloudStatus(`✅ ${t("logged_in")}: ${u.email || u.displayName || "Google"}`);
+      if(btnCloudPull) btnCloudPull.disabled = false;
+      if(btnCloudPush) btnCloudPush.disabled = false;
+    }else{
+      setCloudStatus(t("not_logged_in"));
+      if(btnCloudPull) btnCloudPull.disabled = true;
+      if(btnCloudPush) btnCloudPush.disabled = true;
+    }
+  });
+}
+
+/* =========================
+   Settings
+   ========================= */
+function renderSettings(){
+  const startSaldoTxt = formatHM(state.settings.startSaldoMin || 0);
+let [ssh, ssm] = startSaldoTxt.split(":");
+
+ssh = String(ssh || "00").padStart(2,"0");
+ssm = String(ssm || "00").padStart(2,"0");
+
+if(elStartSaldoH) elStartSaldoH.value = ssh;
+if(elStartSaldoM) elStartSaldoM.value = ssm;
+
+  const normTxt = formatHM(state.settings.normDayMin ?? NORM_MIN);
+let [nh, nm] = normTxt.split(":");
+
+nh = String(nh || "07").padStart(2,"0");
+nm = String(nm || "30").padStart(2,"0");
+
+if(elNormDayH) elNormDayH.value = nh;
+if(elNormDayM) elNormDayM.value = nm;
+  if(elPauseMin) elPauseMin.value = String(state.settings.pauseMin ?? 30);
+
+  const emp = document.getElementById("employeeName");
+  const emr = document.getElementById("employerName");
+
+  if(emp) emp.value = state.settings.employeeName || "";
+  if(emr) emr.value = state.settings.employerName || "";
+}
+
+function saveSettings(){
+  const startSaldoTxt = `${elStartSaldoH?.value || "00"}:${elStartSaldoM?.value || "00"}`;
+  const mins = parseHM(startSaldoTxt);
+
+  if(mins==null){
+    showToast(t("err_start_saldo_format"), "warn");
+    return;
+  }
+
+  const normTxt = `${elNormDayH?.value || "00"}:${elNormDayM?.value || "00"}`;
+  const norm = parseHM(normTxt);
+
+  if(norm==null){
+    showToast(t("err_normday_format"), "warn");
+    return;
+  }
+  state.settings.startSaldoMin = mins;
+  state.settings.normDayMin = norm;
+  state.settings.lang = currentLang;
+
+  // 👇 deze twee moeten erbij
+  state.settings.employeeName = (document.getElementById("employeeName")?.value || "").trim();
+  state.settings.employerName = (document.getElementById("employerName")?.value || "").trim();
+
+  saveState();
+  renderAll();
+  showToast(t("settings_saved"), "ok");
+}
+  function renderOnlineBadge(){
+    if(!elOnlineBadge) return;
+    const online = navigator.onLine;
+    elOnlineBadge.textContent = online ? t("status_online") : t("status_offline");
+    elOnlineBadge.classList.toggle("ok", online);
+    elOnlineBadge.classList.toggle("warn", !online);
+  }
+
+  function formatTodayPill(){
+  const loc =
+    currentLang==="fr" ? "fr-FR" :
+    currentLang==="en" ? "en-GB" :
+    currentLang==="de" ? "de-DE" :
+    currentLang==="pl" ? "pl-PL" :
+    currentLang==="es" ? "es-ES" :
+    currentLang==="hu" ? "hu-HU" :
+    currentLang==="it" ? "it-IT" :
+    "nl-BE";
+
+  return new Date().toLocaleDateString(loc, {
+    weekday:"short",
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric"
+  });
+}
+
+  function renderTotals(){
+    const today = ymd(new Date());
+    const todayNet = workNetForDate(today);
+
+    const weekNet = state.entries
+      .filter(e=>!e.deletedAt && e.type==="Werk" && inSameWeek(e.date))
+      .reduce((a,e)=>a+(e.netMin||0),0);
+
+    const ot = overtimeSaldoMin();
+    const vacDays = vacationDaysTaken();
+    if(elVacTaken) elVacTaken.textContent = String(vacDays);
+
+    if(elTodayWork) elTodayWork.textContent = formatHM(todayNet);
+    if(elWeekWork)  elWeekWork.textContent  = formatHM(weekNet);
+
+    if(elOvertimeSaldo){
+      const normDay = state.settings.normDayMin ?? NORM_MIN;
+      const totalDays = normDay > 0 ? (ot / normDay) : 0;
+
+      const cls = ot > 0 ? "otPos" : (ot < 0 ? "otNeg" : "otZero");
+
+elOvertimeSaldo.innerHTML = `
+  <div class="saldoMain ${cls}">
+    ${formatHM(ot)} <span class="unit">${t("hours")}</span>
+  </div>
+  <div class="saldoSub">
+    = ${ot} <span>${t("minutes")}</span><br>
+    = ${totalDays.toFixed(2)} <span>${t("days")}</span>
+  </div>
+`;
+
+      setSaldoColor(elOvertimeSaldo, ot);
+      const card = elOvertimeSaldo.closest(".miniCard");
+      if(card) setSaldoColor(card, ot);
+    }
+  }
+
+  function renderAll(){
+    if(elTodayPill) elTodayPill.textContent = formatTodayPill();
+    updateTimerUI();
+    renderTotals();
+    renderHistory();
+    renderBackupMeta();
+    renderSettings();
+    renderOnlineBadge();
+    applyLang();
+    // als kalender zichtbaar is → opnieuw tekenen
+  const tab3 = document.getElementById("tab3");
+  if(tab3 && tab3.style.display !== "none"){
+    renderCalendar();
+  }
+  }
+
+  /* =========================
+   Bind events
+   ========================= */
+
+// Basis knoppen
+btnStart?.addEventListener("click", startTimer);
+btnPause?.addEventListener("click", pauseTimer);
+btnSave?.addEventListener("click", saveWorkEntry);
+btnRecup?.addEventListener("click", addRecup);
+btnAddManual?.addEventListener("click", ()=> openModal("add"));
+
+// Backup
+btnBackupNow?.addEventListener("click", ()=> exportJSON());
+fileImport2?.addEventListener("change", (e)=>{
+  const f = e.target.files?.[0];
+  if(f) importJSON(f);
+  e.target.value = "";
+});
+
+// Verrekenen
+const verrekenAmount = document.getElementById("verrekenAmount");
+const verrekenDate   = document.getElementById("verrekenDate");
+const btnSaveVerreken = document.getElementById("btnSaveVerrekening");
+const btnCloseVerreken = document.getElementById("btnCloseVerreken");
+
+document.getElementById("btnVerreken")?.addEventListener("click", () => {
+  if(verrekenDate) verrekenDate.value = todayISO();
+  if(verrekenAmount && !verrekenAmount.value) verrekenAmount.value = "0:00";
+  if(verrekenModal) verrekenModal.style.display = "flex";
+});
+
+btnCloseVerreken?.addEventListener("click", () => {
+  if(verrekenModal) verrekenModal.style.display = "none";
+});
+
+verrekenModal?.addEventListener("click", (e) => {
+  if(e.target === verrekenModal) verrekenModal.style.display = "none";
+});
+
+btnSaveVerreken?.addEventListener("click", () => {
+  const date = (verrekenDate?.value || "").trim();
+  const amountStr = (verrekenAmount?.value || "").trim();
+
+  if(!date){
+    showToast("Kies een datum.", "warn");
+    return;
+  }
+
+  const mins = parseHM(amountStr);
+  if(mins == null){
+    showToast("Vul uren in als u:min (bv 10:00).", "warn");
+    return;
+  }
+
+  state.verrekeningen = state.verrekeningen || [];
+  state.verrekeningen.unshift({
+    id: uid(),
+    date,
+    minutes: mins,
+    createdAt: Date.now()
+  });
+
+  state.overtimePaidMinutes = (state.overtimePaidMinutes || 0) + mins;
+
+  saveState();
+  if(verrekenModal) verrekenModal.style.display = "none";
+  showToast("Verrekenen ✓", "ok");
+  renderAll();
+});
+
+// Dag detail
+dayClose?.addEventListener("click", closeDayDetail);
+
+dayOverlay?.addEventListener("click", (ev)=>{
+  if(ev.target === dayOverlay) closeDayDetail();
+});
+
+dayEdit?.addEventListener("click", () => {
+  const ymdStr = dayTitle?.dataset?.ymd;
+  if(!ymdStr) return;
+
+const weekInfo = getWeekInfo(ymdStr);
+if(isWeekLocked(weekInfo.key)){
+  showToast(t("week_locked"));
+  return;
+}
+
+  const e = entryForDate(ymdStr);
+  if(!e) return;
+
+  closeDayDetail();
+  openModal("edit", e);
+});
+// Settings
+btnSaveSettings?.addEventListener("click", saveSettings);
+btnCloseModal?.addEventListener("click", closeModal);
+modalBack?.addEventListener("click", (e)=>{ if(e.target===modalBack) closeModal(); });
+btnSaveModal?.addEventListener("click", saveModal);
+btnDeleteInModal?.addEventListener("click", deleteEditing);
+window.addEventListener("online", renderOnlineBadge);
+window.addEventListener("offline", renderOnlineBadge);
+
+
+/* =========================
+   INIT
+   ========================= */
+
+async function init(){
+
+// Stop normale init als setup nog niet gedaan is
+if(!isSetupDone()){
+  const langOverlay = document.getElementById("langOverlay");
+  if(langOverlay){
+    langOverlay.style.display = "flex";
+  }
+  return;
+}
+  // Taal instellen (mag pas na setup)
+  const savedLang = localStorage.getItem("lang");
+  currentLang = savedLang || state?.settings?.lang || "nl";
+
+  state.settings = state.settings || {};
+  state.settings.lang = currentLang;
+  localStorage.setItem("lang", currentLang);
+  
+  applyLang();
+
+  try{
+    await handleRedirectLoginResult();
+  }catch(e){
+    console.warn("redirect init error:", e);
+  }
+
+  try{
+    await wireCloudAuthUI();
+  }catch(e){
+    console.warn("auth UI error:", e);
+  }
+
+  bindCloudButtons();
+  showTab("tab1");
+
+  if(state.timer.running){
+    if(!interval) interval = setInterval(()=>{ 
+      updateTimerUI(); 
+      saveState(); 
+    }, 250);
+  }
+  renderAll();
+applyLang();
+maybeAutoBackupOnOpen(); 
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+const vEl = document.getElementById("appVersionText");
+if(vEl) vEl.textContent = "v" + APP_VERSION;
+
+  // TEST button (alleen actief als setup NIET klaar is)
+  const btn = document.getElementById("btnTestSetup");
+  if(btn){
+    btn.textContent = "SETUP=" + (localStorage.getItem(SETUP_KEY) ?? "null");
+
+    if(!isSetupDone()){
+      btn.style.display = "block";
+      btn.addEventListener("click", () => {
+        markSetupDone();
+        location.reload();
+      });
+    }else{
+      btn.style.display = "none"; // verberg als setup al gedaan is
+    }
+  }
+
+// ===== SETUP START BUTTON =====
+const setupBtn = document.getElementById("btnSetupStart");
+if (setupBtn) {
+  setupBtn.addEventListener("click", () => {
+
+    const hhStr = document.getElementById("setupNormHoursH")?.value || "00";
+    const mmStr = document.getElementById("setupNormHoursM")?.value || "00";
+    const pauseMin = parseInt(document.getElementById("setupPauseMin")?.value, 10);
+
+    const hh = parseInt(hhStr, 10);
+    const mm = parseInt(mmStr, 10);
+
+    if (Number.isNaN(hh) || Number.isNaN(mm) || Number.isNaN(pauseMin)) {
+      showToast(t("setup_fill_fields"), "warn");
+      return;
+    }
+
+    if ((hh * 60 + mm) === 0) {
+      showToast(t("setup_set_normday"), "warn");
+      return;
+    }
+
+    if (pauseMin < 0) {
+      showToast(t("setup_fill_fields"), "warn");
+      return;
+    }
+
+    state.settings = state.settings || {};
+    state.settings.normDayMin = (hh * 60) + mm;
+    state.settings.pauseMin = pauseMin;
+
+    // TAAL OPSLAAN
+    const lang = currentLang || "nl";
+    state.settings.lang = lang;
+    localStorage.setItem("lang", lang);
+    currentLang = lang;
+
+    saveState();
+    markSetupDone();
+
+    const overlay = document.getElementById("setupOverlay");
+    if (overlay) overlay.style.display = "none";
+
+    location.reload();
+  });
+}
+// ===== LANGUAGE MODAL =====
+const langOverlay = document.getElementById("langOverlay");
+const setupOverlay = document.getElementById("setupOverlay");
+
+function openSetupAfterLang(lang){
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+
+  if(state && state.settings){
+    state.settings.lang = lang;
+  }
+
+  applyLang();
+
+  const setupSelect = document.getElementById("setupLang");
+  if(setupSelect) setupSelect.value = lang;
+
+  if(langOverlay) langOverlay.style.display = "none";
+  if(setupOverlay) setupOverlay.style.display = "flex";
+}
+
+document.getElementById("btnLangNl")?.addEventListener("click", () => openSetupAfterLang("nl"));
+document.getElementById("btnLangEn")?.addEventListener("click", () => openSetupAfterLang("en"));
+document.getElementById("btnLangFr")?.addEventListener("click", () => openSetupAfterLang("fr"));
+document.getElementById("btnLangDe")?.addEventListener("click", () => openSetupAfterLang("de"));
+document.getElementById("btnLangPl")?.addEventListener("click", () => openSetupAfterLang("pl"));
+document.getElementById("btnLangEs")?.addEventListener("click", () => openSetupAfterLang("es"));
+document.getElementById("btnLangHu")?.addEventListener("click", () => openSetupAfterLang("hu"));
+document.getElementById("btnLangIt")?.addEventListener("click", () => openSetupAfterLang("it"));
+
+
+
+// checkMissingTranslations();
+
+
+init();
+});
+})();
+</script>
+
+
+<!-- ===== PDF EXPORT DIALOG ===== -->
+<dialog id="pdfDialog" class="pdfDialog">
+  <div class="pdfBox">
+    <h3 data-i18n="pdf_title">PDF export</h3>
+
+    <div class="sp"></div>
+
+    <label class="radioLine">
+      <input type="radio" name="pdfMode" value="month" checked>
+      <span data-i18n="pdf_month">Maand</span>
+    </label>
+
+    <label class="radioLine" style="margin-top:10px;">
+      <input type="radio" name="pdfMode" value="dates">
+      <span data-i18n="pdf_dates">Datums</span>
+    </label>
+
+    <div class="sp"></div>
+
+    <!-- Maand select -->
+    <div id="pdfMonthWrap">
+      <select id="pdfMonthSelect"></select>
+    </div>
+
+    <!-- Van/Tot -->
+    <div id="pdfRangeWrap" style="display:none; margin-top:10px;">
+      <div class="row3">
+        <div>
+          <label for="pdfFrom" data-i18n="pdf_from">Van</label>
+          <input id="pdfFrom" type="date">
+        </div>
+        <div>
+          <label for="pdfTo" data-i18n="pdf_to">Tot</label>
+          <input id="pdfTo" type="date">
+        </div>
+      </div>
+    </div>
+
+    <div class="sp"></div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+      <button class="btnSmall" id="pdfCancel" type="button" data-i18n="cancel">Annuleren</button>
+      <button class="btnSmall" id="pdfConfirm" type="button" data-i18n="make_pdf">Maak PDF</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- libs for PDF export -->
+<script src="jspdf.umd.min.js"></script>
+<script src="pdf-export.js"></script>
+
+<button id="btnTestSetup" style="display:none; position:fixed; bottom:10px; right:10px; z-index:9999;">
+  TEST Setup Done
+</button>
+
+<!-- ===== LANGUAGE MODAL START ===== -->
+<div class="appModalOverlay" id="langOverlay" style="display:none;" aria-hidden="true">
+  <div class="appModal" role="dialog" aria-modal="true">
+    <div class="appModalBody" style="text-align:center;">
+      <div style="font-size:32px; margin-bottom:10px;">🌍</div>
+      <h2 style="margin:0 0 14px 0;">Choose language</h2>
+
+      <div style="display:flex; flex-direction:column; gap:10px;">
+<button type="button" class="btnGhost" id="btnLangNl">🇳🇱 Nederlands</button>
+<button type="button" class="btnGhost" id="btnLangEn">🇬🇧 English</button>
+<button type="button" class="btnGhost" id="btnLangFr">🇫🇷 Français</button>
+<button type="button" class="btnGhost" id="btnLangDe">🇩🇪 Deutsch</button>
+<button type="button" class="btnGhost" id="btnLangPl">🇵🇱 Polski</button>
+<button type="button" class="btnGhost" id="btnLangEs">🇪🇸 Español</button>
+<button type="button" class="btnGhost" id="btnLangHu">🇭🇺 Magyar</button>
+<button type="button" class="btnGhost" id="btnLangIt">🇮🇹 Italiano</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ===== LANGUAGE MODAL END ===== -->
+
+
+<!-- ===== SETUP MODAL START ===== -->
+<div class="appModalOverlay" id="setupOverlay" style="display:none;" aria-hidden="true">
+  <div class="appModal" role="dialog" aria-modal="true">
+    
+    <div class="appModalBody">
+
+      <h2 data-i18n="setup_title">Welkom bij Shift-Tap 👋</h2>
+
+      <p data-i18n="setup_intro">
+        Werkuren, recup en overuren zonder gedoe.<br>
+        Stel eerst even je basisinstellingen in.
+      </p>
+
+     
+      <!-- instellingen -->
+      <div class="setupGrid">
+
+        <div class="setupField">
+   <label data-i18n="setup_normday">
+            Normale werkdag (uren)
+          </label>
+
+<div class="timeSelectRow">
+  
+<select id="setupNormHoursH" class="timeSelect">
+<option>00</option>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+</select>
+
+<span class="timeColon">:</span>
+
+<select id="setupNormHoursM" class="timeSelect">
+<option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+<option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+<option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+<option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+<option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+<option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+<option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+<option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+<option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+</select>
+
+</div>
+  
+          <div class="setupHint" data-i18n="setup_norm_hint">
+            Voorbeeld: 07:30 of 08:00
+          </div>
+        </div>
+
+        <div class="setupField">
+          <label for="setupPauseMin" data-i18n="setup_pause">
+            Pauze (minuten)
+          </label>
+
+     <select id="setupPauseMin">
+
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+
+</select>
+
+          <div class="setupHint" data-i18n="setup_pause_hint">
+            Dit is uw standaard pauze, deze wordt automatisch afgetrokken.
+          </div>
+        </div>
+
+      </div>
+
+      <p class="setupNote" data-i18n="setup_note">
+        Je kan deze instellingen later altijd aanpassen bij Instellingen.
+      </p>
+
+    </div>
+
+    <div class="appModalActions">
+      <button
+        type="button"
+        class="btnGreen"
+        id="btnSetupStart"
+        data-i18n="setup_done">
+        Klaar voor gebruik
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- ===== SETUP MODAL END ===== -->
+</body>
+</html>
