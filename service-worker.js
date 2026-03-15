@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'shift-tap-v4';
+const CACHE_VERSION = 'shift-tap-v1.0.0';
 const APP_SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
 
