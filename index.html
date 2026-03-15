@@ -1290,6 +1290,16 @@ button:active,
 
     <div class="sp"></div>
 
+    <!-- Notificaties -->
+<label>Meldingen</label>
+<label style="display:flex; align-items:center; gap:10px;">
+  <input type="checkbox" id="chkNotifEnabled">
+  Notificaties inschakelen
+</label>
+
+<div class="sp"></div>
+
+
 <label id="lblEmployeeName" data-i18n="employee_name_label">
   Naam werknemer
 </label>
@@ -1662,6 +1672,7 @@ button:active,
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 
 </div>  <!-- einde van je wrap / tabs -->
 
@@ -1777,9 +1788,14 @@ async function ensureFirebase(){
   fbAuth = firebase.auth();
   fbDb = firebase.firestore();
 
+  window.fbApp = fbApp;
+  window.fbAuth = fbAuth;
+  window.fbDb = fbDb;
+
   await fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   return true;
 }
+window.ensureFirebase = ensureFirebase;
 
 /* =========================
    Cloud sync (Google login)
@@ -3531,6 +3547,9 @@ function scheduleCloudPush(){
   function saveState(){ 
   localStorage.setItem(STORE_KEY, JSON.stringify(state)); 
 }
+window.state = state;
+window.saveState = saveState;
+
   function saveMeta(){ localStorage.setItem(META_KEY, JSON.stringify(meta)); }
 
   /* =========================
@@ -5620,14 +5639,61 @@ document.getElementById("btnLangIt")?.addEventListener("click", () => openSetupA
 
 // checkMissingTranslations();
 
+// Notification settings opslaan
+function saveNotifSettings(settings) {
+  localStorage.setItem("ShiftTapNotifSettings", JSON.stringify(settings));
+}
 
+// Notification settings opslaan
+function saveNotifSettings(settings) {
+  localStorage.setItem("ShiftTapNotifSettings", JSON.stringify(settings));
+}
+
+// Notification settings laden
+function loadNotifSettings() {
+  const saved = localStorage.getItem("ShiftTapNotifSettings");
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
 init();
+
+if (window.ShiftTapNotifications) {
+  const saved = loadNotifSettings();
+  if (saved) ShiftTapNotifications.setSettings(saved);
+
+  ShiftTapNotifications.init();
+
+  const chkNotif = document.getElementById("chkNotifEnabled");
+
+  if (chkNotif) {
+    chkNotif.checked = ShiftTapNotifications.getSettings().enabled;
+
+    chkNotif.addEventListener("change", () => {
+      const next = ShiftTapNotifications.getSettings();
+      next.enabled = chkNotif.checked;
+
+      ShiftTapNotifications.setSettings(next);
+      saveNotifSettings(next);
+
+      console.log("Notificaties staan nu:", chkNotif.checked);
+
+      if (chkNotif.checked && window.ShiftTapNotifications?.init) {
+        window.ShiftTapNotifications.init();
+      }
+    });
+  }
+}
 });
 })();
 </script>
-
-
 <!-- ===== PDF EXPORT DIALOG ===== -->
+
 <dialog id="pdfDialog" class="pdfDialog">
   <div class="pdfBox">
     <h3 data-i18n="pdf_title">PDF export</h3>
@@ -5677,6 +5743,7 @@ init();
 <!-- libs for PDF export -->
 <script src="jspdf.umd.min.js"></script>
 <script src="pdf-export.js"></script>
+<script src="notifications.js"></script>
 
 <button id="btnTestSetup" style="display:none; position:fixed; bottom:10px; right:10px; z-index:9999;">
   TEST Setup Done
@@ -5830,13 +5897,7 @@ init();
 </div>
 <!-- ===== SETUP MODAL END ===== -->
  <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('Service Worker geregistreerd', reg))
-      .catch(err => console.log('Service Worker fout', err));
-  });
-}
+
 </script>
 </body>
 </html>
