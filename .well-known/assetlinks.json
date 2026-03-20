@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kimgijs.shifttap",
+      "sha256_cert_fingerprints": [
+        "EA:A8:A1:4B:51:BB:7D:FE:44:18:68:7B:F3:C9:EE:CB:54:F0:FF:E8:E0:4A:41:AD:1D:F5:C7:DE:45:49:7E:91"
+      ]
+    }
+  }
+]
