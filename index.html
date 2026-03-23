@@ -710,6 +710,28 @@ input::-webkit-calendar-picker-indicator{ filter: invert(1); }
   z-index:2;
   pointer-events:none;
 }
+
+.calMultiMarks{
+  position:absolute;
+  left:6px;
+  right:6px;
+  bottom:5px;
+  display:flex;
+  gap:3px;
+  align-items:center;
+  pointer-events:none;
+  z-index:2;
+}
+
+.calMultiMark{
+  flex:1 1 0;
+  min-width:0;
+  height:4px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+
 .calDeltaMini{
   position:absolute;
   top:8px;
@@ -1161,9 +1183,19 @@ button:active,
     <div id="tab1" class="tab">
       <div class="card">
 
-        <div class="timerTopLine">
+           <div class="timerTopLine" style="display:flex; flex-direction:column; align-items:flex-start; gap:10px;">
+          <button
+            class="btnSmall"
+            id="btnHomeEmployerView"
+            type="button"
+            style="width:auto; min-width:180px; display:flex; justify-content:space-between; align-items:center;"
+          >
+            <span id="homeEmployerViewLabel">Alles</span>
+            <span aria-hidden="true">▾</span>
+          </button>
+
           <span id="todayPill" class="timerDateValue">-</span>
-        </div>
+        </div>     
 
         <div id="timer" class="bigTimer">00:00:00</div>
         <div id="status" class="status"></div>
@@ -1203,19 +1235,63 @@ button:active,
   Heb je overuren uitbetaald gekregen? Registreer ze hier zodat ze van je saldo worden afgetrokken.
 </p>
 
- <label for="verrekenAmount" data-i18n="hours_amount_hhmm">Aantal uren (HH:MM)</label>
- <input id="verrekenAmount" type="text"
-       inputmode="numeric"
-       maxlength="5"
-       placeholder="00:00">
-       
+ <label for="verrekenEmployer" data-i18n="employer_fallback">Werkgever</label>
+ <select id="verrekenEmployer">
+   <option value="">Kies werkgever</option>
+ </select>
+
+ <label data-i18n="hours_amount_hhmm">Aantal uren (HH:MM)</label>
+ <div class="timeSelectRow">
+   <select id="verrekenHours" class="timeSelect">
+    <option>00</option><option>01</option><option>02</option><option>03</option>
+<option>04</option><option>05</option><option>06</option><option>07</option>
+<option>08</option><option>09</option><option>10</option><option>11</option>
+<option>12</option><option>13</option><option>14</option><option>15</option>
+<option>16</option><option>17</option><option>18</option><option>19</option>
+<option>20</option><option>21</option><option>22</option><option>23</option>
+<option>24</option><option>25</option><option>26</option><option>27</option>
+<option>28</option><option>29</option><option>30</option><option>31</option>
+<option>32</option><option>33</option><option>34</option><option>35</option>
+<option>36</option><option>37</option><option>38</option><option>39</option>
+<option>40</option><option>41</option><option>42</option><option>43</option>
+<option>44</option><option>45</option><option>46</option><option>47</option>
+<option>48</option><option>49</option><option>50</option><option>51</option>
+<option>52</option><option>53</option><option>54</option><option>55</option>
+<option>56</option><option>57</option><option>58</option><option>59</option>
+<option>60</option><option>61</option><option>62</option><option>63</option>
+<option>64</option><option>65</option><option>66</option><option>67</option>
+<option>68</option><option>69</option><option>70</option><option>71</option>
+<option>72</option><option>73</option><option>74</option><option>75</option>
+<option>76</option><option>77</option><option>78</option><option>79</option>
+<option>80</option><option>81</option><option>82</option><option>83</option>
+<option>84</option><option>85</option><option>86</option><option>87</option>
+<option>88</option><option>89</option><option>90</option><option>91</option>
+<option>92</option><option>93</option><option>94</option><option>95</option>
+<option>96</option><option>97</option><option>98</option><option>99</option>
+<option>100</option>
+   </select>
+   <span class="timeColon">:</span>
+   <select id="verrekenMinutes" class="timeSelect small">
+     <option>00</option><option>01</option><option>02</option><option>03</option><option>04</option>
+     <option>05</option><option>06</option><option>07</option><option>08</option><option>09</option>
+     <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+     <option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+     <option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+     <option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+     <option>30</option><option>31</option><option>32</option><option>33</option><option>34</option>
+     <option>35</option><option>36</option><option>37</option><option>38</option><option>39</option>
+     <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
+     <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
+     <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
+     <option>55</option><option>56</option><option>57</option><option>58</option><option>59</option><option>00</option>
+   </select>
+ </div>
 
 <label for="verrekenDate" data-i18n="lbl_date">Datum</label>
     <input id="verrekenDate" type="date">
     <div class="modalActions">
 <button type="button" id="btnSaveVerrekening" class="btnGreen" data-i18n="save">Opslaan</button>
 </div>
-
  
   </div>
 </div>
@@ -1240,9 +1316,19 @@ button:active,
 <div id="tab2" class="tab" style="display:none;">
   <div class="card">
 
-    <div class="h2Row">
-      <h2 data-i18n="history_title">Historiek</h2>
-    </div>
+   <div class="h2Row">
+  <h2 data-i18n="history_title">Historiek</h2>
+
+  <button
+    class="btnSmall"
+    id="btnHistoryEmployerView"
+    type="button"
+    style="width:auto; min-width:140px; display:flex; justify-content:space-between; align-items:center;"
+  >
+    <span id="historyEmployerViewLabel">Alles</span>
+    <span aria-hidden="true">▾</span>
+  </button>
+</div>
 
     <div class="historyActions">
       <button class="btnSmall" id="btnAddManual"
@@ -1287,11 +1373,23 @@ button:active,
   <div class="info-bubble" id="bubbleCalendar" data-i18n="calendar_info"></div>
 </div>
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btnSmall" id="calPrev" type="button">◀</button>
-        <span class="badge" id="calLabel">-</span>
-        <button class="btnSmall" id="calNext" type="button">▶</button>
-      </div>
+   <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-end; width:100%;">
+  <button
+    class="btnSmall"
+    id="btnCalendarEmployerView"
+    type="button"
+    style="width:100%; min-height:44px; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box;"
+  >
+    <span id="calendarEmployerViewLabel">Alles</span>
+    <span aria-hidden="true">▾</span>
+  </button>
+
+  <div style="display:flex; align-items:center; justify-content:flex-end; gap:10px; width:100%; flex-wrap:nowrap;">
+    <button class="btnSmall" id="calPrev" type="button">◀</button>
+    <span class="badge" id="calLabel" style="text-align:center; min-width:0;">-</span>
+    <button class="btnSmall" id="calNext" type="button">▶</button>
+  </div>
+</div>
     </div>
 
     <div class="hr"></div>
@@ -1347,15 +1445,32 @@ button:active,
 
     <div class="sp"></div>
 
-    <!-- Notificaties -->
-<label>Meldingen</label>
-<label style="display:flex; align-items:center; gap:10px;">
-  <input type="checkbox" id="chkNotifEnabled">
-  Notificaties inschakelen
-</label>
 
-<div class="sp"></div>
 
+
+
+
+<div id="employerSwitcher" class="card" style="padding:12px; margin-bottom:12px;">
+  <div id="employerButtons" style="display:flex; flex-direction:column; gap:10px;">
+    <button type="button" class="btnSmall" id="btnEmployer1">Werkgever 1</button>
+  </div>
+
+  <div class="sp"></div>
+
+  <button type="button" class="btnGhost" id="btnAddEmployer" data-i18n="add_employer_btn">+ Werkgever toevoegen</button>
+
+
+
+<div id="employerModal" class="modalBack">
+  <div class="modal" style="max-width:560px; max-height:85vh; overflow:auto;">
+    <button class="modalCloseBtn" id="btnCloseEmployerModal" type="button">×</button>
+    <div class="h2Row" style="align-items:center; gap:10px;">
+      <div>
+        <h3 id="employerModalTitle" style="margin:0;"></h3>
+      </div>
+    </div>
+
+    <div id="employerDetailPanel" style="display:block; margin-top:12px;">
 
 <label id="lblEmployeeName" data-i18n="employee_name_label">
   Naam werknemer
@@ -1413,7 +1528,7 @@ button:active,
     <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
     <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
     <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
-    <option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+    <option>55</option><option>56</option><option>57</option><option>58</option><option>59</option><option>00</option>
   </select>
 
 </div>
@@ -1483,7 +1598,7 @@ button:active,
 <option>84</option><option>85</option><option>86</option><option>87</option>
 <option>88</option><option>89</option><option>90</option><option>91</option>
 <option>92</option><option>93</option><option>94</option><option>95</option>
-<option>96</option><option>97</option><option>98</option><option>99</option>
+<option>96</option><option>97</option><option>98</option><option>99</option><option>00</option>
 <option>100</option>
   </select>
   <span class="timeColon">:</span>
@@ -1548,6 +1663,7 @@ button:active,
   <option>57</option>
   <option>58</option>
   <option>59</option>
+  <option>00</option>
 
   </select>
 </div>
@@ -1565,15 +1681,22 @@ button:active,
   type="button"
   class="btnSmall"
   style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-<span id="offDaysCurrentLabel">Geen</span>
+<span id="offDaysCurrentLabel" data-i18n="off_days_none">Geen</span>
   <span aria-hidden="true">▾</span>
 </button>
 
     <div class="row" style="margin-top:16px;">
+        <button class="btnGhost btnDanger" id="btnDeleteEmployer" type="button" data-i18n="btn_delete">
+    Verwijderen
+  </button>
       <button class="btnGhost" id="btnSaveSettings" data-i18n="settings">
-        Opslaan
+       Opslaan
       </button>
     </div>
+    </div>
+  </div>
+</div>
+</div>
 
     <div class="hr"></div>
 
@@ -1617,6 +1740,23 @@ button:active,
   </div>
 </div>
 
+
+<div id="employerViewModal" class="modalBack">
+  <div class="modal" style="max-width:420px;">
+    <button class="modalCloseBtn" id="btnCloseEmployerViewModal" type="button">×</button>
+
+    <div class="h2Row" style="align-items:center; gap:10px;">
+      <div>
+        <h3 id="employerViewModalTitle" style="margin:0;">Werkgever kiezen</h3>
+      </div>
+    </div>
+
+    <div class="sp"></div>
+
+    <div id="employerViewModalButtons" style="display:flex; flex-direction:column; gap:10px;"></div>
+  </div>
+</div>
+
 <!-- MODAL -->
   <div class="modalBack" id="modalBack">
 <div class="modal">
@@ -1633,14 +1773,21 @@ button:active,
 
   <div class="sp"></div>
 
-  <div class="row2">
-    <div>
-      <label for="mDate" data-i18n="lbl_date">Datum</label>
-      <input id="mDate" type="date">
-    </div>
+<div class="row2">
+  <div>
+   <label for="mEmployer" data-i18n="employer_fallback">Werkgever</label>
+    <select id="mEmployer"></select>
+  </div>
+</div>
 
-    <div>
-      <label for="mType" data-i18n="lbl_type">Type</label>
+<div class="row2">
+  <div>
+    <label for="mDate" data-i18n="lbl_date">Datum</label>
+    <input id="mDate" type="date">
+  </div>
+
+  <div>
+    <label for="mType" data-i18n="lbl_type">Type</label>
 <select id="mType">
   <option value="Werk" data-i18n="work_label">Werk</option>
   <option value="Recup" data-i18n="recup">Recup</option>
@@ -1648,8 +1795,8 @@ button:active,
   <option value="Vakantie" data-i18n="vacation">Vakantie</option>
   <option value="Feestdag" data-i18n="holiday">Feestdag</option>
 </select>
-    </div>
   </div>
+</div>
 
 <div class="row3">
   <div>
@@ -1676,7 +1823,7 @@ button:active,
 <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
 <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
 <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
-<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option><option>00</option>
 
       </select>
     </div>
@@ -1706,7 +1853,7 @@ button:active,
 <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
 <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
 <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
-<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option><option>00</option>
       </select>
     </div>
   </div>
@@ -1845,14 +1992,15 @@ window.onerror = function(message, source, lineno, colno, error){
   /* =========================
      ShiftTap + + + setuppage
      ========================= */
-  const APP_ID = "shifttap";
-const APP_CHANNEL = "stable_met_gmail_pdf_setuppagev1";
-const APP_VERSION = "1.0.1";
+ const APP_ID = "shifttap";
+const APP_CHANNEL = "multijob_live_v1";
+const APP_VERSION = "2.0.1";
 
 
 
 const STORE_KEY = `${APP_ID}_state_${APP_CHANNEL}`;
 const META_KEY  = `${APP_ID}_meta_${APP_CHANNEL}`;
+const NOTIF_SETTINGS_KEY = `${APP_ID}_notif_${APP_CHANNEL}`;
 
 // Expose for extra modules (bv. pdf-export.js)
 window.SHIFTTAP_STORE_KEY = STORE_KEY;
@@ -1882,12 +2030,13 @@ function markSetupDone(){
 
 // Firebase config is not a secret, but Firestore rules must be locked.
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCkK45tqlORcpyIkVVsD5sJA6CRx4guad0",
-  authDomain: "shifttap-cloud.firebaseapp.com",
-  projectId: "shifttap-cloud",
-  storageBucket: "shifttap-cloud.firebasestorage.app",
-  messagingSenderId: "818538130643",
-  appId: "1:818538130643:web:2614157b0d6a767deb3826"
+  apiKey: "AIzaSyDNwfd6yDOkRgBJfc3htdiu9a9EiLAwJrE",
+  authDomain: "shift-tap-multijob-sandbox.firebaseapp.com",
+  projectId: "shift-tap-multijob-sandbox",
+  storageBucket: "shift-tap-multijob-sandbox.firebasestorage.app",
+  messagingSenderId: "1071983982527",
+  appId: "1:1071983982527:web:6b41c184491f1f5d74930a",
+  measurementId: "G-VHTLZQVG76"
 };
 
 let fbApp = null;
@@ -1897,7 +2046,6 @@ let fbDb = null;
 function firebaseConfigured(){
   return !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId);
 }
-
 
 async function ensureFirebase(){
   if(!firebaseConfigured()) return false;
@@ -2021,6 +2169,17 @@ nl: {
   tab_history: "Historiek",
   calendar: "Kalender",
   language: "Taal",
+  notifications_title: "Meldingen",
+  notifications_enable: "Notificaties inschakelen",
+  recon_delete_title: "Verrekening verwijderen?",
+  recon_delete_message: "Deze verrekening verwijderen?",
+  recon_delete_date_label: "Datum",
+  recon_delete_time_label: "Tijd",
+  recon_delete_employer_label: "Werkgever",
+   recon_delete_confirm_btn: "Verwijderen",
+  employer_delete_keep_one: "Je moet minstens 1 werkgever behouden.",
+  employer_delete_confirm_msg: 'Werkgever "{name}" verwijderen? Alle werklogs van deze werkgever worden ook verwijderd.',
+  all_employers: "Alle",
 
   start: "Start",
   pause_stop: "Stop",
@@ -2130,6 +2289,10 @@ day_sunday_short: "Zo",
   employee_name_ph: "Jouw naam",
   employer_name_label: "Naam werkgever",
   employer_name_ph: "Naam werkgever",
+    employers_title: "Werkgevers",
+  add_employer_btn: "+ Werkgever toevoegen",
+  employer_fallback: "Werkgever",
+  choose_employer: "Kies werkgever",
 
   // --- Setup modal ---
   setup_title: "Welkom bij Shift-Tap 👋",
@@ -2216,8 +2379,19 @@ it: {
   // --- General / UI ---
   tab_day: "Giornata",
   tab_history: "Cronologia",
-  calendar: "Calendario",
+    calendar: "Calendario",
   language: "Lingua",
+  notifications_title: "Notifiche",
+  notifications_enable: "Attiva notifiche",
+  recon_delete_title: "Eliminare questa compensazione?",
+  recon_delete_message: "Vuoi eliminare questa compensazione?",
+  recon_delete_date_label: "Data",
+  recon_delete_time_label: "Tempo",
+  recon_delete_employer_label: "Datore di lavoro",
+    recon_delete_confirm_btn: "Elimina",
+  employer_delete_keep_one: "Devi mantenere almeno 1 datore di lavoro.",
+  employer_delete_confirm_msg: 'Eliminare il datore di lavoro "{name}"? Anche tutti i registri di lavoro di questo datore verranno eliminati.',
+  all_employers: "Tutti",
 
   start: "Avvia",
   pause_stop: "Stop",
@@ -2326,6 +2500,10 @@ day_sunday_short: "Dom",
   employee_name_ph: "Il tuo nome",
   employer_name_label: "Nome datore di lavoro",
   employer_name_ph: "Nome datore di lavoro",
+    employers_title: "Datori di lavoro",
+  add_employer_btn: "+ Aggiungi datore di lavoro",
+  employer_fallback: "Datore di lavoro",
+  choose_employer: "Scegli datore di lavoro",
 
   // --- Setup modal ---
   setup_title: "Benvenuto in Shift-Tap 👋",
@@ -2390,6 +2568,19 @@ en: {
   tab_day: "Day Shift",
   tab_history: "History",
   language: "Language",
+  notifications_title: "Notifications",
+  notifications_enable: "Enable notifications",
+  recon_delete_title: "Delete this settlement?",
+  recon_delete_message: "Do you want to delete this settlement?",
+  recon_delete_date_label: "Date",
+  recon_delete_time_label: "Time",
+  recon_delete_employer_label: "Employer",
+    recon_delete_confirm_btn: "Delete",
+  employer_delete_keep_one: "You must keep at least 1 employer.",
+  employer_delete_confirm_msg: 'Delete employer "{name}"? All work logs for this employer will also be deleted.',
+  all_employers: "All",
+
+  
 
   // ===== General buttons =====
   start: "Start",
@@ -2423,6 +2614,10 @@ en: {
   employee_name_ph: "Your name",
   employer_name_label: "Employer name",
   employer_name_ph: "Employer name",
+    employers_title: "Employers",
+  add_employer_btn: "+ Add employer",
+  employer_fallback: "Employer",
+  choose_employer: "Choose employer",
 
   // ===== PDF =====
   pdf_export_btn: "📄 PDF",
@@ -2620,8 +2815,19 @@ hu: {
   // --- General / UI ---
   tab_day: "Munkanap",
   tab_history: "Előzmények",
-  calendar: "Naptár",
+   calendar: "Naptár",
   language: "Nyelv",
+  notifications_title: "Értesítések",
+  notifications_enable: "Értesítések bekapcsolása",
+  recon_delete_title: "Törlöd ezt az elszámolást?",
+  recon_delete_message: "Biztosan törlöd ezt az elszámolást?",
+  recon_delete_date_label: "Dátum",
+  recon_delete_time_label: "Idő",
+  recon_delete_employer_label: "Munkáltató",
+    recon_delete_confirm_btn: "Törlés",
+  employer_delete_keep_one: "Legalább 1 munkáltatót meg kell tartanod.",
+  employer_delete_confirm_msg: 'Törlöd ezt a munkáltatót: "{name}"? Ehhez a munkáltatóhoz tartozó összes munkanapló is törlődik.',
+  all_employers: "Összes",
 
   start: "Start",
   pause_stop: "Stop",
@@ -2731,6 +2937,10 @@ day_sunday_short: "V",
   employee_name_ph: "A te neved",
   employer_name_label: "Munkáltató neve",
   employer_name_ph: "Munkáltató neve",
+    employers_title: "Munkáltatók",
+  add_employer_btn: "+ Munkáltató hozzáadása",
+  employer_fallback: "Munkáltató",
+  choose_employer: "Munkáltató kiválasztása",
 
   // --- Setup modal ---
   setup_title: "Üdv a Shift-Tap alkalmazásban 👋",
@@ -2818,8 +3028,19 @@ de: {
 
   tab_day: "Arbeitstag",
   tab_history: "Verlauf",
-  calendar: "Kalender",
+    calendar: "Kalender",
   language: "Sprache",
+  notifications_title: "Benachrichtigungen",
+  notifications_enable: "Benachrichtigungen aktivieren",
+  recon_delete_title: "Diese Verrechnung löschen?",
+  recon_delete_message: "Möchtest du diese Verrechnung löschen?",
+  recon_delete_date_label: "Datum",
+  recon_delete_time_label: "Zeit",
+  recon_delete_employer_label: "Arbeitgeber",
+    recon_delete_confirm_btn: "Löschen",
+  employer_delete_keep_one: "Du musst mindestens 1 Arbeitgeber behalten.",
+  employer_delete_confirm_msg: 'Arbeitgeber "{name}" löschen? Alle Arbeitsprotokolle dieses Arbeitgebers werden ebenfalls gelöscht.',
+  all_employers: "Alle",
 
   start: "Start",
   pause_stop: "Stop",
@@ -2921,6 +3142,10 @@ day_sunday_short: "So",
   employee_name_ph: "Dein Name",
   employer_name_label: "Name Arbeitgeber",
   employer_name_ph: "Name Arbeitgeber",
+    employers_title: "Arbeitgeber",
+  add_employer_btn: "+ Arbeitgeber hinzufügen",
+  employer_fallback: "Arbeitgeber",
+  choose_employer: "Arbeitgeber wählen",
 
   setup_title: "Willkommen bei Shift-Tap 👋",
   setup_intro: "Arbeitszeit, Freizeitausgleich und Überstunden ohne Aufwand. Richte zuerst deine Grundeinstellungen ein.",
@@ -3008,8 +3233,19 @@ pl: {
   // --- General / UI ---
   tab_day: "Dzień pracy",
   tab_history: "Historia",
-  calendar: "Kalendarz",
+    calendar: "Kalendarz",
   language: "Język",
+  notifications_title: "Powiadomienia",
+  notifications_enable: "Włącz powiadomienia",
+  recon_delete_title: "Usunąć to rozliczenie?",
+  recon_delete_message: "Czy chcesz usunąć to rozliczenie?",
+  recon_delete_date_label: "Data",
+  recon_delete_time_label: "Czas",
+  recon_delete_employer_label: "Pracodawca",
+    recon_delete_confirm_btn: "Usuń",
+  employer_delete_keep_one: "Musisz zachować co najmniej 1 pracodawcę.",
+  employer_delete_confirm_msg: 'Usunąć pracodawcę "{name}"? Wszystkie wpisy pracy dla tego pracodawcy również zostaną usunięte.',
+  all_employers: "Wszyscy",
 
   start: "Start",
   pause_stop: "Stop",
@@ -3119,6 +3355,10 @@ day_sunday_short: "Nd",
   employee_name_ph: "Twoje imię",
   employer_name_label: "Nazwa pracodawcy",
   employer_name_ph: "Nazwa pracodawcy",
+    employers_title: "Pracodawcy",
+  add_employer_btn: "+ Dodaj pracodawcę",
+  employer_fallback: "Pracodawca",
+  choose_employer: "Wybierz pracodawcę",
 
   // --- Setup modal ---
   setup_title: "Witamy w Shift-Tap 👋",
@@ -3207,8 +3447,19 @@ es: {
   // --- General / UI ---
   tab_day: "Día laboral",
   tab_history: "Historial",
-  calendar: "Calendario",
+   calendar: "Calendario",
   language: "Idioma",
+  notifications_title: "Notificaciones",
+  notifications_enable: "Activar notificaciones",
+  recon_delete_title: "¿Eliminar esta compensación?",
+  recon_delete_message: "¿Quieres eliminar esta compensación?",
+  recon_delete_date_label: "Fecha",
+  recon_delete_time_label: "Tiempo",
+  recon_delete_employer_label: "Empresa",
+    recon_delete_confirm_btn: "Eliminar",
+  employer_delete_keep_one: "Debes conservar al menos 1 empleador.",
+  employer_delete_confirm_msg: '¿Eliminar el empleador "{name}"? Todos los registros de trabajo de este empleador también se eliminarán.',
+  all_employers: "Todos",
 
   start: "Start",
   pause_stop: "Stop",
@@ -3318,6 +3569,10 @@ day_sunday_short: "Dom",
   employee_name_ph: "Tu nombre",
   employer_name_label: "Nombre del empleador",
   employer_name_ph: "Nombre del empleador",
+    employers_title: "Empleadores",
+  add_employer_btn: "+ Añadir empleador",
+  employer_fallback: "Empleador",
+  choose_employer: "Elegir empresa",
 
   // --- Setup modal ---
   setup_title: "Bienvenido a Shift-Tap 👋",
@@ -3381,6 +3636,18 @@ fr: {
   tab_day: "Jour de travail",
   tab_history: "Historique",
   language: "Langue",
+  notifications_title: "Notifications",
+  notifications_enable: "Activer les notifications",
+  recon_delete_title: "Supprimer ce décompte ?",
+  recon_delete_message: "Voulez-vous supprimer ce décompte ?",
+  recon_delete_date_label: "Date",
+  recon_delete_time_label: "Heure",
+  recon_delete_employer_label: "Employeur",
+    recon_delete_confirm_btn: "Supprimer",
+  employer_delete_keep_one: "Vous devez conserver au moins 1 employeur.",
+  employer_delete_confirm_msg: 'Supprimer l’employeur "{name}" ? Tous les journaux de travail de cet employeur seront également supprimés.',
+  all_employers: "Tous",
+
 
   // ===== Boutons généraux =====
   start: "Démarrer",
@@ -3414,6 +3681,10 @@ fr: {
   employee_name_ph: "Ton nom",
   employer_name_label: "Nom de l'employeur",
   employer_name_ph: "Nom de l'employeur",
+    employers_title: "Employeurs",
+  add_employer_btn: "+ Ajouter un employeur",
+  employer_fallback: "Employeur",
+  choose_employer: "Choisir employeur",
 
   // ===== PDF =====
   pdf_export_btn: "📄 PDF",
@@ -3747,33 +4018,65 @@ verrekenInput?.addEventListener("input", (e) => {
     setTimeout(() => el.classList.remove("show"), 2200);
   }
 
-  function openConfirm(message, onOk){
+    function openConfirm(options, onOk){
     const overlay = document.getElementById("appModalOverlay");
     const body    = document.getElementById("appModalBody");
     const btnOk   = document.getElementById("appModalOk");
     const btnCan  = document.getElementById("appModalCancel");
 
+    const config = typeof options === "string"
+      ? { message: options }
+      : (options || {});
+
+    const message = config.message || "";
+    const messageHtml = config.messageHtml || "";
+    const okLabel = config.okLabel || (typeof t === "function" ? t("ok") : "OK");
+    const cancelLabel = config.cancelLabel || (typeof t === "function" ? t("cancel") : "Annuleren");
+
     if(!overlay || !btnOk || !btnCan){
-      if(confirm(message)){
+      if(confirm(messageHtml ? message : message)){
         if(typeof onOk === "function") onOk();
       }
       return;
     }
 
-    if(body) body.textContent = message;
+    if(body){
+      if(messageHtml){
+        body.innerHTML = messageHtml;
+      }else{
+        body.textContent = message;
+      }
+    }
+
+    btnOk.textContent = okLabel;
+    btnCan.textContent = cancelLabel;
+
+     overlay.style.zIndex = "10020";
+    overlay.style.display = "flex";
     overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
 
     const cleanup = () => {
-      overlay.classList.remove("show");
+       overlay.classList.remove("show");
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden", "true");
+      overlay.style.zIndex = "";
       btnOk.onclick = null;
       btnCan.onclick = null;
       overlay.onclick = null;
       document.removeEventListener("keydown", escHandler);
+
+      btnOk.textContent = (typeof t === "function" ? t("ok") : "OK");
+      btnCan.textContent = (typeof t === "function" ? t("cancel") : "Annuleren");
     };
 
     const escHandler = (e) => { if(e.key === "Escape") cleanup(); };
 
-    btnOk.onclick = () => { cleanup(); if(typeof onOk === "function") onOk(); };
+    btnOk.onclick = () => {
+      cleanup();
+      if(typeof onOk === "function") onOk();
+    };
+
     btnCan.onclick = () => cleanup();
     overlay.onclick = (e) => { if(e.target === overlay) cleanup(); };
     document.addEventListener("keydown", escHandler);
@@ -3783,19 +4086,45 @@ verrekenInput?.addEventListener("input", (e) => {
      State + Meta defaults
      ========================= */
 const defaultState = () => ({
-  settings: { 
-    startSaldoMin: 0, 
-    normDayMin: NORM_MIN, 
+  settings: {
+    lang: "nl",
+
+    // tijdelijk gespiegeld voor bestaande UI/logica
+    startSaldoMin: 0,
+    normDayMin: NORM_MIN,
     pauseMin: 30,
     offDays: [],
-    lang: "nl",
     employeeName: "",
     employerName: ""
   },
-  timer:    { running: false, startMs: null, accMs: 0 },
-  entries:  [],
-  verrekeningen: [],          
-  overtimePaidMinutes: 0      
+
+  activeEmployerId: "emp_1",
+
+  employers: [
+    {
+      id: "emp_1",
+      label: "Werkgever 1",
+      employeeName: "",
+      employerName: "",
+      startSaldoMin: 0,
+      normDayMin: NORM_MIN,
+      pauseMin: 30,
+      offDays: []
+    }
+  ],
+
+   timer: {
+    running: false,
+    startMs: null,
+    accMs: 0,
+    employerId: "emp_1",
+    sessionDate: null,
+    currentSegmentStartMs: null,
+    segments: []
+  },
+  entries: [],
+  verrekeningen: [],
+  overtimePaidMinutes: 0
 });
 
   const defaultMeta = () => ({
@@ -3803,53 +4132,169 @@ const defaultState = () => ({
     lastBackupName: null
   });
 
-  function loadState(){
+  function normalizeOffDays(input){
+  if(!Array.isArray(input)) return [];
+
+  const seen = new Set();
+  return input
+    .map(v => parseInt(v, 10))
+    .filter(v => Number.isInteger(v) && v >= 1 && v <= 7)
+    .filter(v => {
+      if(seen.has(v)) return false;
+      seen.add(v);
+      return true;
+    });
+}
+
+function safeNumber(value, fallback){
+  return (typeof value === "number" && Number.isFinite(value)) ? value : fallback;
+}
+
+function normalizeEmployer(emp, index, usedIds){
+  const source = (emp && typeof emp === "object") ? emp : {};
+
+  let id = (typeof source.id === "string" && source.id.trim())
+    ? source.id.trim()
+    : `emp_${index + 1}`;
+
+  while(usedIds.has(id)){
+    id = `${id}_${index + 1}`;
+  }
+  usedIds.add(id);
+
+  return {
+    ...source,
+    id,
+    label: (typeof source.label === "string" && source.label.trim())
+      ? source.label.trim()
+      : `Werkgever ${index + 1}`,
+    employeeName: typeof source.employeeName === "string" ? source.employeeName : "",
+    employerName: typeof source.employerName === "string" ? source.employerName : "",
+    startSaldoMin: safeNumber(source.startSaldoMin, 0),
+    normDayMin: safeNumber(source.normDayMin, NORM_MIN),
+    pauseMin: safeNumber(source.pauseMin, 30),
+    offDays: normalizeOffDays(source.offDays)
+  };
+}
+
+function normalizeEntry(entry, fallbackEmployerId){
+  const source = (entry && typeof entry === "object") ? entry : {};
+
+  return {
+    ...source,
+    employerId:
+      (typeof source.employerId === "string" && source.employerId.trim())
+        ? source.employerId.trim()
+        : fallbackEmployerId,
+    pauseMin: safeNumber(source.pauseMin, 0),
+    netMin: safeNumber(source.netMin, 0)
+  };
+}
+
+function normalizeState(inputState){
+  const base = defaultState();
+  const raw  = (inputState && typeof inputState === "object") ? inputState : {};
+  const rawSettings = (raw.settings && typeof raw.settings === "object") ? raw.settings : {};
+  const usedIds = new Set();
+
+  let employers = [];
+
+  if(Array.isArray(raw.employers) && raw.employers.length){
+    employers = raw.employers.map((emp, index) => normalizeEmployer(emp, index, usedIds));
+  }else{
+    employers = [
+      normalizeEmployer({
+        id: "emp_1",
+        label: "Werkgever 1",
+        employeeName: typeof rawSettings.employeeName === "string" ? rawSettings.employeeName : "",
+        employerName: typeof rawSettings.employerName === "string" ? rawSettings.employerName : "",
+        startSaldoMin: safeNumber(rawSettings.startSaldoMin, 0),
+        normDayMin: safeNumber(rawSettings.normDayMin, NORM_MIN),
+        pauseMin: safeNumber(rawSettings.pauseMin, 30),
+        offDays: normalizeOffDays(rawSettings.offDays)
+      }, 0, usedIds)
+    ];
+  }
+
+  if(!employers.length){
+    employers = [normalizeEmployer({}, 0, usedIds)];
+  }
+
+  let activeEmployerId =
+    (typeof raw.activeEmployerId === "string" && raw.activeEmployerId.trim())
+      ? raw.activeEmployerId.trim()
+      : employers[0].id;
+
+  if(!employers.some(emp => emp.id === activeEmployerId)){
+    activeEmployerId = employers[0].id;
+  }
+
+  const activeEmployer =
+    employers.find(emp => emp.id === activeEmployerId) || employers[0];
+
+  const timerSource = (raw.timer && typeof raw.timer === "object") ? raw.timer : {};
+
+  const timer = {
+    ...base.timer,
+    ...timerSource,
+    running: !!timerSource.running,
+    startMs:
+      (typeof timerSource.startMs === "number" && Number.isFinite(timerSource.startMs))
+        ? timerSource.startMs
+        : null,
+    accMs: safeNumber(timerSource.accMs, 0),
+    employerId:
+      (typeof timerSource.employerId === "string" &&
+       employers.some(emp => emp.id === timerSource.employerId))
+        ? timerSource.employerId
+        : activeEmployerId
+  };
+
+  const entries = Array.isArray(raw.entries)
+    ? raw.entries.map(entry => normalizeEntry(entry, activeEmployerId))
+    : [];
+
+  const normalized = {
+    ...base,
+    ...raw,
+
+    settings: {
+      ...base.settings,
+      ...rawSettings,
+
+      // huidige app blijft hier nog op steunen
+      startSaldoMin: activeEmployer.startSaldoMin,
+      normDayMin: activeEmployer.normDayMin,
+      pauseMin: activeEmployer.pauseMin,
+      offDays: [...activeEmployer.offDays],
+      employeeName: activeEmployer.employeeName,
+      employerName: activeEmployer.employerName,
+
+      // taal blijft globaal
+      lang:
+        (typeof rawSettings.lang === "string" && rawSettings.lang.trim())
+          ? rawSettings.lang.trim()
+          : base.settings.lang
+    },
+
+    activeEmployerId,
+    employers,
+    timer,
+    entries,
+    verrekeningen: Array.isArray(raw.verrekeningen) ? raw.verrekeningen : [],
+    overtimePaidMinutes: safeNumber(raw.overtimePaidMinutes, 0)
+  };
+
+  return normalized;
+}
+
+function loadState(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
-    if(!raw) return defaultState();
-    const s = JSON.parse(raw);
-
-s.settings = s.settings || {};
-
-if(typeof s.settings.startSaldoMin !== "number")
-  s.settings.startSaldoMin = 0;
-
-if(typeof s.settings.normDayMin !== "number")
-  s.settings.normDayMin = NORM_MIN;
-
-  if(typeof s.settings.pauseMin !== "number")
-  s.settings.pauseMin = 30;
-
-if(!Array.isArray(s.settings.offDays))
-  s.settings.offDays = [];
-else
-  s.settings.offDays = s.settings.offDays
-    .map(v => parseInt(v, 10))
-    .filter(v => v >= 1 && v <= 7);
-
-if(typeof s.settings.lang !== "string")
-  s.settings.lang = "nl";
-
-if(typeof s.settings.employeeName !== "string")
-  s.settings.employeeName = "";
-
-if(typeof s.settings.employerName !== "string")
-  s.settings.employerName = "";
-    if(!s.timer)    
-      s.timer = { running:false, startMs:null, accMs:0 };
-
-    if(!Array.isArray(s.entries)) 
-      s.entries = [];
-
-    if(!Array.isArray(s.verrekeningen)) 
-      s.verrekeningen = [];
-
-    if(typeof s.overtimePaidMinutes !== "number") 
-      s.overtimePaidMinutes = 0;
-
-    return s;
-  }catch(e){ 
-    return defaultState(); 
+    if(!raw) return normalizeState(defaultState());
+    return normalizeState(JSON.parse(raw));
+  }catch(e){
+    return normalizeState(defaultState());
   }
 }
 
@@ -3864,6 +4309,15 @@ if(typeof s.settings.employerName !== "string")
 
   let state = loadState();
   let meta  = loadMeta();
+
+let selectedEmployerViewId =
+  (typeof meta?.selectedEmployerViewId === "string" && meta.selectedEmployerViewId.trim())
+    ? meta.selectedEmployerViewId.trim()
+    : null;
+
+let historyEmployerViewId = selectedEmployerViewId;
+let calendarEmployerViewId = selectedEmployerViewId;
+let employerViewModalTarget = null;
 
 let cloudPushTimeout = null;
 
@@ -3886,6 +4340,312 @@ window.state = state;
 window.saveState = saveState;
 
   function saveMeta(){ localStorage.setItem(META_KEY, JSON.stringify(meta)); }
+
+function syncActiveEmployerToLegacySettings(){
+  if(!state || typeof state !== "object") return;
+
+  if(!state.settings || typeof state.settings !== "object"){
+    state.settings = {};
+  }
+
+  const employers = Array.isArray(state.employers) ? state.employers : [];
+
+  const activeEmployer =
+    employers.find(emp => emp && emp.id === state.activeEmployerId) ||
+    employers[0] ||
+    null;
+
+  if(!activeEmployer) return;
+
+  state.settings.startSaldoMin = safeNumber(activeEmployer.startSaldoMin, 0);
+  state.settings.normDayMin = safeNumber(activeEmployer.normDayMin, NORM_MIN);
+  state.settings.pauseMin = safeNumber(activeEmployer.pauseMin, 30);
+  state.settings.offDays = normalizeOffDays(activeEmployer.offDays);
+  state.settings.employeeName =
+    typeof activeEmployer.employeeName === "string" ? activeEmployer.employeeName : "";
+  state.settings.employerName =
+    typeof activeEmployer.employerName === "string" ? activeEmployer.employerName : "";
+
+  if(typeof state.settings.lang !== "string" || !state.settings.lang.trim()){
+    state.settings.lang = "nl";
+  }
+}
+
+function syncLegacySettingsToActiveEmployer(){
+  if(!state || typeof state !== "object") return;
+
+  if(!state.settings || typeof state.settings !== "object") return;
+  if(!Array.isArray(state.employers) || !state.employers.length) return;
+
+  const idx = state.employers.findIndex(emp => emp && emp.id === state.activeEmployerId);
+  const targetIndex = idx >= 0 ? idx : 0;
+  const current = state.employers[targetIndex] || {};
+
+  const safeId =
+    (typeof current.id === "string" && current.id.trim())
+      ? current.id.trim()
+      : `emp_${targetIndex + 1}`;
+
+  state.employers[targetIndex] = {
+    ...current,
+    id: safeId,
+    label:
+      (typeof current.label === "string" && current.label.trim())
+        ? current.label.trim()
+        : `Werkgever ${targetIndex + 1}`,
+    employeeName:
+      typeof state.settings.employeeName === "string" ? state.settings.employeeName : "",
+    employerName:
+      typeof state.settings.employerName === "string" ? state.settings.employerName : "",
+    startSaldoMin: safeNumber(state.settings.startSaldoMin, 0),
+    normDayMin: safeNumber(state.settings.normDayMin, NORM_MIN),
+    pauseMin: safeNumber(state.settings.pauseMin, 30),
+    offDays: normalizeOffDays(state.settings.offDays)
+  };
+
+  state.activeEmployerId = safeId;
+
+  if(!state.timer || typeof state.timer !== "object"){
+    state.timer = { running:false, startMs:null, accMs:0, employerId:safeId };
+  }else if(typeof state.timer.employerId !== "string" || !state.timer.employerId.trim()){
+    state.timer.employerId = safeId;
+  }
+}
+
+function getEntriesForEmployer(employerId){
+  const entries = Array.isArray(state?.entries) ? state.entries : [];
+  if(!employerId) return [];
+
+  return entries.filter(e => {
+    if(!e || e.deletedAt) return false;
+    return e.employerId === employerId;
+  });
+}
+
+function getActiveEmployerEntries(){
+  return getEntriesForEmployer(state?.activeEmployerId || null);
+}
+
+function getEmployerViewLabel(viewId){
+  if(!viewId) return t("all_employers");
+
+  const employers = Array.isArray(state?.employers) ? state.employers : [];
+  const emp = employers.find(e => e && e.id === viewId);
+
+  if(!emp) return t("all_employers");
+
+  return (typeof emp.employerName === "string" && emp.employerName.trim())
+    ? emp.employerName.trim()
+    : (typeof emp.label === "string" && emp.label.trim())
+      ? emp.label.trim()
+      : t("employer_generic");
+}
+
+function refreshEmployerViewLabels(){
+  if(historyEmployerViewLabel){
+    historyEmployerViewLabel.textContent = getEmployerViewLabel(historyEmployerViewId);
+  }
+
+  if(calendarEmployerViewLabel){
+    calendarEmployerViewLabel.textContent = getEmployerViewLabel(calendarEmployerViewId);
+  }
+
+  if(homeEmployerViewLabel){
+    const homeLockedEmployerId = state.timer?.running
+      ? (state.timer.employerId || state.activeEmployerId || selectedEmployerViewId || null)
+      : (selectedEmployerViewId || state.activeEmployerId || null);
+
+    homeEmployerViewLabel.textContent = getEmployerViewLabel(homeLockedEmployerId);
+  }
+}
+function renderEmployerViewModalButtons(){
+  if(!employerViewModalButtons) return;
+
+  const employers = Array.isArray(state?.employers) ? state.employers : [];
+  employerViewModalButtons.innerHTML = "";
+
+  if(employerViewModalTarget !== "home"){
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = "btnGhost";
+    allBtn.dataset.viewEmployerId = "";
+    allBtn.textContent = t("all_employers");
+    employerViewModalButtons.appendChild(allBtn);
+  }
+
+  employers.forEach((emp, index) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btnGhost";
+    btn.dataset.viewEmployerId = emp?.id || "";
+
+    const label =
+      (typeof emp?.employerName === "string" && emp.employerName.trim())
+        ? emp.employerName.trim()
+        : (typeof emp?.label === "string" && emp.label.trim())
+          ? emp.label.trim()
+          : `${t("employer_generic")} ${index + 1}`;
+
+    btn.textContent = label;
+    employerViewModalButtons.appendChild(btn);
+  });
+}
+
+function openEmployerViewModal(target){
+  employerViewModalTarget = target || null;
+
+  if(employerViewModalTitle){
+    employerViewModalTitle.textContent = t("choose_employer");
+  }
+
+  renderEmployerViewModalButtons();
+
+  if(employerViewModal){
+    employerViewModal.style.display = "flex";
+  }
+}
+
+function closeEmployerViewModal(){
+  if(employerViewModal){
+    employerViewModal.style.display = "none";
+  }
+
+  employerViewModalTarget = null;
+}
+
+function deleteActiveEmployer(){
+  const employers = Array.isArray(state.employers) ? state.employers : [];
+  const activeEmployerId = state.activeEmployerId || null;
+
+  if(!activeEmployerId) return;
+
+  if(employers.length <= 1){
+    showToast(t("employer_delete_keep_one") || "Je moet minstens 1 werkgever behouden.", "warn");
+    return;
+  }
+
+  const activeIndex = employers.findIndex(emp => emp && emp.id === activeEmployerId);
+  if(activeIndex === -1) return;
+
+  const activeEmployer = employers[activeIndex] || null;
+  const employerLabel =
+    (typeof activeEmployer?.employerName === "string" && activeEmployer.employerName.trim())
+      ? activeEmployer.employerName.trim()
+      : (typeof activeEmployer?.label === "string" && activeEmployer.label.trim())
+        ? activeEmployer.label.trim()
+        : "Werkgever";
+
+   const deleteEmployerMsgTemplate =
+    t("employer_delete_confirm_msg") ||
+    'Werkgever "{name}" verwijderen? Alle werklogs van deze werkgever worden ook verwijderd.';
+
+  openConfirm(
+    deleteEmployerMsgTemplate.replace("{name}", employerLabel),
+    () => {
+
+      state.entries = (Array.isArray(state.entries) ? state.entries : []).filter(e => {
+        if(!e) return false;
+        return e.employerId !== activeEmployerId;
+      });
+
+      state.employers = employers.filter(emp => emp && emp.id !== activeEmployerId);
+
+      const nextEmployer = state.employers[0] || null;
+      if(!nextEmployer) return;
+
+      state.activeEmployerId = nextEmployer.id;
+
+      if(!state.timer || typeof state.timer !== "object"){
+        state.timer = {
+          running: false,
+          startMs: null,
+          accMs: 0,
+          employerId: nextEmployer.id
+        };
+      }else if(state.timer.employerId === activeEmployerId){
+        state.timer.running = false;
+        state.timer.startMs = null;
+        state.timer.accMs = 0;
+        state.timer.employerId = nextEmployer.id;
+      }
+
+      syncActiveEmployerToLegacySettings();
+      saveState();
+      renderAll();
+
+      closeEmployerSettingsModal();
+
+      showToast("Werkgever verwijderd.", "ok");
+    }
+  );
+}
+
+function renderEmployerSwitcher(){
+  const employers = Array.isArray(state.employers) ? state.employers : [];
+  const fallbackBase = t("employer_fallback") || "Werkgever";
+
+  if(employerButtons){
+    employerButtons.innerHTML = "";
+
+    employers.forEach((emp, index) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btnSmall";
+      btn.dataset.employerId = emp.id;
+
+      const label =
+        (typeof emp.employerName === "string" && emp.employerName.trim())
+          ? emp.employerName.trim()
+          : (typeof emp.label === "string" && emp.label.trim())
+            ? emp.label.trim()
+            : `${fallbackBase} ${index + 1}`;
+
+      btn.textContent = label;
+
+      if(emp.id === state.activeEmployerId){
+        btn.classList.add("primary");
+      }
+
+      employerButtons.appendChild(btn);
+    });
+  }
+  const setupEmployerButtonsEl = document.getElementById("setupEmployerButtons");
+
+  if(setupEmployerButtonsEl){
+    setupEmployerButtonsEl.innerHTML = "";
+
+    employers.forEach((emp, index) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btnSmall";
+      btn.dataset.setupEmployerId = emp.id;
+      btn.style.textAlign = "left";
+
+      const employerName =
+        (typeof emp.employerName === "string" && emp.employerName.trim())
+          ? emp.employerName.trim()
+          : (typeof emp.label === "string" && emp.label.trim())
+            ? emp.label.trim()
+            : `${fallbackBase} ${index + 1}`;
+
+      const employeeName =
+        (typeof emp.employeeName === "string" && emp.employeeName.trim())
+          ? emp.employeeName.trim()
+          : "—";
+
+      btn.innerHTML = `
+        <div style="font-weight:900;">${escapeHtml(employerName)}</div>
+        <div class="muted2" style="font-size:13px; margin-top:4px;">${escapeHtml(employeeName)}</div>
+      `;
+
+      if(emp.id === state.activeEmployerId){
+        btn.classList.add("primary");
+      }
+
+      setupEmployerButtonsEl.appendChild(btn);
+    });
+  }
+}
 
   /* =========================
      DOM refs
@@ -3917,6 +4677,26 @@ const offDaysOverlay = document.getElementById("offDaysOverlay");
 const btnOffDaysCancel = document.getElementById("btnOffDaysCancel");
 const btnOffDaysDone = document.getElementById("btnOffDaysDone");
 const offDaysCurrentLabel = document.getElementById("offDaysCurrentLabel");
+
+const employerSwitcher = document.getElementById("employerSwitcher");
+const employerButtons = document.getElementById("employerButtons");
+const btnEmployer1 = document.getElementById("btnEmployer1");
+const btnAddEmployer = document.getElementById("btnAddEmployer");
+const setupEmployerButtons = document.getElementById("setupEmployerButtons");
+const btnSetupAddEmployer = document.getElementById("btnSetupAddEmployer");
+const employerModal = document.getElementById("employerModal");
+const btnCloseEmployerModal = document.getElementById("btnCloseEmployerModal");
+const employerModalTitle = document.getElementById("employerModalTitle");
+
+if(employerModal && employerModal.parentElement !== document.body){
+  document.body.appendChild(employerModal);
+}
+
+
+const employerViewModal = document.getElementById("employerViewModal");
+const btnCloseEmployerViewModal = document.getElementById("btnCloseEmployerViewModal");
+const employerViewModalTitle = document.getElementById("employerViewModalTitle");
+const employerViewModalButtons = document.getElementById("employerViewModalButtons");
 
   const elHistoryList     = document.getElementById("historyList");
 
@@ -3956,6 +4736,14 @@ infoStartSaldo?.addEventListener("click", (e)=>{
   const isOpen = bubbleStartSaldo.style.display === "block";
   closeAllBubbles();
   bubbleStartSaldo.style.display = isOpen ? "none" : "block";
+});
+infoOffDays?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleOffDays) return;
+
+  const isOpen = bubbleOffDays.style.display === "block";
+  closeAllBubbles();
+  bubbleOffDays.style.display = isOpen ? "none" : "block";
 });
 infoRecup?.addEventListener("click", (e)=>{
   e.stopPropagation();
@@ -4010,6 +4798,7 @@ infoNormDay?.addEventListener("click", (e)=>{
 
 function closeAllBubbles(){
   if(bubbleStartSaldo) bubbleStartSaldo.style.display = "none";
+  if(bubbleOffDays) bubbleOffDays.style.display = "none";
   if(bubbleCalendar) bubbleCalendar.style.display = "none";
   if(bubbleVerreken) bubbleVerreken.style.display = "none";
   if(bubbleNormDay) bubbleNormDay.style.display = "none";
@@ -4021,6 +4810,7 @@ function closeAllBubbles(){
 document.addEventListener("click", closeAllBubbles);
 
   const btnSaveSettings   = document.getElementById("btnSaveSettings");
+  const btnDeleteEmployer = document.getElementById("btnDeleteEmployer");
 
   const fileImport2       = document.getElementById("fileImport2");
 
@@ -4031,16 +4821,25 @@ document.addEventListener("click", closeAllBubbles);
   const btnDeleteInModal  = document.getElementById("btnDeleteInModal");
   const mDate             = document.getElementById("mDate");
   const mType             = document.getElementById("mType");
-  const mStartH = document.getElementById("mStartH");
-const mStartM = document.getElementById("mStartM");
-const mEndH   = document.getElementById("mEndH");
-const mEndM   = document.getElementById("mEndM");
+  const mEmployer         = document.getElementById("mEmployer");
+  const mStartH           = document.getElementById("mStartH");
+  const mStartM           = document.getElementById("mStartM");
+  const mEndH             = document.getElementById("mEndH");
+  const mEndM             = document.getElementById("mEndM");
   const mPause            = document.getElementById("mPause");
   const mNote             = document.getElementById("mNote");
-  const elCalGrid  = document.getElementById("calGrid");
-  const elCalLabel = document.getElementById("calLabel");
-  const btnCalPrev = document.getElementById("calPrev");
-  const btnCalNext = document.getElementById("calNext");
+  const elCalGrid         = document.getElementById("calGrid");
+  const elCalLabel        = document.getElementById("calLabel");
+  const btnCalPrev        = document.getElementById("calPrev");
+  const btnCalNext        = document.getElementById("calNext");
+
+
+const btnHistoryEmployerView = document.getElementById("btnHistoryEmployerView");
+const historyEmployerViewLabel = document.getElementById("historyEmployerViewLabel");
+const btnCalendarEmployerView = document.getElementById("btnCalendarEmployerView");
+const calendarEmployerViewLabel = document.getElementById("calendarEmployerViewLabel");
+const btnHomeEmployerView = document.getElementById("btnHomeEmployerView");
+const homeEmployerViewLabel = document.getElementById("homeEmployerViewLabel");
 
   /* =========================
      Boot lang from settings
@@ -4179,7 +4978,10 @@ function openLangModal(){
 }
 
 document.getElementById("btnLangOpen")?.addEventListener("click", openLangModal)
-  document.getElementById("btnOpenHistory")?.addEventListener("click", () => showTab("tab2"));
+document.getElementById("btnOpenHistory")?.addEventListener("click", () => {
+  showTab("tab2");
+  renderHistory();
+});
   document.getElementById("btnHome")?.addEventListener("click", () => showTab("tab1"));
   document.getElementById("btnOpenSettings")?.addEventListener("click", () => showTab("tab4"));
 document.getElementById("btnNavCalendar")?.addEventListener("click", () => {
@@ -4299,14 +5101,21 @@ function updateLegendLetters(){
   return ["M","D","W","D","V","Z","Z"]; // Nederlands
 }
 
-  function entryForDate(dateStr){
-    // 1 entry per datum: neem de “laatste” (createdAt) als er toch meerdere zouden zijn
-    const list = state.entries
-      .filter(e=>!e.deletedAt && e.date===dateStr)
-      .slice()
-      .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-    return list[0] || null;
-  }
+function entriesForDate(dateStr){
+  const baseList = calendarEmployerViewId
+    ? getEntriesForEmployer(calendarEmployerViewId)
+    : (Array.isArray(state?.entries) ? state.entries.filter(e => e && !e.deletedAt) : []);
+
+  return baseList
+    .filter(e => e.date === dateStr)
+    .slice()
+    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+}
+
+function entryForDate(dateStr){
+  const list = entriesForDate(dateStr);
+  return list[0] || null;
+}
 
   function calClassForType(type){
     if(type==="Werk") return "calWork";
@@ -4374,7 +5183,8 @@ function renderCalendar(){
   for(let day=1; day<=daysInMonth; day++){
     const dateObj = new Date(calYear, calMonth, day);
     const dateStr = ymd(dateObj);
-    const e = entryForDate(dateStr);
+    const dayEntries = entriesForDate(dateStr);
+const e = dayEntries[0] || null;
 
 const cell = document.createElement("div");
 
@@ -4395,7 +5205,9 @@ if(e){
     // type letter
 const pill = e ? `<div class="calTypePill">${typeAbbr(e.type)}</div>` : "";
 
-const hours = "";
+const hours = dayEntries.length > 1
+  ? `<div class="calMultiMarks">${dayEntries.map(entry => `<span class="calMultiMark ${calClassForType(entry.type)}"></span>`).join("")}</div>`
+  : "";
 
     // verrekening dot (ook als er geen entry is)
     const vMins = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
@@ -4436,45 +5248,63 @@ function formatHM(min){
 }
 
 // ===== TOEVOEGING VERREKENINGEN START =====
-// ---- verrekening verwijderen (enkel LAATSTE verrekening van die dag) ----
-function undoVerrekeningForDate(ymdStr){
+// ---- verrekening verwijderen op exacte index ----
+function undoVerrekeningByIndex(rawIdx, ymdStr){
   const arr = Array.isArray(state.verrekeningen) ? state.verrekeningen : [];
+  const idx = Number(rawIdx);
 
-  // pak alle verrekeningen van die datum
-  const matches = arr
-    .map((v, idx) => ({ v, idx }))
-    .filter(x => x.v && x.v.date === ymdStr);
-
-  if(matches.length === 0){
+  if(
+    !Number.isInteger(idx) ||
+    idx < 0 ||
+    idx >= arr.length ||
+    !arr[idx] ||
+    arr[idx].deletedAt ||
+    arr[idx].date !== ymdStr
+  ){
     showToast(t("verrek_none"), "warn");
     return;
   }
 
-  // verwijder enkel de meest recente (hoogste createdAt)
-  matches.sort((a,b) => (b.v.createdAt||0) - (a.v.createdAt||0));
-  const removeIdx = matches[0].idx;
+  const item = arr[idx];
+  const employerLabel = getEmployerViewLabel(item.employerId || null);
+  const amountLabel = formatHM(item.minutes || 0);
 
-  arr.splice(removeIdx, 1);
+  openConfirm({
+    message: `${t("recon_delete_message")}\n${amountLabel}\n${employerLabel}`,
+    messageHtml: `
+      <div style="font-size:20px; font-weight:900; margin-bottom:10px;">
+        ${escapeHtml(t("recon_delete_title"))}
+      </div>
+      <div style="line-height:1.6;">
+        <b>${escapeHtml(t("recon_delete_date_label"))}:</b> ${escapeHtml(dmy(new Date(ymdStr)))}<br>
+        <b>${escapeHtml(t("recon_delete_time_label"))}:</b> ${escapeHtml(amountLabel)}<br>
+        <b>${escapeHtml(t("recon_delete_employer_label"))}:</b> ${escapeHtml(employerLabel)}
+      </div>
+    `,
+    okLabel: t("recon_delete_confirm_btn"),
+    cancelLabel: t("cancel")
+  }, () => {
+    arr.splice(idx, 1);
+    state.verrekeningen = arr;
 
-  state.verrekeningen = arr;
-
-  // totaal opnieuw uitrekenen (veiligste)
-  state.overtimePaidMinutes = arr.reduce((sum, v) => sum + (v.minutes || 0), 0);
-
-  saveState();
-  showToast(t("verrek_deleted"), "ok");
-  renderAll();
-  openDayDetail(ymdStr);
+    saveState();
+    showToast(t("verrek_deleted"), "ok");
+    renderAll();
+    openDayDetail(ymdStr);
+  });
 }
+
+window.undoVerrekeningByIndex = undoVerrekeningByIndex;
 // ===== TOEVOEGING VERREKENINGEN END =====
 
 function openDayDetail(ymdStr){
-  const e = entryForDate(ymdStr);
+  const entries = entriesForDate(ymdStr);
+  const e = entries[0] || null;
 
-  const vMins = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
+   const verrekenItems = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
+    .map((v, idx) => ({ ...v, _idx: idx }))
     .filter(v => !v.deletedAt && v.date === ymdStr)
-    .reduce((sum, v) => sum + (v.minutes || 0), 0);
-
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   if(dayTitle){
     dayTitle.textContent = dmy(new Date(ymdStr));
     dayTitle.dataset.ymd = ymdStr;
@@ -4482,106 +5312,146 @@ function openDayDetail(ymdStr){
 
   if(dayBody) dayBody.innerHTML = "";
   const dayDeltaLabel = formatDayDeltaLabel(ymdStr);
-const dayDeltaLine = dayDeltaLabel ? `<br><b>${escapeHtml(dayDeltaLabel)}</b>` : "";
+  const dayDeltaLine = dayDeltaLabel ? `<br><b>${escapeHtml(dayDeltaLabel)}</b>` : "";
 
-  // GEEN entry: toch tonen als er verrekend is
-  if(!e){
+  if(dayEdit) dayEdit.style.display = "none";
+
+  if(!entries.length){
     if(dayBody){
-      dayBody.innerHTML = (vMins > 0)
-   ? `
-  <b>${t("reconciled")}</b><br>${formatHM(vMins)}
-  <div style="margin-top:12px;">
-    <button type="button" class="btnGhostSmall" id="btnUndoVerrek">
-      ${t("reconciled_remove")}
-    </button>
-  </div>
-`
-: t("day_no_entry");
+      dayBody.innerHTML = verrekenItems.length
+              ? verrekenItems.map((v, index) => `
+            <div style="border:1px solid var(--line); background:rgba(255,255,255,.05); border-radius:14px; padding:12px; ${index ? "margin-top:10px;" : ""}">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                <div>
+                  <b>${t("reconciled")}</b><br>
+                  ${formatHM(v.minutes || 0)}<br>
+                  <span class="muted2">${escapeHtml(getEmployerViewLabel(v.employerId || null))}</span>
+                </div>
+                <button
+                  class="btnSmall btnDanger"
+                  type="button"
+                  onclick="undoVerrekeningByIndex(${v._idx}, '${ymdStr}')"
+                  aria-label="Undo verrekening"
+                >↩</button>
+              </div>
+            </div>
+          `).join("")
+        : t("day_no_entry");
     }
-    if(dayEdit) dayEdit.style.display = "none";
+
     if(dayOverlay) dayOverlay.style.display = "flex";
-
-    if(vMins > 0){
-      document.getElementById("btnUndoVerrek")?.addEventListener("click", () => undoVerrekeningForDate(ymdStr));
-    }
-// ===== TOEVOEGING DAGDETAIL START =====
-if(dayBody){
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "btnSmall";
-  btn.textContent = t("btn_add_manual");
-  btn.style.marginTop = "12px";
-
-  btn.addEventListener("click", () => {
-    const mDate = document.getElementById("mDate");
-    if(mDate) mDate.value = ymdStr;
-
-    const modalBack = document.getElementById("modalBack");
-    if(modalBack) modalBack.style.display = "flex";
-    const dayOverlay = document.getElementById("dayOverlay");
-if(dayOverlay) dayOverlay.style.display = "none";
-  });
-
-  dayBody.appendChild(btn);
-}
-// ===== TOEVOEGING DAGDETAIL END =====
     return;
   }
 
-  if(dayEdit) dayEdit.style.display = "inline-block";
+   if(dayBody){
+    let dayHtml = entries.map((entry, index) => {
+      const employerLine = `<b>${escapeHtml(getEmployerViewLabel(entry.employerId || null))}</b><br>`;
+      const noteLine = entry.note
+        ? `<br><br><b>${t("note_label")}:</b><br>${escapeHtml(entry.note)}`
+        : "";
 
-  const noteLine = e.note
-    ? `<br><br><b>${t("note_label")}:</b><br>${escapeHtml(e.note)}`
-    : "";
+      let content = "";
 
-  // ===== WERK =====
-if(e.type === "Werk"){
-  const start = e.start || "";
-  const end   = e.end || "";
-  const pause = (e.pauseMin || 0);
-  const net   = formatHM(e.netMin || 0);
+      if(entry.type === "Werk"){
+        const start = entry.start || "";
+        const end   = entry.end || "";
+        const pause = entry.pauseMin || 0;
+        const net   = formatHM(entry.netMin || 0);
 
-  if(dayBody) dayBody.innerHTML =
-    `<b>${t("work_label")}</b><br>
-     ${start}${end ? "–"+end : ""}<br>
-     ${t("pause_line")}: ${pause} ${t("min")}<br>
-     ${t("net_line")}: ${net}${dayDeltaLine}
-     ${noteLine}`;
-}
+        content = `
+          <b>${t("work_label")}</b><br>
+          ${start}${end ? "–"+end : ""}<br>
+          ${t("pause_line")}: ${pause} ${t("min")}<br>
+          ${t("net_line")}: ${net}${dayDeltaLine}
+          ${noteLine}
+        `;
+      }else if(entry.type === "Recup"){
+        const hm = formatHM(entry.netMin || 0);
 
-  // ===== RECUP =====
-  else if(e.type === "Recup"){
-    const hm = formatHM(e.netMin || 0);
-    if(dayBody) dayBody.innerHTML =
-      `<b>${t("recup")}</b><br>
-       ${t("recup_line")} (${hm})
-       ${noteLine}`;
+        content = `
+          <b>${t("recup")}</b><br>
+          ${t("recup_line")} (${hm})
+          ${noteLine}
+        `;
+      }else{
+        const map = { "Ziekte":"sick", "Vakantie":"vacation", "Feestdag":"holiday" };
+        const key = map[entry.type];
+        const label = key ? t(key) : entry.type;
+
+        content = `
+          <b>${escapeHtml(label)}</b>
+          ${noteLine}
+        `;
+      }
+
+      return `
+        <div style="border:1px solid var(--line); background:rgba(255,255,255,.05); border-radius:14px; padding:12px; ${index ? "margin-top:10px;" : ""}">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+            <div style="min-width:0; flex:1;">
+              ${employerLine}
+              ${content}
+            </div>
+
+            <button
+              class="btnSmall"
+              type="button"
+              data-day-edit-id="${entry.id}"
+              aria-label="${t("edit_btn")}"
+              style="flex:0 0 auto;"
+            >✎</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    if(verrekenItems.length){
+      dayHtml += `
+        <hr>
+        ${verrekenItems.map((v, index) => `
+          <div style="border:1px solid var(--line); background:rgba(255,255,255,.05); border-radius:14px; padding:12px; ${index ? "margin-top:10px;" : ""}">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+              <div>
+                <b>${t("reconciled")}</b><br>
+                ${formatHM(v.minutes || 0)}<br>
+                <span class="muted2">${escapeHtml(getEmployerViewLabel(v.employerId || null))}</span>
+              </div>
+              <button
+                class="btnSmall btnDanger"
+                type="button"
+                onclick="undoVerrekeningByIndex(${v._idx}, '${ymdStr}')"
+                aria-label="Undo verrekening"
+              >↩</button>
+            </div>
+          </div>
+        `).join("")}
+      `;
+    }
+
+    dayBody.innerHTML = dayHtml;
+
+    dayBody.querySelectorAll("[data-day-edit-id]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const entryId = btn.getAttribute("data-day-edit-id");
+        if(!entryId) return;
+
+        const entry = (Array.isArray(state.entries) ? state.entries : [])
+          .find(x => x.id === entryId && !x.deletedAt);
+
+        if(!entry) return;
+
+        const weekInfo = getWeekInfo(entry.date);
+        if(isWeekLocked(weekInfo.key)){
+          showToast(t("week_locked"));
+          return;
+        }
+
+        closeDayDetail();
+        openModal("edit", entry);
+      });
+    });
   }
 
-  // ===== ANDERE TYPES =====
-  else{
-    const map = { "Ziekte":"sick", "Vakantie":"vacation", "Feestdag":"holiday" };
-    const key = map[e.type];
-    const label = key ? t(key) : e.type;
-
-    if(dayBody) dayBody.innerHTML =
-      `<b>${escapeHtml(label)}</b>
-       ${noteLine}`;
-  }
-
-// ===== VERREKEND TONEN + UNDO =====
-if(vMins > 0 && dayBody){
-  dayBody.innerHTML += `
-    <hr>
-    <div class="verrekRow">
-      <div><b>${t("reconciled")}</b><br>${formatHM(vMins)}</div>
-      <button type="button" class="btnGhostSmall" id="btnUndoVerrek">${t("reconciled_remove")}</button>
-    </div>
-  `;
-  document.getElementById("btnUndoVerrek")?.addEventListener("click", () => undoVerrekeningForDate(ymdStr));
-}
-
-if(dayOverlay) dayOverlay.style.display = "flex";
+  if(dayOverlay) dayOverlay.style.display = "flex";
 }
 
 // =========================
@@ -4679,9 +5549,17 @@ function hmFromMinutes(mins){
     return state.timer.accMs || 0;
   }
 
-  function updateTimerUI(){
-    if(elTimer) elTimer.textContent = formatHMS(currentElapsedMs());
+ function updateTimerUI(){
+  if(elTimer) elTimer.textContent = formatHMS(currentElapsedMs());
+
+  const isLocked = !!state.timer?.running;
+
+  if(btnHomeEmployerView){
+    btnHomeEmployerView.disabled = isLocked;
+    btnHomeEmployerView.style.opacity = isLocked ? "0.55" : "1";
+    btnHomeEmployerView.style.cursor = isLocked ? "not-allowed" : "";
   }
+}
 
   function setStatus(mode){
     if(!elStatus) return;
@@ -4702,8 +5580,23 @@ function hmFromMinutes(mins){
 async function startTimer(){
   if(state.timer.running) return;
 
+  const nowMs = Date.now();
+  const nowDate = new Date(nowMs);
+  const date = ymd(nowDate);
+
   state.timer.running = true;
-  state.timer.startMs = Date.now();
+  state.timer.startMs = nowMs;
+  state.timer.employerId = state.activeEmployerId;
+
+  if(!Array.isArray(state.timer.segments)){
+    state.timer.segments = [];
+  }
+
+  if(!state.timer.sessionDate){
+    state.timer.sessionDate = date;
+  }
+
+  state.timer.currentSegmentStartMs = nowMs;
 
   if(!interval) interval = setInterval(()=>{ updateTimerUI(); saveState(); }, 250);
 
@@ -4714,9 +5607,7 @@ async function startTimer(){
     if (await ensureFirebase()) {
       const u = currentUser?.();
       if (u && fbDb) {
-        const now = new Date();
-        const date = ymd(now);
-        const startTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        const startTime = `${String(nowDate.getHours()).padStart(2, "0")}:${String(nowDate.getMinutes()).padStart(2, "0")}`;
 
         await fbDb
           .collection("users")
@@ -4741,9 +5632,36 @@ async function pauseTimer(){
   if(!state.timer.running) return;
 
   const now = Date.now();
+  const nowDate = new Date(now);
+  const sessionDate = state.timer.sessionDate || ymd(nowDate);
+  const segmentStartMs =
+    state.timer.currentSegmentStartMs != null
+      ? state.timer.currentSegmentStartMs
+      : state.timer.startMs;
+
+  const segmentDurationMs =
+    segmentStartMs != null
+      ? Math.max(0, now - segmentStartMs)
+      : 0;
+
+  if(!Array.isArray(state.timer.segments)){
+    state.timer.segments = [];
+  }
+
+  if(segmentStartMs != null && segmentDurationMs > 0){
+    state.timer.segments.push({
+      date: sessionDate,
+      employerId: state.timer.employerId || state.activeEmployerId || "emp_1",
+      startMs: segmentStartMs,
+      endMs: now,
+      durationMs: segmentDurationMs
+    });
+  }
+
   state.timer.accMs += (now - state.timer.startMs);
   state.timer.running = false;
   state.timer.startMs = null;
+  state.timer.currentSegmentStartMs = null;
 
   setStatus("paused");
   updateTimerUI();
@@ -4753,16 +5671,15 @@ async function pauseTimer(){
     if (await ensureFirebase()) {
       const u = currentUser?.();
       if (u && fbDb) {
-        const date = ymd(new Date(now));
-        const stopTime = `${String(new Date(now).getHours()).padStart(2, "0")}:${String(new Date(now).getMinutes()).padStart(2, "0")}`;
+        const stopTime = `${String(nowDate.getHours()).padStart(2, "0")}:${String(nowDate.getMinutes()).padStart(2, "0")}`;
 
         await fbDb
           .collection("users")
           .doc(u.uid)
           .collection("workLogs")
-          .doc(date)
+          .doc(sessionDate)
           .set({
-            date,
+            date: sessionDate,
             stopTime,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
           }, { merge: true });
@@ -4777,6 +5694,9 @@ async function pauseTimer(){
     state.timer.running = false;
     state.timer.startMs = null;
     state.timer.accMs = 0;
+    state.timer.sessionDate = null;
+    state.timer.currentSegmentStartMs = null;
+    state.timer.segments = [];
     updateTimerUI();
     setStatus("stopped");
     saveState();
@@ -4812,25 +5732,33 @@ async function pauseTimer(){
   return offDays.includes(dayNr);
 }
 
-  function workNetForDate(dateYMD){
-    return state.entries
-      .filter(e=>!e.deletedAt && e.date===dateYMD && e.type==="Werk")
-      .reduce((a,e)=>a + (e.netMin||0), 0);
-  }
-  function vacationDaysTaken(){
+ function workNetForDate(dateYMD){
+  return getActiveEmployerEntries()
+    .filter(e => e.date === dateYMD && e.type === "Werk")
+    .reduce((a,e)=>a + (e.netMin||0), 0);
+}
+   function vacationDaysTaken(){
   const year = new Date().getFullYear();
   const prefix = year + "-"; // omdat datum = "YYYY-MM-DD"
 
+  const resolvedEmployerId = state.timer?.running
+    ? (state.timer.employerId || state.activeEmployerId || selectedEmployerViewId || null)
+    : (selectedEmployerViewId || state.activeEmployerId || null);
+
+  const sourceEntries = resolvedEmployerId
+    ? getEntriesForEmployer(resolvedEmployerId)
+    : [];
+
   const set = new Set();
 
-  state.entries.forEach(e=>{
+  sourceEntries.forEach(e=>{
     if(
       !e.deletedAt &&
       e.type === "Vakantie" &&
       typeof e.date === "string" &&
       e.date.startsWith(prefix)
     ){
-      set.add(e.date); // telt per unieke dag
+      set.add(e.date); // telt per unieke dag binnen gekozen werkgever
     }
   });
 
@@ -4838,31 +5766,56 @@ async function pauseTimer(){
 }
 
   function overtimeSaldoMin(){
-    const start = state.settings.startSaldoMin || 0;
-    const normDay = state.settings.normDayMin ?? NORM_MIN;
-    const days = [...new Set(state.entries.filter(e=>!e.deletedAt).map(e=>e.date))].sort();
+    const resolvedEmployerId = state.timer?.running
+      ? (state.timer.employerId || state.activeEmployerId || selectedEmployerViewId || null)
+      : (selectedEmployerViewId || state.activeEmployerId || null);
 
-  let sum = start - (state.overtimePaidMinutes || 0);
+    const employers = Array.isArray(state.employers) ? state.employers : [];
+    const employer =
+      employers.find(emp => emp && emp.id === resolvedEmployerId) ||
+      employers[0] ||
+      null;
+
+    if(!employer) return 0;
+
+    const start = safeNumber(employer.startSaldoMin, 0);
+    const normDay = safeNumber(employer.normDayMin, NORM_MIN);
+    const employerEntries = getEntriesForEmployer(employer.id);
+    const days = [...new Set(employerEntries.map(e => e.date))].sort();
+
+    const paidMinutes = (Array.isArray(state.verrekeningen) ? state.verrekeningen : [])
+      .filter(v => !v.deletedAt && v.employerId === employer.id)
+      .reduce((sum, v) => sum + (v.minutes || 0), 0);
+
+    let sum = start - paidMinutes;
+
     for(const day of days){
-  const hasWork = state.entries.some(e=>!e.deletedAt && e.date===day && e.type==="Werk");
-  const workNet = workNetForDate(day);
+      const hasWork = employerEntries.some(e => e.date === day && e.type === "Werk");
+      const workNet = employerEntries
+        .filter(e => e.date === day && e.type === "Werk")
+        .reduce((a, e) => a + (e.netMin || 0), 0);
 
-  if(hasWork){
-    sum += isConfiguredOffDay(day)
-      ? workNet
-      : (workNet - normDay);
-  }
+      if(hasWork){
+        const offDays = Array.isArray(employer.offDays) ? employer.offDays : [];
+        const d = new Date(day + "T00:00:00");
+        const dayNr = ((d.getDay() + 6) % 7) + 1;
+        const isOffDay = offDays.includes(dayNr);
 
-  const recups = state.entries.filter(e=>!e.deletedAt && e.date===day && e.type==="Recup").length;
-  if(recups>0) sum += (-normDay * recups);
-}
+        sum += isOffDay ? workNet : (workNet - normDay);
+      }
+
+      const recups = employerEntries.filter(e => e.date === day && e.type === "Recup").length;
+      if(recups > 0) sum += (-normDay * recups);
+    }
+
     return sum;
   }
 
   /* =========================
      Actions
      ========================= */
-  async function saveWorkEntry(){
+
+     async function saveWorkEntry(){
   const ms = currentElapsedMs();
   if(ms < 1000){
     showToast(t("err_timer_short"), "warn");
@@ -4870,57 +5823,97 @@ async function pauseTimer(){
   }
 
   const pause = clamp(parseInt(elPauseMin?.value || "0", 10) || 0, 0, 600);
-  const now = new Date();
-  const date = ymd(now);
+  const nowMs = Date.now();
 
-  const durMin = Math.max(0, Math.round(ms / 60000));
-  const netMin = Math.max(0, durMin - pause);
+  if(!Array.isArray(state.timer.segments)){
+    state.timer.segments = [];
+  }
 
-  const endMin = now.getHours() * 60 + now.getMinutes();
-  const startDate = new Date(now.getTime() - ms);
-  const startMin = startDate.getHours() * 60 + startDate.getMinutes();
+  const workingSegments = state.timer.segments.slice();
 
-  const entry = {
-    id: uid(),
-    date,
-    type: "Werk",
-    start: minToTime(startMin),
-    end: minToTime(endMin),
-    pauseMin: pause,
-    netMin,
-    createdAt: Date.now()
-  };
+  if(state.timer.running && state.timer.currentSegmentStartMs != null){
+    const liveStartMs = state.timer.currentSegmentStartMs;
+    const liveDurationMs = Math.max(0, nowMs - liveStartMs);
 
-  state.entries.unshift(entry);
+    if(liveDurationMs > 0){
+      workingSegments.push({
+        date: state.timer.sessionDate || ymd(new Date(liveStartMs)),
+        employerId: state.timer.employerId || state.activeEmployerId || "emp_1",
+        startMs: liveStartMs,
+        endMs: nowMs,
+        durationMs: liveDurationMs
+      });
+    }
+  }
+
+  if(!workingSegments.length){
+    showToast(t("err_timer_short"), "warn");
+    return;
+  }
+
+  const fallbackEmployerId = state.timer?.employerId || state.activeEmployerId || "emp_1";
+
+  const normalizedSegments = workingSegments
+    .map((seg, index) => {
+      const startMs = Number(seg?.startMs || 0);
+      const endMs = Number(seg?.endMs || 0);
+      const durationMs = Math.max(0, Number(seg?.durationMs || (endMs - startMs) || 0));
+      const segDate = seg?.date || ymd(new Date(startMs || nowMs));
+
+      return {
+        id: uid(),
+        employerId: seg?.employerId || fallbackEmployerId,
+        date: segDate,
+        type: "Werk",
+        start: minToTime((new Date(startMs)).getHours() * 60 + (new Date(startMs)).getMinutes()),
+        end: minToTime((new Date(endMs)).getHours() * 60 + (new Date(endMs)).getMinutes()),
+        pauseMin: index === workingSegments.length - 1 ? pause : 0,
+        netMin: Math.max(
+          0,
+          Math.round(durationMs / 60000) - (index === workingSegments.length - 1 ? pause : 0)
+        ),
+        createdAt: Date.now() + index
+      };
+    })
+    .filter(entry => entry.start && entry.end && entry.netMin >= 0);
+
+  if(!normalizedSegments.length){
+    showToast(t("err_timer_short"), "warn");
+    return;
+  }
+
+  state.entries.unshift(...normalizedSegments);
   saveState();
 
+  resetTimer();
+  showToast(`${t("save")} ✓`, "ok");
+  renderAll();
+
   try {
-    if (await ensureFirebase()) {
+    if (navigator.onLine && await ensureFirebase()) {
       const u = currentUser?.();
       if (u && fbDb) {
-        await fbDb
-          .collection("users")
-          .doc(u.uid)
-          .collection("workLogs")
-          .doc(date)
-          .set({
-            date,
-            startTime: entry.start,
-            stopTime: entry.end,
-            pauseMin: pause,
-            netMin,
-            type: "Werk",
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          }, { merge: true });
+        for (const entry of normalizedSegments) {
+          await fbDb
+            .collection("users")
+            .doc(u.uid)
+            .collection("workLogs")
+            .add({
+              date: entry.date,
+              startTime: entry.start,
+              stopTime: entry.end,
+              pauseMin: entry.pauseMin,
+              netMin: entry.netMin,
+              employerId: entry.employerId || null,
+              type: "Werk",
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
       }
     }
   } catch (err) {
     console.error("Firestore workLogs save failed:", err);
   }
-
-  resetTimer();
-  showToast(`${t("save")} ✓`, "ok");
-  renderAll();
 }
 
   function msgRecupConfirm(){
@@ -4988,10 +5981,18 @@ return hasNorm
 
   function addRecup(){
     openConfirm(msgRecupConfirm(), () => {
-      state.entries.unshift({
-        id: uid(), date: ymd(new Date()), type:"Recup",
-        start:null, end:null, pauseMin:0, netMin: (state.settings?.normDayMin ?? NORM_MIN), createdAt: Date.now()
+       state.entries.unshift({
+        id: uid(),
+        employerId: state.activeEmployerId,
+        date: ymd(new Date()),
+        type:"Recup",
+        start:null,
+        end:null,
+        pauseMin:0,
+        netMin: (state.settings?.normDayMin ?? NORM_MIN),
+        createdAt: Date.now()
       });
+      
       saveState();
       showToast(`${t("recup")} ✓`, "ok");
       renderAll();
@@ -5002,6 +6003,33 @@ return hasNorm
    Modal (manual add/edit)
    ========================= */
 let editingId = null;
+
+function populateManualEmployerSelect(selectedEmployerId = null){
+  if(!mEmployer) return;
+
+  const employers = Array.isArray(state?.employers) ? state.employers : [];
+  mEmployer.innerHTML = "";
+
+  employers.forEach((emp, index) => {
+    if(!emp?.id) return;
+
+    const opt = document.createElement("option");
+    opt.value = emp.id;
+    opt.textContent =
+      (typeof emp.employerName === "string" && emp.employerName.trim())
+        ? emp.employerName.trim()
+        : (typeof emp.label === "string" && emp.label.trim())
+          ? emp.label.trim()
+          : `Werkgever ${index + 1}`;
+
+    mEmployer.appendChild(opt);
+  });
+
+  const fallbackId = selectedEmployerId || state.activeEmployerId || employers[0]?.id || "";
+  if(fallbackId){
+    mEmployer.value = fallbackId;
+  }
+}
 
 function openModal(mode, entry=null){
 
@@ -5050,8 +6078,18 @@ function openModal(mode, entry=null){
 
   if(mNote) mNote.value = entry?.note || "";
 
-  if(modalBack) modalBack.style.display = "flex";
-  applyLang();
+populateManualEmployerSelect(
+  entry?.employerId ||
+  historyEmployerViewId ||
+  calendarEmployerViewId ||
+  state.activeEmployerId ||
+  null
+);
+
+if(mNote) mNote.value = entry?.note || "";
+
+if(modalBack) modalBack.style.display = "flex";
+applyLang();
 }
 
 function closeModal(){
@@ -5083,6 +6121,7 @@ function netFromFields(type, start, end, pauseMin){
 function saveModal(){
   const date = mDate?.value;
   const type = mType?.value || "Werk";
+  const selectedEmployerId = mEmployer?.value || state.activeEmployerId || null;
   
   // 🔒 week lock check
   if(date){
@@ -5125,6 +6164,7 @@ function saveModal(){
 
     state.entries[idx] = {
       ...state.entries[idx],
+      employerId: selectedEmployerId,
       date,
       type,
       start: (type==="Recup" || isZeroType) ? null : start,
@@ -5136,6 +6176,7 @@ function saveModal(){
   }else{
     state.entries.unshift({
       id: uid(),
+      employerId: selectedEmployerId,
       date,
       type,
       start: (type==="Recup" || isZeroType) ? null : start,
@@ -5146,6 +6187,13 @@ function saveModal(){
       createdAt: Date.now()
     });
   }
+
+  selectedEmployerViewId = selectedEmployerId;
+  historyEmployerViewId = selectedEmployerViewId;
+  calendarEmployerViewId = selectedEmployerViewId;
+
+  meta.selectedEmployerViewId = selectedEmployerViewId;
+  saveMeta();
 
   saveState();
   closeModal();
@@ -5237,10 +6285,10 @@ function entrySubtitle(e){
     return `${(key ? t(key) : e.type).toUpperCase()}${noteLine}${verrekenLine}`;
   }
 
-const dayDeltaLabel = formatDayDeltaLabel(e.date);
-const deltaLine = dayDeltaLabel ? `<br>${dayDeltaLabel}` : "";
+  const dayDeltaLabel = formatDayDeltaLabel(e.date);
+  const deltaLine = dayDeltaLabel ? `<br>${dayDeltaLabel}` : "";
 
-return `${t("work_label")}<br>
+  return `${t("work_label")}<br>
 ${e.start || "-"}-${e.end || "-"}<br>
 ${t("net_line")} ${formatHM(e.netMin||0)}${deltaLine}<br>
 ${t("pause_line")} ${e.pauseMin||0} ${t("minutes")}${noteLine}${verrekenLine}`;
@@ -5282,8 +6330,11 @@ function toggleWeekLock(weekKey){
 function renderHistory(){
   if(!elHistoryList) return;
 
-  const list = state.entries
-    .filter(e=>!e.deletedAt)
+  const baseList = historyEmployerViewId
+    ? getEntriesForEmployer(historyEmployerViewId)
+    : (Array.isArray(state?.entries) ? state.entries.filter(e => e && !e.deletedAt) : []);
+
+  const list = baseList
     .slice()
     .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
@@ -5367,10 +6418,13 @@ function renderHistory(){
     group.items.forEach(e=>{
       const div = document.createElement("div");
       div.className = "entry";
-      div.innerHTML = `
+       div.innerHTML = `
         <div class="left">
           <div class="t1">${entryTitle(e)}</div>
           <div class="t2">${entrySubtitle(e)}</div>
+          <div class="t3" style="opacity:.72; font-weight:800; margin-top:4px;">
+            ${escapeHtml(getEmployerViewLabel(e.employerId || null))}
+          </div>
         </div>
         <div class="right">
           <div class="chip">${entryChip(e)}</div>
@@ -5459,39 +6513,36 @@ if(isWeekLocked(weekInfo.key)){
     renderBackupMeta();
   }
 
-  function importJSON(file){
-    const reader = new FileReader();
-    reader.onload = () => {
-      try{
-        const parsed = JSON.parse(reader.result);
-        if(parsed && parsed.state && parsed.meta){
-          state = parsed.state;
-          meta  = parsed.meta;
-        }else if(parsed && parsed.settings && parsed.entries){
-          state = parsed;
-          meta  = { lastBackupAt:null, lastBackupName:null };
-        }else{
-          showToast(t("err_bad_json"), "err");
-          return;
-        }
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const parsed = JSON.parse(reader.result);
 
-        if(!state.settings) state.settings = { startSaldoMin:0, normDayMin:NORM_MIN, lang:"nl" };
-        if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
-        if(!Array.isArray(state.entries)) state.entries = [];
-        if(!meta) meta = { lastBackupAt:null, lastBackupName:null, lastAutoBackupAt:null };
-        if(!("lastAutoBackupAt" in meta)) meta.lastAutoBackupAt = null;
-        if(!meta.weekLocks) meta.weekLocks = {};
-
-        saveState(); saveMeta();
-        renderAll();
-        showToast("Import ✓", "ok");
-      }catch(e){
+      if(parsed && parsed.state && parsed.meta){
+        state = normalizeState(parsed.state);
+        meta  = parsed.meta;
+      }else if(parsed && parsed.settings && parsed.entries){
+        state = normalizeState(parsed);
+        meta  = { lastBackupAt:null, lastBackupName:null };
+      }else{
         showToast(t("err_bad_json"), "err");
+        return;
       }
-    };
-    reader.readAsText(file);
-  }
 
+      if(!meta) meta = { lastBackupAt:null, lastBackupName:null, lastAutoBackupAt:null };
+      if(!("lastAutoBackupAt" in meta)) meta.lastAutoBackupAt = null;
+      if(!meta.weekLocks) meta.weekLocks = {};
+
+      saveState(); saveMeta();
+      renderAll();
+      showToast("Import ✓", "ok");
+    }catch(e){
+      showToast(t("err_bad_json"), "err");
+    }
+  };
+  reader.readAsText(file);
+}
   
 
 /* =========================
@@ -5654,23 +6705,19 @@ if(!payload?.state){
 }
 
     openConfirm(t("cloud_restore_confirm"), ()=>{
-      state = payload.state;
+      state = normalizeState(payload.state);
       meta  = payload.meta || meta;
 
-      // safety defaults
-      if(!state.settings) state.settings = { startSaldoMin:0, normDayMin:NORM_MIN, lang:"nl" };
-      if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
-      if(!Array.isArray(state.entries)) state.entries = [];
-      if(!Array.isArray(state.verrekeningen)) state.verrekeningen = [];
-      if(typeof state.overtimePaidMinutes !== "number") state.overtimePaidMinutes = 0;
-      if(!meta) meta = { lastBackupAt:null, lastBackupName:null };
+      if(!meta) meta = { lastBackupAt:null, lastBackupName:null, lastAutoBackupAt:null };
+      if(!("lastAutoBackupAt" in meta)) meta.lastAutoBackupAt = null;
+      if(!meta.weekLocks) meta.weekLocks = {};
 
       saveState();
       saveMeta();
       renderAll();
 
       setCloudStatus(`⬇️ ${t("cloud_loaded")} (${u.email || "Google"})`);
-showToast("✅ " + t("cloud_to_device_success"), "ok");
+      showToast("✅ " + t("cloud_to_device_success"), "ok");
     });
   }catch(err){
     console.error(err);
@@ -5760,6 +6807,8 @@ async function wireCloudAuthUI(){
 }
 
 function renderSettings(){
+  renderEmployerSwitcher();
+
   const startSaldoTxt = formatHM(state.settings.startSaldoMin || 0);
 let [ssh, ssm] = startSaldoTxt.split(":");
 
@@ -5816,7 +6865,7 @@ function saveSettings(){
   }
 state.settings.startSaldoMin = mins;
 state.settings.normDayMin = norm;
-state.settings.pauseMin = parseInt(elPauseMin?.value || "30", 10) || 30;
+state.settings.pauseMin = clamp(parseInt(elPauseMin?.value ?? "0", 10) || 0, 0, 600);
 state.settings.offDays = Array.isArray(draftOffDays) ? [...draftOffDays] : [];
 state.settings.lang = currentLang;
 console.log("SAVE SETTINGS offDays", { draftOffDays, saved: state.settings.offDays });
@@ -5824,10 +6873,17 @@ console.log("SAVE SETTINGS offDays", { draftOffDays, saved: state.settings.offDa
   state.settings.employeeName = (document.getElementById("employeeName")?.value || "").trim();
   state.settings.employerName = (document.getElementById("employerName")?.value || "").trim();
 
+    syncLegacySettingsToActiveEmployer();
+
   saveState();
   renderAll();
+
+  closeEmployerSettingsModal();
+
   showToast(t("settings_saved"), "ok");
 }
+
+
 
 let draftOffDays = [];
 let offDaysOpenedFromSetup = false;
@@ -5864,6 +6920,7 @@ btnOffDaysOpen?.addEventListener("click", () => {
     return;
   }
 
+  overlay.style.zIndex = "10020";
   overlay.style.display = "flex";
   overlay.classList.add("show");
   overlay.setAttribute("aria-hidden", "false");
@@ -5879,11 +6936,12 @@ btnSetupOffDaysOpen?.addEventListener("click", () => {
     return;
   }
 
-if(setupOverlay) setupOverlay.style.display = "none";
+  overlay.style.zIndex = "10020";
   overlay.style.display = "flex";
   overlay.classList.add("show");
   overlay.setAttribute("aria-hidden", "false");
 });
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("#btnSetupOffDaysOpen");
   if(!btn) return;
@@ -5897,7 +6955,7 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if(setupOverlay) setupOverlay.style.display = "none";
+  overlay.style.zIndex = "10020";
   overlay.style.display = "flex";
   overlay.classList.add("show");
   overlay.setAttribute("aria-hidden", "false");
@@ -5981,10 +7039,19 @@ if(setupLabel){
 
   function renderTotals(){
     const today = ymd(new Date());
-    const todayNet = workNetForDate(today);
 
-    const weekNet = state.entries
-      .filter(e=>!e.deletedAt && e.type==="Werk" && inSameWeek(e.date))
+    const resolvedHomeEmployerId = state.timer?.running
+      ? (state.timer.employerId || state.activeEmployerId || selectedEmployerViewId || null)
+      : (selectedEmployerViewId || state.activeEmployerId || null);
+
+    const totalEntries = getEntriesForEmployer(resolvedHomeEmployerId);
+
+    const todayNet = totalEntries
+      .filter(e => e.type === "Werk" && e.date === today)
+      .reduce((a,e)=>a+(e.netMin||0),0);
+
+    const weekNet = totalEntries
+      .filter(e => e.type === "Werk" && inSameWeek(e.date))
       .reduce((a,e)=>a+(e.netMin||0),0);
 
     const ot = overtimeSaldoMin();
@@ -6025,6 +7092,7 @@ elOvertimeSaldo.innerHTML = `
     renderSettings();
     renderOnlineBadge();
     applyLang();
+    refreshEmployerViewLabels();
     // als kalender zichtbaar is → opnieuw tekenen
   const tab3 = document.getElementById("tab3");
   if(tab3 && tab3.style.display !== "none"){
@@ -6056,6 +7124,211 @@ btnSave?.addEventListener("click", () => {
 btnRecup?.addEventListener("click", addRecup);
 btnAddManual?.addEventListener("click", ()=> openModal("add"));
 
+function closeEmployerSettingsModal(){
+  const setupOverlayEl = document.getElementById("setupOverlay");
+  const shouldReturnToSetup =
+    !!(employerModal && employerModal.dataset.returnToSetup === "1");
+
+  if(employerModal){
+    employerModal.style.display = "none";
+    delete employerModal.dataset.returnToSetup;
+  }
+
+  if(shouldReturnToSetup){
+    renderEmployerSwitcher();
+
+    if(setupOverlayEl){
+      setupOverlayEl.style.display = "flex";
+      setupOverlayEl.setAttribute("aria-hidden", "false");
+    }
+  }
+}
+
+function openEmployerSettingsForId(employerId, titleText, fromSetup = false){
+  if(!employerId) return;
+
+  if(employerId !== state.activeEmployerId){
+    state.activeEmployerId = employerId;
+    syncActiveEmployerToLegacySettings();
+    saveState();
+  }
+
+  renderSettings();
+
+  if(employerModalTitle){
+    employerModalTitle.textContent = titleText || t("employer_fallback");
+  }
+
+  const showModal = () => {
+    if(!employerModal) return;
+    employerModal.style.zIndex = "10001";
+    employerModal.style.display = "flex";
+    employerModal.style.visibility = "visible";
+    employerModal.style.opacity = "1";
+    employerModal.classList.add("open");
+  };
+
+  if(fromSetup){
+    const setupOverlayEl = document.getElementById("setupOverlay");
+
+    if(employerModal){
+      employerModal.dataset.returnToSetup = "1";
+    }
+
+    if(setupOverlayEl){
+      setupOverlayEl.style.display = "none";
+      setupOverlayEl.setAttribute("aria-hidden", "true");
+    }
+
+    requestAnimationFrame(() => {
+      showModal();
+    });
+    return;
+  }
+
+  if(employerModal){
+    delete employerModal.dataset.returnToSetup;
+  }
+
+  showModal();
+}
+
+function createEmployerAndOpenSettings(fromSetup = false){
+  const employers = Array.isArray(state.employers) ? state.employers : [];
+  const nextIndex = employers.length + 1;
+  const fallbackBase = t("employer_fallback") || "Werkgever";
+
+  const newEmployer = {
+    id: `emp_${Date.now()}`,
+    label: `${fallbackBase} ${nextIndex}`,
+    employeeName: "",
+    employerName: "",
+    startSaldoMin: 0,
+    normDayMin: NORM_MIN,
+    pauseMin: 30,
+    offDays: []
+  };
+
+  employers.push(newEmployer);
+  state.employers = employers;
+  state.activeEmployerId = newEmployer.id;
+
+  syncActiveEmployerToLegacySettings();
+  saveState();
+  renderAll();
+
+  openEmployerSettingsForId(newEmployer.id, newEmployer.label, fromSetup);
+}
+employerButtons?.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-employer-id]");
+  if(!btn) return;
+
+  const employerId = btn.getAttribute("data-employer-id");
+  if(!employerId) return;
+
+  openEmployerSettingsForId(employerId, btn.textContent?.trim() || "");
+});
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("#setupEmployerButtons [data-setup-employer-id]");
+  if(!btn) return;
+
+  const employerId = btn.getAttribute("data-setup-employer-id");
+  if(!employerId) return;
+
+  const employers = Array.isArray(state.employers) ? state.employers : [];
+  const emp = employers.find(x => x && x.id === employerId);
+
+  const fallbackBase = t("employer_fallback") || "Werkgever";
+  const titleText =
+    (typeof emp?.employerName === "string" && emp.employerName.trim())
+      ? emp.employerName.trim()
+      : (typeof emp?.label === "string" && emp.label.trim())
+        ? emp.label.trim()
+        : fallbackBase;
+
+  openEmployerSettingsForId(employerId, titleText, true);
+});
+
+btnCloseEmployerModal?.addEventListener("click", () => {
+  closeEmployerSettingsModal();
+});
+
+employerModal?.addEventListener("click", (e) => {
+  if(e.target === employerModal){
+    closeEmployerSettingsModal();
+  }
+});
+
+btnHistoryEmployerView?.addEventListener("click", () => {
+  openEmployerViewModal("history");
+});
+
+btnCalendarEmployerView?.addEventListener("click", () => {
+  openEmployerViewModal("calendar");
+});
+
+btnHomeEmployerView?.addEventListener("click", () => {
+  openEmployerViewModal("home");
+});
+
+btnCloseEmployerViewModal?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  closeEmployerViewModal();
+});
+
+employerViewModal?.addEventListener("click", (e) => {
+  if(
+    e.target === employerViewModal ||
+    e.target.closest("#btnCloseEmployerViewModal")
+  ){
+    closeEmployerViewModal();
+  }
+});
+
+employerViewModalButtons?.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-view-employer-id]");
+  if(!btn) return;
+
+  const selectedId = btn.getAttribute("data-view-employer-id") || null;
+
+  selectedEmployerViewId = selectedId;
+  historyEmployerViewId = selectedEmployerViewId;
+  calendarEmployerViewId = selectedEmployerViewId;
+
+  if(employerViewModalTarget === "home" && selectedEmployerViewId){
+    state.activeEmployerId = selectedEmployerViewId;
+    syncActiveEmployerToLegacySettings();
+
+    if(!state.timer || typeof state.timer !== "object"){
+      state.timer = { running:false, startMs:null, accMs:0, employerId:selectedEmployerViewId };
+    }else if(!state.timer.running){
+      state.timer.employerId = selectedEmployerViewId;
+    }
+
+    saveState();
+  }
+
+  meta.selectedEmployerViewId = selectedEmployerViewId;
+  saveMeta();
+
+  refreshEmployerViewLabels();
+  renderAll();
+  closeEmployerViewModal();
+});
+
+btnAddEmployer?.addEventListener("click", () => {
+  createEmployerAndOpenSettings();
+});
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("#btnSetupAddEmployer");
+  if(!btn) return;
+
+  createEmployerAndOpenSettings(true);
+});
+
 // Backup
 btnBackupNow?.addEventListener("click", ()=> exportJSON());
 fileImport2?.addEventListener("change", (e)=>{
@@ -6065,14 +7338,43 @@ fileImport2?.addEventListener("change", (e)=>{
 });
 
 // Verrekenen
-const verrekenAmount = document.getElementById("verrekenAmount");
+const verrekenEmployer = document.getElementById("verrekenEmployer");
+const verrekenHours = document.getElementById("verrekenHours");
+const verrekenMinutes = document.getElementById("verrekenMinutes");
 const verrekenDate   = document.getElementById("verrekenDate");
 const btnSaveVerreken = document.getElementById("btnSaveVerrekening");
 const btnCloseVerreken = document.getElementById("btnCloseVerreken");
 
 document.getElementById("btnVerreken")?.addEventListener("click", () => {
+  if(verrekenEmployer){
+    const employers = Array.isArray(state?.employers) ? state.employers : [];
+    const preselectedId = selectedEmployerViewId || state.activeEmployerId || "";
+
+    verrekenEmployer.innerHTML = `<option value="">Kies werkgever</option>`;
+
+    employers.forEach((emp, index) => {
+      if(!emp?.id) return;
+
+      const opt = document.createElement("option");
+      opt.value = emp.id;
+      opt.textContent =
+        (typeof emp.employerName === "string" && emp.employerName.trim())
+          ? emp.employerName.trim()
+          : (typeof emp.label === "string" && emp.label.trim())
+            ? emp.label.trim()
+            : `Werkgever ${index + 1}`;
+
+      if(emp.id === preselectedId){
+        opt.selected = true;
+      }
+
+      verrekenEmployer.appendChild(opt);
+    });
+  }
+
   if(verrekenDate) verrekenDate.value = todayISO();
-  if(verrekenAmount && !verrekenAmount.value) verrekenAmount.value = "0:00";
+  if(verrekenHours) verrekenHours.value = "00";
+  if(verrekenMinutes) verrekenMinutes.value = "00";
   if(verrekenModal) verrekenModal.style.display = "flex";
 });
 
@@ -6085,29 +7387,35 @@ verrekenModal?.addEventListener("click", (e) => {
 });
 
 btnSaveVerreken?.addEventListener("click", () => {
+  const employerId = (verrekenEmployer?.value || "").trim();
   const date = (verrekenDate?.value || "").trim();
-  const amountStr = (verrekenAmount?.value || "").trim();
+  const hours = parseInt(verrekenHours?.value || "0", 10) || 0;
+  const minutes = parseInt(verrekenMinutes?.value || "0", 10) || 0;
+  const mins = (hours * 60) + minutes;
+
+  if(!employerId){
+    showToast("Kies een werkgever.", "warn");
+    return;
+  }
 
   if(!date){
     showToast("Kies een datum.", "warn");
     return;
   }
 
-  const mins = parseHM(amountStr);
-  if(mins == null){
-    showToast("Vul uren in als u:min (bv 10:00).", "warn");
+  if(mins <= 0){
+    showToast("Kies een bedrag om van het saldo af te trekken.", "warn");
     return;
   }
 
   state.verrekeningen = state.verrekeningen || [];
   state.verrekeningen.unshift({
     id: uid(),
+    employerId,
     date,
     minutes: mins,
     createdAt: Date.now()
   });
-
-  state.overtimePaidMinutes = (state.overtimePaidMinutes || 0) + mins;
 
   saveState();
   if(verrekenModal) verrekenModal.style.display = "none";
@@ -6140,6 +7448,7 @@ if(isWeekLocked(weekInfo.key)){
 });
 // Settings
 btnSaveSettings?.addEventListener("click", saveSettings);
+btnDeleteEmployer?.addEventListener("click", deleteActiveEmployer);
 document.getElementById("btnGoogleLogout")?.addEventListener("click", ()=> logoutGoogle().catch(console.error));
 btnCloseModal?.addEventListener("click", closeModal);
 modalBack?.addEventListener("click", (e)=>{ if(e.target===modalBack) closeModal(); });
@@ -6241,43 +7550,42 @@ if(vEl) vEl.textContent = "v" + APP_VERSION;
 const setupBtn = document.getElementById("btnSetupStart");
 if (setupBtn) {
   setupBtn.addEventListener("click", () => {
+    const employers = Array.isArray(state.employers) ? state.employers : [];
+    const activeEmployer =
+      employers.find(emp => emp && emp.id === state.activeEmployerId) ||
+      employers[0] ||
+      null;
 
-    const hhStr = document.getElementById("setupNormHoursH")?.value || "00";
-    const mmStr = document.getElementById("setupNormHoursM")?.value || "00";
-    const pauseMin = parseInt(document.getElementById("setupPauseMin")?.value, 10);
-
-    const hh = parseInt(hhStr, 10);
-    const mm = parseInt(mmStr, 10);
-
-    if (Number.isNaN(hh) || Number.isNaN(mm) || Number.isNaN(pauseMin)) {
+    if (!activeEmployer) {
       showToast(t("setup_fill_fields"), "warn");
       return;
     }
 
-    if ((hh * 60 + mm) === 0) {
+    const normDayMin = safeNumber(activeEmployer.normDayMin, 0);
+    const pauseMin = safeNumber(activeEmployer.pauseMin, 30);
+    const setupOffDays = normalizeOffDays(activeEmployer.offDays);
+
+    if (normDayMin <= 0) {
       showToast(t("setup_set_normday"), "warn");
       return;
     }
 
-    if (pauseMin < 0) {
-      showToast(t("setup_fill_fields"), "warn");
-      return;
-    }
-
- const setupOffDays = Array.isArray(draftOffDays)
-  ? [...draftOffDays]
-  : [];
-
     state.settings = state.settings || {};
-    state.settings.normDayMin = (hh * 60) + mm;
+    state.settings.normDayMin = normDayMin;
     state.settings.pauseMin = pauseMin;
     state.settings.offDays = setupOffDays;
+    state.settings.employeeName =
+      typeof activeEmployer.employeeName === "string" ? activeEmployer.employeeName : "";
+    state.settings.employerName =
+      typeof activeEmployer.employerName === "string" ? activeEmployer.employerName : "";
 
     // TAAL OPSLAAN
     const lang = currentLang || "nl";
     state.settings.lang = lang;
     localStorage.setItem("lang", lang);
     currentLang = lang;
+
+    syncLegacySettingsToActiveEmployer();
 
     saveState();
     markSetupDone();
@@ -6352,17 +7660,17 @@ document.getElementById("btnLangIt")?.addEventListener("click", () => openSetupA
 
 // Notification settings opslaan
 function saveNotifSettings(settings) {
-  localStorage.setItem("ShiftTapNotifSettings", JSON.stringify(settings));
+localStorage.setItem(NOTIF_SETTINGS_KEY, JSON.stringify(settings));
 }
 
 // Notification settings opslaan
 function saveNotifSettings(settings) {
-  localStorage.setItem("ShiftTapNotifSettings", JSON.stringify(settings));
+  localStorage.setItem(NOTIF_SETTINGS_KEY, JSON.stringify(settings));
 }
 
 // Notification settings laden
 function loadNotifSettings() {
-  const saved = localStorage.getItem("ShiftTapNotifSettings");
+  const saved = localStorage.getItem(NOTIF_SETTINGS_KEY);
   if (saved) {
     try {
       return JSON.parse(saved);
@@ -6411,6 +7719,13 @@ if (window.ShiftTapNotifications) {
 
     <div class="sp"></div>
 
+    <label for="pdfEmployerSelect" data-i18n="employer_fallback">Werkgever</label>
+    <select id="pdfEmployerSelect">
+      <option value="__all__">Alles</option>
+    </select>
+
+    <div class="sp"></div>
+
     <label class="radioLine">
       <input type="radio" name="pdfMode" value="month" checked>
       <span data-i18n="pdf_month">Maand</span>
@@ -6445,8 +7760,8 @@ if (window.ShiftTapNotifications) {
     <div class="sp"></div>
 
     <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
-      <button class="btnSmall" id="pdfCancel" type="button" data-i18n="cancel">Annuleren</button>
-      <button class="btnSmall" id="pdfConfirm" type="button" data-i18n="make_pdf">Maak PDF</button>
+      <button class="btnSmall" id="btnClosePdf" type="button" data-i18n="cancel">Annuleren</button>
+      <button class="btnSmall btnGreen" id="btnMakePdf" type="button" data-i18n="make_pdf">Maak PDF</button>
     </div>
   </div>
 </dialog>
@@ -6548,14 +7863,28 @@ if (window.ShiftTapNotifications) {
 
       <h2 data-i18n="setup_title">Welkom bij Shift-Tap 👋</h2>
 
-      <p data-i18n="setup_intro">
+         <p data-i18n="setup_intro">
         Werkuren, recup en overuren zonder gedoe.<br>
         Stel eerst even je basisinstellingen in.
       </p>
 
-     
+      
+        
+      <div id="setupEmployerSwitcher" class="card" style="padding:12px; margin-bottom:16px;">
+        
+       <div id="setupEmployerButtons" style="display:flex; flex-direction:column; gap:10px;">
+  <button type="button" class="btnSmall" id="btnSetupEmployer1" data-setup-employer-id="emp_1">
+    <span data-i18n="employer_fallback">Werkgever</span> 1
+  </button>
+</div>
+
+        <div class="sp"></div>
+
+        <button type="button" class="btnGhost" id="btnSetupAddEmployer" data-i18n="add_employer_btn">+ Werkgever toevoegen</button>
+      </div>
+
       <!-- instellingen -->
-      <div class="setupGrid">
+      <div class="setupGrid" style="display:none;">
 
         <div class="setupField">
    <label data-i18n="setup_normday">
@@ -6605,7 +7934,7 @@ if (window.ShiftTapNotifications) {
 <option>40</option><option>41</option><option>42</option><option>43</option><option>44</option>
 <option>45</option><option>46</option><option>47</option><option>48</option><option>49</option>
 <option>50</option><option>51</option><option>52</option><option>53</option><option>54</option>
-<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+<option>55</option><option>56</option><option>57</option><option>58</option><option>59</option><option>00</option>
 </select>
 
 </div>
@@ -6651,7 +7980,7 @@ if (window.ShiftTapNotifications) {
     Indien u wel werkt op deze dagen, tellen deze automatisch als overuren.
   </div>
 <button type="button" class="btnSmall" id="btnSetupOffDaysOpen" style="width:100%; min-height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; box-sizing:border-box;">
-  <span id="setupOffDaysCurrentLabel">Geen</span>
+<span id="setupOffDaysCurrentLabel" data-i18n="off_days_none">Geen</span>
   <span aria-hidden="true">▾</span>
 </button>
 

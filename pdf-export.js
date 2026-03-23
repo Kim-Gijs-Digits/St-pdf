@@ -285,17 +285,18 @@ it: {
   }
 
   // ---------- DOM wiring ----------
-  const btnExportPdf = $("btnExportPdf");
-  const dlg          = $("pdfDialog");
-  const monthWrap    = $("pdfMonthWrap");
-  const rangeWrap    = $("pdfRangeWrap");
-  const monthSelect  = $("pdfMonthSelect");
-  const fromInput    = $("pdfFrom");
-  const toInput      = $("pdfTo");
-  const btnCancel    = $("pdfCancel");
-  const btnConfirm   = $("pdfConfirm");
+  const btnExportPdf   = $("btnExportPdf");
+  const dlg            = $("pdfDialog");
+  const monthWrap      = $("pdfMonthWrap");
+  const rangeWrap      = $("pdfRangeWrap");
+  const monthSelect    = $("pdfMonthSelect");
+  const fromInput      = $("pdfFrom");
+  const toInput        = $("pdfTo");
+  const employerSelect = $("pdfEmployerSelect");
+  const btnCancel      = $("btnClosePdf") || $("pdfCancel");
+  const btnConfirm     = $("btnMakePdf") || $("pdfConfirm");
 
-  if(!btnExportPdf || !dlg || !monthSelect || !fromInput || !toInput || !btnConfirm) return;
+  if(!btnExportPdf || !dlg || !monthSelect || !fromInput || !toInput || !btnCancel || !btnConfirm) return;
 
   function getMode(){
     return (dlg.querySelector('input[name="pdfMode"]:checked')?.value) || "month";
@@ -335,6 +336,64 @@ it: {
     }
   }
 
+  function fillEmployerSelect(state){
+    if(!employerSelect) return;
+
+    const previous = employerSelect.value || "__all__";
+    const employers = Array.isArray(state?.employers) ? state.employers : [];
+
+    employerSelect.innerHTML = "";
+
+    const allOpt = document.createElement("option");
+    allOpt.value = "__all__";
+    allOpt.textContent = "Alles";
+    employerSelect.appendChild(allOpt);
+
+    employers
+      .filter(emp => emp && !emp.deletedAt)
+      .forEach(emp => {
+        const opt = document.createElement("option");
+        opt.value = emp.id || "";
+        opt.textContent = (emp.name || "").trim() || "Werkgever";
+        employerSelect.appendChild(opt);
+      });
+
+    const hasPrevious = [...employerSelect.options].some(opt => opt.value === previous);
+    employerSelect.value = hasPrevious ? previous : "__all__";
+  }
+
+  function fillEmployerSelect(state){
+    if(!employerSelect) return;
+
+    const employers = Array.isArray(state?.employers) ? state.employers : [];
+    const previousValue = employerSelect.value || "__all__";
+
+    employerSelect.innerHTML = "";
+
+    const allOpt = document.createElement("option");
+    allOpt.value = "__all__";
+    allOpt.textContent = "Alles";
+    employerSelect.appendChild(allOpt);
+
+    employers.forEach((emp, index) => {
+      if(!emp?.id) return;
+
+      const opt = document.createElement("option");
+      opt.value = emp.id;
+      opt.textContent =
+        (typeof emp.employerName === "string" && emp.employerName.trim())
+          ? emp.employerName.trim()
+          : (typeof emp.label === "string" && emp.label.trim())
+            ? emp.label.trim()
+            : `Werkgever ${index + 1}`;
+
+      employerSelect.appendChild(opt);
+    });
+
+    const hasPrevious = [...employerSelect.options].some(opt => opt.value === previousValue);
+    employerSelect.value = hasPrevious ? previousValue : "__all__";
+  }
+
   function defaultRangeToMonth(ym){
     // ym = "YYYY-MM"
     const [y,m] = ym.split("-").map(Number);
@@ -346,17 +405,18 @@ it: {
   }
 
   btnExportPdf.addEventListener("click", () => {
-  const state = loadState();
-  fillMonthSelect(state);
+    const state = loadState();
+    fillEmployerSelect(state);
+    fillMonthSelect(state);
 
-  const radios = [...dlg.querySelectorAll('input[name="pdfMode"]')];
-  const rMonth = radios.find(r=>r.value==="month");
-  if(rMonth) rMonth.checked = true;
+    const radios = [...dlg.querySelectorAll('input[name="pdfMode"]')];
+    const rMonth = radios.find(r=>r.value==="month");
+    if(rMonth) rMonth.checked = true;
 
-  syncModeUI();
-  defaultRangeToMonth(monthSelect.value || "");
-  dlg.showModal();
-});
+    syncModeUI();
+    defaultRangeToMonth(monthSelect.value || "");
+    dlg.showModal();
+  });
 
   btnCancel?.addEventListener("click", () => dlg.close());
 
@@ -471,9 +531,28 @@ it: {
     const lang = getLang(state);
     const L = I18N[lang] || I18N.nl;
 
-    const normDayMin = state?.settings?.normDayMin ?? 450; // 7u30
-    const employer = (state?.settings?.employerName || "").trim();
-    const employee = (state?.settings?.employeeName || "").trim();
+      const selectedEmployerId = employerSelect?.value || "__all__";
+    const employers = Array.isArray(state?.employers) ? state.employers : [];
+    const selectedEmployer =
+      selectedEmployerId !== "__all__"
+        ? (employers.find(emp => emp && emp.id === selectedEmployerId) || null)
+        : null;
+
+    const normDayMin = selectedEmployer
+      ? (selectedEmployer.normDayMin ?? 450)
+      : (state?.settings?.normDayMin ?? 450); // 7u30
+
+    const employer = selectedEmployer
+      ? (
+          (typeof selectedEmployer.employerName === "string" && selectedEmployer.employerName.trim())
+            ? selectedEmployer.employerName.trim()
+            : (typeof selectedEmployer.label === "string" ? selectedEmployer.label.trim() : "")
+        )
+      : (state?.settings?.employerName || "").trim();
+
+    const employee = selectedEmployer
+      ? ((selectedEmployer.employeeName || "").trim())
+      : (state?.settings?.employeeName || "").trim();
 
     // Mode: month / dates
     const mode = (dlg.querySelector('input[name="pdfMode"]:checked')?.value) || "month";
@@ -504,12 +583,26 @@ it: {
     const toDate   = parseYMD(toYmd);
     if(!fromDate || !toDate) return;
 
-    const allEntries = (state.entries || []).filter(e=>!e.deletedAt && e.date);
+    const allEntries = (state.entries || [])
+      .filter(e => !e.deletedAt && e.date)
+      .filter(e => selectedEmployerId === "__all__" ? true : e.employerId === selectedEmployerId);
+
     const byDate = groupByDate(allEntries);
     const allDates = [...byDate.keys()].sort(sortDatesAsc);
 
-    // compute saldo previous: startSaldo - paid + deltas for dates < fromYmd
-    let saldoPrev = (state?.settings?.startSaldoMin || 0) - (state?.overtimePaidMinutes || 0);
+    // compute saldo previous
+    let saldoPrev = selectedEmployer
+      ? (selectedEmployer.startSaldoMin || 0)
+      : ((state?.settings?.startSaldoMin || 0) - (state?.overtimePaidMinutes || 0));
+
+    if(selectedEmployer){
+      const paidForEmployer = (Array.isArray(state?.verrekeningen) ? state.verrekeningen : [])
+        .filter(v => !v.deletedAt && v.employerId === selectedEmployerId)
+        .reduce((sum, v) => sum + (v.minutes || 0), 0);
+
+      saldoPrev -= paidForEmployer;
+    }
+
     for(const day of allDates){
       if(day >= fromYmd) break;
       const delta = deltaOvertimeMinForDay(byDate.get(day) || [], normDayMin);
