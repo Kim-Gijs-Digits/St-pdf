@@ -5314,7 +5314,7 @@ function openDayDetail(ymdStr){
   const dayDeltaLabel = formatDayDeltaLabel(ymdStr);
   const dayDeltaLine = dayDeltaLabel ? `<br><b>${escapeHtml(dayDeltaLabel)}</b>` : "";
 
-  if(dayEdit) dayEdit.style.display = "none";
+  if(dayEdit) dayEdit.style.display = "inline-block";
 
   if(!entries.length){
     if(dayBody){
@@ -7434,18 +7434,25 @@ dayEdit?.addEventListener("click", () => {
   const ymdStr = dayTitle?.dataset?.ymd;
   if(!ymdStr) return;
 
-const weekInfo = getWeekInfo(ymdStr);
-if(isWeekLocked(weekInfo.key)){
-  showToast(t("week_locked"));
-  return;
-}
+  const weekInfo = getWeekInfo(ymdStr);
+  if(isWeekLocked(weekInfo.key)){
+    showToast(t("week_locked"));
+    return;
+  }
 
   const e = entryForDate(ymdStr);
-  if(!e) return;
 
   closeDayDetail();
-  openModal("edit", e);
+
+  if(e){
+    openModal("edit", e);
+    return;
+  }
+
+  openModal("add");
+  if(mDate) mDate.value = ymdStr;
 });
+
 // Settings
 btnSaveSettings?.addEventListener("click", saveSettings);
 btnDeleteEmployer?.addEventListener("click", deleteActiveEmployer);
