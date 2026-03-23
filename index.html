@@ -1452,7 +1452,7 @@ button:active,
 
 <div id="employerSwitcher" class="card" style="padding:12px; margin-bottom:12px;">
   <div id="employerButtons" style="display:flex; flex-direction:column; gap:10px;">
-    <button type="button" class="btnSmall" id="btnEmployer1">Werkgever 1</button>
+   <button type="button" class="btnSmall" id="btnEmployer1"></button>
   </div>
 
   <div class="sp"></div>
@@ -4165,9 +4165,9 @@ function normalizeEmployer(emp, index, usedIds){
   return {
     ...source,
     id,
-    label: (typeof source.label === "string" && source.label.trim())
-      ? source.label.trim()
-      : `Werkgever ${index + 1}`,
+label: (typeof source.label === "string" && source.label.trim())
+  ? source.label.trim()
+  : "",
     employeeName: typeof source.employeeName === "string" ? source.employeeName : "",
     employerName: typeof source.employerName === "string" ? source.employerName : "",
     startSaldoMin: safeNumber(source.startSaldoMin, 0),
@@ -4205,7 +4205,7 @@ function normalizeState(inputState){
     employers = [
       normalizeEmployer({
         id: "emp_1",
-        label: "Werkgever 1",
+       label: "",
         employeeName: typeof rawSettings.employeeName === "string" ? rawSettings.employeeName : "",
         employerName: typeof rawSettings.employerName === "string" ? rawSettings.employerName : "",
         startSaldoMin: safeNumber(rawSettings.startSaldoMin, 0),
@@ -7350,7 +7350,7 @@ document.getElementById("btnVerreken")?.addEventListener("click", () => {
     const employers = Array.isArray(state?.employers) ? state.employers : [];
     const preselectedId = selectedEmployerViewId || state.activeEmployerId || "";
 
-    verrekenEmployer.innerHTML = `<option value="">Kies werkgever</option>`;
+    verrekenEmployer.innerHTML = `<option value="">${t("choose_employer")}</option>`;
 
     employers.forEach((emp, index) => {
       if(!emp?.id) return;
@@ -7362,7 +7362,7 @@ document.getElementById("btnVerreken")?.addEventListener("click", () => {
           ? emp.employerName.trim()
           : (typeof emp.label === "string" && emp.label.trim())
             ? emp.label.trim()
-            : `Werkgever ${index + 1}`;
+            : `${t("employer_generic")} ${index + 1}`;
 
       if(emp.id === preselectedId){
         opt.selected = true;
