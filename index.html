@@ -7286,7 +7286,21 @@ btnSave?.addEventListener("click", () => {
 btnRecup?.addEventListener("click", addRecup);
 btnAddManual?.addEventListener("click", ()=> openModal("add"));
 elCountHoursOnly?.addEventListener("change", () => {
-  state.settings.countHoursOnly = !!elCountHoursOnly.checked;
+  const onlyHours = !!elCountHoursOnly.checked;
+  state.settings.countHoursOnly = onlyHours;
+
+  if(onlyHours){
+    state.settings.normDayMin = 0;
+    state.settings.pauseMin = 0;
+    state.settings.startSaldoMin = 0;
+
+    if(elNormDayH) elNormDayH.value = "00";
+    if(elNormDayM) elNormDayM.value = "00";
+    if(elPauseMin) elPauseMin.value = "0";
+    if(elStartSaldoH) elStartSaldoH.value = "00";
+    if(elStartSaldoM) elStartSaldoM.value = "00";
+  }
+
   updateEmployerNormModeUI();
   syncLegacySettingsToActiveEmployer();
   saveState();
