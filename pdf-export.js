@@ -538,6 +538,22 @@ it: {
         ? (employers.find(emp => emp && emp.id === selectedEmployerId) || null)
         : null;
 
+    const countHoursOnly = selectedEmployer
+      ? (
+          !!selectedEmployer.countHoursOnly ||
+          (
+            (selectedEmployer.normDayMin ?? 0) === 0 &&
+            (selectedEmployer.startSaldoMin ?? 0) === 0
+          )
+        )
+      : (
+          !!state?.settings?.countHoursOnly ||
+          (
+            (state?.settings?.normDayMin ?? 0) === 0 &&
+            (state?.settings?.startSaldoMin ?? 0) === 0
+          )
+        );
+        
     const normDayMin = selectedEmployer
       ? (selectedEmployer.normDayMin ?? 450)
       : (state?.settings?.normDayMin ?? 450); // 7u30
@@ -591,22 +607,26 @@ it: {
     const allDates = [...byDate.keys()].sort(sortDatesAsc);
 
     // compute saldo previous
-    let saldoPrev = selectedEmployer
-      ? (selectedEmployer.startSaldoMin || 0)
-      : ((state?.settings?.startSaldoMin || 0) - (state?.overtimePaidMinutes || 0));
+    let saldoPrev = 0;
 
-    if(selectedEmployer){
-      const paidForEmployer = (Array.isArray(state?.verrekeningen) ? state.verrekeningen : [])
-        .filter(v => !v.deletedAt && v.employerId === selectedEmployerId)
-        .reduce((sum, v) => sum + (v.minutes || 0), 0);
+    if(!countHoursOnly){
+      saldoPrev = selectedEmployer
+        ? (selectedEmployer.startSaldoMin || 0)
+        : ((state?.settings?.startSaldoMin || 0) - (state?.overtimePaidMinutes || 0));
 
-      saldoPrev -= paidForEmployer;
-    }
+      if(selectedEmployer){
+        const paidForEmployer = (Array.isArray(state?.verrekeningen) ? state.verrekeningen : [])
+          .filter(v => !v.deletedAt && v.employerId === selectedEmployerId)
+          .reduce((sum, v) => sum + (v.minutes || 0), 0);
 
-    for(const day of allDates){
-      if(day >= fromYmd) break;
-      const delta = deltaOvertimeMinForDay(byDate.get(day) || [], normDayMin);
-      saldoPrev += delta;
+        saldoPrev -= paidForEmployer;
+      }
+
+      for(const day of allDates){
+        if(day >= fromYmd) break;
+        const delta = deltaOvertimeMinForDay(byDate.get(day) || [], normDayMin);
+        saldoPrev += delta;
+      }
     }
 
     // rows for period
@@ -636,9 +656,11 @@ if(type !== "Werk"){
 
         // +/- for this entry (daily logic is clearer, but employers expect per day; we show per entry row)
         let delta = 0;
-        if(type === "Werk") delta = netMin - normDayMin; // if multiple work entries in a day, this is approximate; best is daily calc in totals
-        else if(type === "Recup") delta = -normDayMin;
-        else delta = 0;
+        if(!countHoursOnly){
+          if(type === "Werk") delta = netMin - normDayMin; // if multiple work entries in a day, this is approximate; best is daily calc in totals
+          else if(type === "Recup") delta = -normDayMin;
+          else delta = 0;
+        }
 
 // Info/opmerkingen split
 const note = (e.note || "").trim();
@@ -656,14 +678,16 @@ rows.push([
           start,
           end,
           (type === "Werk") ? minutesToHM(netMin, L.unitsH) : "—",
-          formatPlusMinus(delta, L.unitsH),
+          countHoursOnly ? "" : formatPlusMinus(delta, L.unitsH),
           info,
           remarks
         ]);
       }
 
       // totals overtime should be daily accurate:
-      overtimeThis += deltaOvertimeMinForDay(dayEntries, normDayMin);
+      if(!countHoursOnly){
+        overtimeThis += deltaOvertimeMinForDay(dayEntries, normDayMin);
+      }
     }
 
     const saldoNew = saldoPrev + overtimeThis;
@@ -682,30 +706,38 @@ rows.push([
     doc.setFont("helvetica","normal");
     doc.setFontSize(10);
 
-    // Meta block
-    let y = 26;
-    const lineGap = 5;
-    if(employer){
-      doc.text(`${L.employer}: ${employer}`, margin, y); y += lineGap;
-    }
-    if(employee){
-      doc.text(`${L.employee}: ${employee}`, margin, y); y += lineGap;
-    }
-    doc.text(`${L.normDay}: ${minutesToHM(normDayMin, L.unitsH)}`, margin, y); y += lineGap;
-    doc.text(`${L.prevSaldo}: ${minutesToHM(Math.abs(saldoPrev), L.unitsH).replace(/^(\d)/, (m)=>m)} ${saldoPrev>=0?"+":"-"}`
-      .replace(/(\d+)([uh])\s(\d\d)m\s([+-])/, (m,hh,uh,mm,sgn)=>`${sgn}${hh}${uh}${mm}`), margin, y);
+  // Meta block
+let y = 26;
+const lineGap = 5;
+if(employer){
+  doc.text(`${L.employer}: ${employer}`, margin, y); y += lineGap;
+}
+if(employee){
+  doc.text(`${L.employee}: ${employee}`, margin, y); y += lineGap;
+}
 
-    // Top saldo line (single)
-    y += 6;
-    doc.setDrawColor(180);
-    doc.setLineWidth(0.3);
-    doc.line(margin, y, pageW - margin, y);
-    y += 6;
+if(!countHoursOnly){
+  doc.text(`${L.normDay}: ${minutesToHM(normDayMin, L.unitsH)}`, margin, y); y += lineGap;
+  doc.text(`${L.prevSaldo}: ${minutesToHM(Math.abs(saldoPrev), L.unitsH).replace(/^(\d)/, (m)=>m)} ${saldoPrev>=0?"+":"-"}` 
+    .replace(/(\d+)([uh])\s(\d\d)m\s([+-])/, (m,hh,uh,mm,sgn)=>`${sgn}${hh}${uh}${mm}`), margin, y);
+}
 
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(12);
-    doc.text(`${L.saldoOveruren}: ${formatPlusMinus(saldoPrev, L.unitsH)}`, margin, y);
-    y += 8;
+// Top saldo line (single)
+y += 6;
+doc.setDrawColor(180);
+doc.setLineWidth(0.3);
+doc.line(margin, y, pageW - margin, y);
+y += 6;
+
+doc.setFont("helvetica","bold");
+doc.setFontSize(12);
+if(!countHoursOnly){
+  doc.text(`${L.saldoOveruren}: ${formatPlusMinus(saldoPrev, L.unitsH)}`, margin, y);
+  y += 8;
+} else {
+  y += 2;
+}
+  
 
     // Table
     doc.setFont("helvetica","normal");
@@ -731,9 +763,12 @@ rows.push([
     doc.setFontSize(11);
     const y2 = bottomY + 8;
 
-    doc.text(`${L.totalsHours}: ${minutesToHM(totalWorkNet, L.unitsH)}`, margin, y2);
-    doc.text(`${L.totalsOverThis}: ${formatPlusMinus(overtimeThis, L.unitsH)}`, margin, y2 + 6);
-    doc.text(`${L.saldoOveruren}: ${formatPlusMinus(saldoNew, L.unitsH)}`, margin, y2 + 12);
+     doc.text(`${L.totalsHours}: ${minutesToHM(totalWorkNet, L.unitsH)}`, margin, y2);
+
+    if(!countHoursOnly){
+      doc.text(`${L.totalsOverThis}: ${formatPlusMinus(overtimeThis, L.unitsH)}`, margin, y2 + 6);
+      doc.text(`${L.saldoOveruren}: ${formatPlusMinus(saldoNew, L.unitsH)}`, margin, y2 + 12);
+    }
 
     // Save
     const safePeriod = (periodLabel || monthLabelFromYMD(fromYmd)).replace(/[^\d\-_/]/g,"_");
