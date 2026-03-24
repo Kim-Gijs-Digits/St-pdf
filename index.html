@@ -1217,10 +1217,11 @@ button:active,
 </div>
         </div>
 
-  <div class="miniCard" style="margin-top:12px;">
-  <div class="k" data-i18n="overtime">Saldo overuren</div>
+<div class="miniCard" style="margin-top:12px;">
+  <div class="k" id="homeSaldoTitle" data-i18n="overtime">Saldo overuren</div>
   <div id="overtimeSaldo" class="v" style="font-size:28px; font-weight:900; margin-top:6px;">0:00</div>
 <div class="label-with-info" style="justify-content:flex-end; margin-top:14px;">
+
   <button class="btnSmall" id="btnVerreken" type="button" data-i18n="settle">Verrekenen</button>
   <span class="info-icon" id="infoVerreken">ⓘ</span>
   <div class="info-bubble" id="bubbleVerreken" data-i18n="settle_info"></div>
@@ -1495,6 +1496,23 @@ button:active,
   placeholder="Naam werkgever"
   data-i18n-placeholder="employer_name_ph"
 />
+<div class="sp"></div>
+
+<div class="label-with-info">
+  <label for="countHoursOnly" data-i18n="count_hours_only_label">
+    Geen normdag instellen
+  </label>
+  <span class="info-icon" id="infoCountHoursOnly">ⓘ</span>
+  <div class="info-bubble" id="bubbleCountHoursOnly" data-i18n="count_hours_only_info">
+    Vul u enkel uren registratie, zonder dat er overuren berekend worden, zet u deze functie aan. Zo tellen enkel u echte prestaties.
+  </div>
+</div>
+
+<label style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+  <input type="checkbox" id="countHoursOnly" style="width:auto;">
+  <span data-i18n="count_hours_only_toggle">Alleen uren tellen</span>
+</label>
+
 <div class="sp"></div>
 
     <!-- Normale werkdag -->
@@ -2330,6 +2348,10 @@ setup_continue_without_login: "Verder zonder login",
   default_break_info: "Deze pauze wordt automatisch afgetrokken van je gewerkte tijd wanneer je een dag opslaat. Dit geldt zowel voor de timer als voor handmatige invoer.",
   recup_info: "Gebruik Recup wanneer je een volledige dag compenseert met opgebouwde overuren. Deze dag wordt van je overurensaldo afgetrokken.",
   setup_fill_fields: "Vul beide velden correct in.",
+   count_hours_only_label: "Geen normdag instellen",
+  count_hours_only_toggle: "Alleen uren tellen",
+  count_hours_only_info: "Wilt u enkel uren registreren, zonder dat er overuren berekend worden, zet dan deze functie aan.\nZo tellen enkel uw echte prestaties.",
+  home_month_total_label: "Totale uren deze maand",
   setup_set_normday: "Stel eerst je normale werkdag in.",
   week_lock_info: "Groen = open.<br>Rood = vergrendeld.<br>Verwijderen en bewerken zijn afgeschermd.<br>Tik op het icoon om te ontgrendelen.",
   // --- Cloud status / backup extra ---
@@ -2541,9 +2563,13 @@ setup_continue_without_login: "Continua senza accesso",
   start_saldo_info: "Questo è il saldo di straordinari che avevi prima di questo periodo.",
   default_break_info: "Questa pausa viene automaticamente sottratta dal tempo lavorato quando salvi una giornata. Vale sia per il timer che per le inserzioni manuali.",
   recup_info: "Usa Recupero quando prendi un giorno libero utilizzando straordinari accumulati. Questo giorno verrà sottratto dal saldo straordinari.",
-
+  count_hours_only_label: "Non impostare una giornata lavorativa normale",
+  count_hours_only_toggle: "Conta solo le ore",
+  count_hours_only_info: "Se vuoi solo registrare le ore senza calcolare gli straordinari, attiva questa opzione.\nIn questo modo verrà conteggiato solo il tempo effettivamente lavorato.",
+  home_month_total_label: "Ore totali di questo mese",
   setup_fill_fields: "Compila correttamente entrambi i campi.",
   setup_set_normday: "Imposta prima la tua giornata lavorativa normale.",
+  
   week_lock_info: "Verde = aperto.<br>Rosso = bloccato.<br>Eliminazione e modifica disabilitate.<br>Tocca l’icona per sbloccare.",
   // --- Cloud status / backup extra ---
   cloud_not_configured: "Cloud non configurato.",
@@ -2766,6 +2792,10 @@ setup_continue_without_login: "Continue without login",
   recup_info: "Use Comp Day when you take a full day off using accumulated overtime. This day will be deducted from your overtime balance.",
   setup_fill_fields: "Fill in both fields correctly.",
  setup_set_normday: "Set your normal workday first.",
+   count_hours_only_label: "Do not set a normal workday",
+  count_hours_only_toggle: "Count hours only",
+  count_hours_only_info: "If you only want to register hours without calculating overtime, enable this option.\nThis way only your actual worked time is counted.",
+  home_month_total_label: "Total hours this month",
  week_lock_info: "Green = open.<br>Red = locked.<br>Deleting and editing are disabled.<br>Tap the icon to unlock.",
  // --- Cloud status / backup extra ---
   cloud_not_configured: "Cloud not configured.",
@@ -2980,6 +3010,10 @@ setup_continue_without_login: "Folytatás bejelentkezés nélkül",
   start_saldo_info: "Ez a túlórák száma, amivel már rendelkeztél a periódus előtt.",
   default_break_info: "Ez a szünet automatikusan levonásra kerül a munkaidőből a nap mentésekor. Ez érvényes az időzítőre és a kézi bejegyzésekre is.",
   recup_info: "Használd a Szabadnap opciót amikor egy teljes napot veszel ki a felhalmozott túlórákból. Ez levonódik a túlóra egyenlegből.",
+   count_hours_only_label: "Ne állíts be normál munkanapot",
+  count_hours_only_toggle: "Csak órák számolása",
+  count_hours_only_info: "Ha csak az órákat szeretné rögzíteni túlóra számítás nélkül, kapcsolja be ezt az opciót.\nÍgy csak a ténylegesen ledolgozott idő számít.",
+  home_month_total_label: "Ledolgozott órák ebben a hónapban",
   setup_fill_fields: "Töltse ki mindkét mezőt helyesen.",
 setup_set_normday: "Először állítsa be a normál munkanapot.",
 week_lock_info: "Zöld = nyitva.<br>Piros = zárolva.<br>Törlés és szerkesztés letiltva.<br>Érintsd meg az ikont a feloldáshoz.",
@@ -3185,7 +3219,11 @@ setup_continue_without_login: "Ohne Anmeldung fortfahren",
   default_break_info: "Diese Pause wird automatisch von deiner Arbeitszeit abgezogen wenn du einen Tag speicherst. Dies gilt sowohl für den Timer als auch für manuelle Einträge.",
   recup_info: "Verwende Freizeitausgleich wenn du einen ganzen Tag mit angesammelten Überstunden kompensierst. Dieser Tag wird vom Überstunden-Saldo abgezogen.",
   setup_fill_fields: "Füllen Sie beide Felder korrekt aus.",
-setup_set_normday: "Stellen Sie zuerst Ihren normalen Arbeitstag ein.",
+  count_hours_only_label: "Keinen Normarbeitstag festlegen",
+  count_hours_only_toggle: "Nur Stunden zählen",
+  count_hours_only_info: "Wenn Sie nur Stunden erfassen möchten, ohne Überstunden zu berechnen, aktivieren Sie diese Option.\nSo wird nur Ihre tatsächlich geleistete Arbeitszeit gezählt.",
+  home_month_total_label: "Gesamtstunden diesen Monat",
+  setup_set_normday: "Stellen Sie zuerst Ihren normalen Arbeitstag ein.",
 week_lock_info: "Grün = offen.<br>Rot = gesperrt.<br>Löschen und Bearbeiten sind deaktiviert.<br>Tippe auf das Symbol zum Entsperren.",
 // --- Cloud status / backup extra ---
   cloud_not_configured: "Cloud nicht konfiguriert.",
@@ -3401,7 +3439,11 @@ setup_continue_without_login: "Kontynuuj bez logowania",
   default_break_info: "Ta przerwa jest automatycznie odejmowana od przepracowanego czasu podczas zapisu dnia. Dotyczy to zarówno timera jak i wpisów ręcznych.",
   recup_info: "Użyj Odbioru gdy bierzesz cały dzień wolny w ramach zgromadzonych nadgodzin. Ten dzień zostanie odjęty od salda nadgodzin.",
   setup_fill_fields: "Wypełnij poprawnie oba pola.",
-setup_set_normday: "Najpierw ustaw normalny dzień pracy.",
+  count_hours_only_label: "Nie ustawiaj standardowego dnia pracy",
+  count_hours_only_toggle: "Licz tylko godziny",
+  count_hours_only_info: "Jeśli chcesz tylko rejestrować godziny bez naliczania nadgodzin, włącz tę opcję.\nW ten sposób liczy się wyłącznie rzeczywiście przepracowany czas.",
+  home_month_total_label: "Łączna liczba godzin w tym miesiącu",
+  setup_set_normday: "Najpierw ustaw normalny dzień pracy.",
 week_lock_info: "Zielony = otwarte.<br>Czerwony = zablokowane.<br>Usuwanie i edycja są zablokowane.<br>Dotknij ikonę, aby odblokować.",
 // --- Cloud status / backup extra ---
   cloud_not_configured: "Chmura nie jest skonfigurowana.",
@@ -3616,7 +3658,11 @@ setup_continue_without_login: "Continuar sin iniciar sesión",
   default_break_info: "Esta pausa se descuenta automáticamente del tiempo trabajado al guardar un día. Esto se aplica tanto al temporizador como a las entradas manuales.",
   recup_info: "Usa Recuperación cuando tomes un día completo compensado con horas extra acumuladas. Este día se descontará de tu saldo de horas extra.",
   setup_fill_fields: "Complete correctamente ambos campos.",
-setup_set_normday: "Primero configure su jornada laboral normal.",
+  count_hours_only_label: "No establecer jornada normal",
+  count_hours_only_toggle: "Contar solo horas",
+  count_hours_only_info: "Si solo quieres registrar horas sin calcular horas extra, activa esta opción.\nAsí solo se contará tu tiempo realmente trabajado.",
+  home_month_total_label: "Horas totales este mes",
+  setup_set_normday: "Primero configure su jornada laboral normal.",
 week_lock_info: "Verde = abierto.<br>Rojo = bloqueado.<br>Eliminar y editar están desactivados.<br>Toca el icono para desbloquear.",
 // --- Cloud status / backup extra ---
   cloud_not_configured: "La nube no está configurada.",
@@ -3835,7 +3881,11 @@ setup_continue_without_login: "Continuer sans connexion",
   default_break_info: "Cette pause est automatiquement déduite de ton temps de travail lorsque tu enregistres une journée. Cela s'applique aussi bien au timer qu'aux entrées manuelles.",
   recup_info: "Utilise Jour de récup lorsque tu prends une journée complète en compensation d’heures supplémentaires. Cette journée sera déduite de ton solde d’heures supplémentaires.",
   setup_fill_fields: "Remplissez correctement les deux champs.",
-setup_set_normday: "Définissez d'abord votre journée de travail normale.",
+  count_hours_only_label: "Ne pas définir de journée normale",
+  count_hours_only_toggle: "Compter uniquement les heures",
+  count_hours_only_info: "Si vous voulez uniquement enregistrer les heures sans calculer les heures supplémentaires, activez cette option.\nAinsi, seules vos heures réellement prestées sont comptées.",
+  home_month_total_label: "Total des heures ce mois-ci",
+  setup_set_normday: "Définissez d'abord votre journée de travail normale.",
 week_lock_info: "Vert = ouvert.<br>Rouge = verrouillé.<br>Suppression et modification désactivées.<br>Appuyez sur l’icône pour déverrouiller.",
 // --- Cloud status / backup extra ---
   cloud_not_configured: "Cloud non configuré.",
@@ -4115,6 +4165,7 @@ const defaultState = () => ({
     normDayMin: NORM_MIN,
     pauseMin: 30,
     offDays: [],
+    countHoursOnly: false,
     employeeName: "",
     employerName: ""
   },
@@ -4130,10 +4181,10 @@ const defaultState = () => ({
       startSaldoMin: 0,
       normDayMin: NORM_MIN,
       pauseMin: 30,
-      offDays: []
+      offDays: [],
+      countHoursOnly: false
     }
   ],
-
    timer: {
     running: false,
     startMs: null,
@@ -4182,10 +4233,9 @@ function normalizeEmployer(emp, index, usedIds){
     id = `${id}_${index + 1}`;
   }
   usedIds.add(id);
-
-  return {
-    ...source,
-    id,
+return {
+  ...source,
+  id,
 label: (typeof source.label === "string" && source.label.trim())
   ? source.label.trim()
   : "",
@@ -4194,7 +4244,8 @@ label: (typeof source.label === "string" && source.label.trim())
     startSaldoMin: safeNumber(source.startSaldoMin, 0),
     normDayMin: safeNumber(source.normDayMin, NORM_MIN),
     pauseMin: safeNumber(source.pauseMin, 30),
-    offDays: normalizeOffDays(source.offDays)
+    offDays: normalizeOffDays(source.offDays),
+    countHoursOnly: !!source.countHoursOnly
   };
 }
 
@@ -4224,7 +4275,7 @@ function normalizeState(inputState){
     employers = raw.employers.map((emp, index) => normalizeEmployer(emp, index, usedIds));
   }else{
     employers = [
-      normalizeEmployer({
+       normalizeEmployer({
         id: "emp_1",
        label: "",
         employeeName: typeof rawSettings.employeeName === "string" ? rawSettings.employeeName : "",
@@ -4232,7 +4283,8 @@ function normalizeState(inputState){
         startSaldoMin: safeNumber(rawSettings.startSaldoMin, 0),
         normDayMin: safeNumber(rawSettings.normDayMin, NORM_MIN),
         pauseMin: safeNumber(rawSettings.pauseMin, 30),
-        offDays: normalizeOffDays(rawSettings.offDays)
+        offDays: normalizeOffDays(rawSettings.offDays),
+        countHoursOnly: !!rawSettings.countHoursOnly
       }, 0, usedIds)
     ];
   }
@@ -4283,11 +4335,12 @@ function normalizeState(inputState){
       ...base.settings,
       ...rawSettings,
 
-      // huidige app blijft hier nog op steunen
+        // huidige app blijft hier nog op steunen
       startSaldoMin: activeEmployer.startSaldoMin,
       normDayMin: activeEmployer.normDayMin,
       pauseMin: activeEmployer.pauseMin,
       offDays: [...activeEmployer.offDays],
+      countHoursOnly: !!activeEmployer.countHoursOnly,
       employeeName: activeEmployer.employeeName,
       employerName: activeEmployer.employerName,
 
@@ -4382,11 +4435,11 @@ function syncActiveEmployerToLegacySettings(){
   state.settings.normDayMin = safeNumber(activeEmployer.normDayMin, NORM_MIN);
   state.settings.pauseMin = safeNumber(activeEmployer.pauseMin, 30);
   state.settings.offDays = normalizeOffDays(activeEmployer.offDays);
+  state.settings.countHoursOnly = !!activeEmployer.countHoursOnly;
   state.settings.employeeName =
     typeof activeEmployer.employeeName === "string" ? activeEmployer.employeeName : "";
   state.settings.employerName =
     typeof activeEmployer.employerName === "string" ? activeEmployer.employerName : "";
-
   if(typeof state.settings.lang !== "string" || !state.settings.lang.trim()){
     state.settings.lang = "nl";
   }
@@ -4421,7 +4474,8 @@ function syncLegacySettingsToActiveEmployer(){
     startSaldoMin: safeNumber(state.settings.startSaldoMin, 0),
     normDayMin: safeNumber(state.settings.normDayMin, NORM_MIN),
     pauseMin: safeNumber(state.settings.pauseMin, 30),
-    offDays: normalizeOffDays(state.settings.offDays)
+    offDays: normalizeOffDays(state.settings.offDays),
+    countHoursOnly: !!state.settings.countHoursOnly
   };
 
   state.activeEmployerId = safeId;
@@ -4674,8 +4728,9 @@ function renderEmployerSwitcher(){
   const elTodayPill       = document.getElementById("todayPill");
   const elTimer           = document.getElementById("timer");
   const elStatus          = document.getElementById("status");
-  const elPauseMin        = document.getElementById("pauseMin");
-  const elNormDayH = document.getElementById("normDayH");
+const elPauseMin        = document.getElementById("pauseMin");
+const elCountHoursOnly  = document.getElementById("countHoursOnly");
+const elNormDayH = document.getElementById("normDayH");
 const elNormDayM = document.getElementById("normDayM");
 
 const setupOffDay1 = document.getElementById("setupOffDay1");
@@ -4749,6 +4804,8 @@ const infoWeekLock = document.getElementById("infoWeekLock");
 const bubbleWeekLock = document.getElementById("bubbleWeekLock");
 const infoVerreken = document.getElementById("infoVerreken");
 const bubbleVerreken = document.getElementById("bubbleVerreken");
+const infoCountHoursOnly = document.getElementById("infoCountHoursOnly");
+const bubbleCountHoursOnly = document.getElementById("bubbleCountHoursOnly");
 
 infoStartSaldo?.addEventListener("click", (e)=>{
   e.stopPropagation();
@@ -4799,6 +4856,14 @@ infoVerreken?.addEventListener("click", (e)=>{
   const isOpen = bubbleVerreken.style.display === "block";
   closeAllBubbles();
   bubbleVerreken.style.display = isOpen ? "none" : "block";
+});
+infoCountHoursOnly?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!bubbleCountHoursOnly) return;
+
+  const isOpen = bubbleCountHoursOnly.style.display === "block";
+  closeAllBubbles();
+  bubbleCountHoursOnly.style.display = isOpen ? "none" : "block";
 });
 infoDefaultBreak?.addEventListener("click", (e)=>{
   e.stopPropagation();
@@ -5035,8 +5100,12 @@ btnCalNext?.addEventListener("click", ()=>{
   
   const dmy  = d => `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
  
-  function dayDeltaMin(dateYMD){
+function dayDeltaMin(dateYMD){
   if(!dateYMD) return 0;
+
+  if(state.settings?.countHoursOnly){
+    return 0;
+  }
 
   const normDay = state.settings?.normDayMin ?? NORM_MIN;
   const workNet = workNetForDate(dateYMD);
@@ -5784,6 +5853,29 @@ async function pauseTimer(){
   });
 
   return set.size;
+}
+function selectedEmployerMonthWorkedMin(baseDate = new Date()){
+  const employerId = state.timer?.running
+    ? (state.timer.employerId || state.activeEmployerId || selectedEmployerViewId || null)
+    : (selectedEmployerViewId || state.activeEmployerId || null);
+
+  if(!employerId) return 0;
+
+  const year = baseDate.getFullYear();
+  const month = baseDate.getMonth();
+
+  return (state.entries || []).reduce((sum, e) => {
+    if(!e || e.deletedAt) return sum;
+    if(e.type !== "Werk") return sum;
+    if((e.employerId || "") !== employerId) return sum;
+    if(!e.date) return sum;
+
+    const d = new Date(e.date + "T00:00:00");
+    if(Number.isNaN(d.getTime())) return sum;
+    if(d.getFullYear() !== year || d.getMonth() !== month) return sum;
+
+    return sum + (parseInt(e.netMin, 10) || 0);
+  }, 0);
 }
 
   function overtimeSaldoMin(){
@@ -6826,6 +6918,20 @@ async function wireCloudAuthUI(){
 
   return arr.map(d => map[d] || d).join(", ");
 }
+function updateEmployerNormModeUI(){
+  const onlyHours = !!elCountHoursOnly?.checked;
+
+  if(elNormDayH) elNormDayH.disabled = onlyHours;
+  if(elNormDayM) elNormDayM.disabled = onlyHours;
+  if(elStartSaldoH) elStartSaldoH.disabled = onlyHours;
+  if(elStartSaldoM) elStartSaldoM.disabled = onlyHours;
+
+  const normWrap = elNormDayH?.closest(".timeSelectRow");
+  const saldoWrap = elStartSaldoH?.closest(".timeSelectRow");
+
+  if(normWrap) normWrap.style.opacity = onlyHours ? "0.45" : "1";
+  if(saldoWrap) saldoWrap.style.opacity = onlyHours ? "0.45" : "1";
+}
 
 function renderSettings(){
   renderEmployerSwitcher();
@@ -6848,6 +6954,7 @@ nm = String(nm || "30").padStart(2,"0");
 if(elNormDayH) elNormDayH.value = nh;
 if(elNormDayM) elNormDayM.value = nm;
   if(elPauseMin) elPauseMin.value = String(state.settings.pauseMin ?? 30);
+  if(elCountHoursOnly) elCountHoursOnly.checked = !!state.settings.countHoursOnly;
 
   const emp = document.getElementById("employeeName");
   const emr = document.getElementById("employerName");
@@ -6865,6 +6972,8 @@ if(offDaysCurrentLabel){
 if(setupOffDaysCurrentLabel){
   setupOffDaysCurrentLabel.textContent = getOffDaysLabel(draftOffDays);
 }
+
+updateEmployerNormModeUI();
 }
 
 function saveSettings(){
@@ -7083,24 +7192,56 @@ if(setupLabel){
     if(elWeekWork)  elWeekWork.textContent  = formatHM(weekNet);
 
     if(elOvertimeSaldo){
-      const normDay = state.settings.normDayMin ?? NORM_MIN;
-      const totalDays = normDay > 0 ? (ot / normDay) : 0;
-
-      const cls = ot > 0 ? "otPos" : (ot < 0 ? "otNeg" : "otZero");
-
-elOvertimeSaldo.innerHTML = `
-  <div class="saldoMain ${cls}">
-    ${formatHM(ot)} <span class="unit">${t("hours")}</span>
-  </div>
-  <div class="saldoSub">
-    = ${ot} <span>${t("minutes")}</span><br>
-    = ${totalDays.toFixed(2)} <span>${t("days")}</span>
-  </div>
-`;
-
-      setSaldoColor(elOvertimeSaldo, ot);
       const card = elOvertimeSaldo.closest(".miniCard");
-      if(card) setSaldoColor(card, ot);
+
+      if(state.settings?.countHoursOnly){
+        const monthWorked = selectedEmployerMonthWorkedMin(new Date());
+
+        if(homeSaldoTitle){
+          homeSaldoTitle.removeAttribute("data-i18n");
+          homeSaldoTitle.textContent = t("home_month_total_label");
+        }
+
+        elOvertimeSaldo.innerHTML = `
+          <div class="saldoMain otZero">
+            ${formatHM(monthWorked)} <span class="unit">${t("hours")}</span>
+          </div>
+          <div class="saldoSub">
+            = ${monthWorked} <span>${t("minutes")}</span>
+          </div>
+        `;
+
+        elOvertimeSaldo.classList.remove("otPos","otNeg");
+        elOvertimeSaldo.classList.add("otZero");
+
+        if(card){
+          card.classList.remove("salpos","salneg");
+          card.classList.add("salzero");
+        }
+      } else {
+        if(homeSaldoTitle){
+          homeSaldoTitle.setAttribute("data-i18n", "overtime");
+          homeSaldoTitle.textContent = t("overtime");
+        }
+
+        const normDay = state.settings.normDayMin ?? NORM_MIN;
+        const totalDays = normDay > 0 ? (ot / normDay) : 0;
+
+        const cls = ot > 0 ? "otPos" : (ot < 0 ? "otNeg" : "otZero");
+
+        elOvertimeSaldo.innerHTML = `
+          <div class="saldoMain ${cls}">
+            ${formatHM(ot)} <span class="unit">${t("hours")}</span>
+          </div>
+          <div class="saldoSub">
+            = ${ot} <span>${t("minutes")}</span><br>
+            = ${totalDays.toFixed(2)} <span>${t("days")}</span>
+          </div>
+        `;
+
+        setSaldoColor(elOvertimeSaldo, ot);
+        if(card) setSaldoColor(card, ot);
+      }
     }
   }
 
@@ -7144,6 +7285,17 @@ btnSave?.addEventListener("click", () => {
 });
 btnRecup?.addEventListener("click", addRecup);
 btnAddManual?.addEventListener("click", ()=> openModal("add"));
+elCountHoursOnly?.addEventListener("change", () => {
+  state.settings.countHoursOnly = !!elCountHoursOnly.checked;
+  updateEmployerNormModeUI();
+  syncLegacySettingsToActiveEmployer();
+  saveState();
+  renderAll();
+
+  if(dayOverlay && dayOverlay.style.display !== "none" && dayTitle?.dataset?.ymd){
+    openDayDetail(dayTitle.dataset.ymd);
+  }
+});
 
 function closeEmployerSettingsModal(){
   const setupOverlayEl = document.getElementById("setupOverlay");
@@ -7227,7 +7379,8 @@ function createEmployerAndOpenSettings(fromSetup = false){
     startSaldoMin: 0,
     normDayMin: NORM_MIN,
     pauseMin: 30,
-    offDays: []
+    offDays: [],
+    countHoursOnly: false
   };
 
   employers.push(newEmployer);
