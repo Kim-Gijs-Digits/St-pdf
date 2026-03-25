@@ -41,6 +41,7 @@
       month: "Maand",
       dates: "Datums",
       from: "Van",
+      all: "Alles",
       to: "Tot",
     cols: ["Datum", "Starttijd", "Eindtijd", "Netto", "+/-", "Info", "Opmerkingen"],
       types: { Werk:"Werk", Vakantie:"Vakantie", Ziekte:"Ziekte", Recup:"Recup", Feestdag:"Feestdag" },
@@ -60,6 +61,7 @@
       cancel: "Cancel",
       pdfPrompt: "Which month(s) and/or dates do you want to export?",
       month: "Month",
+      all: "All",
       dates: "Dates",
       from: "From",
       to: "To",
@@ -77,6 +79,7 @@
       saldoOveruren: "Solde heures sup.",
       totalsHours: "Total heures",
       totalsOverThis: "Heures sup. période",
+      all: "Tous",
       makePdf: "Créer PDF",
       cancel: "Annuler",
       pdfPrompt: "Quel(s) mois et/ou quelles dates voulez‑vous exporter ?",
@@ -99,6 +102,7 @@
   totalsHours: "Gesamtstunden",
   totalsOverThis: "Überstunden in diesem Zeitraum",
   makePdf: "PDF erstellen",
+  all: "Alle",
   cancel: "Abbrechen",
   pdfPrompt: "Welche Monate und/oder Daten möchten Sie exportieren?",
   month: "Monat",
@@ -125,6 +129,7 @@ pl: {
   pdfPrompt: "Ktore miesiace i/lub daty chcesz wyeksportowac?",
   month: "Miesiac",
   dates: "Daty",
+  all: "Wszystkie",
   from: "Od",
   to: "Do",
   cols: ["Data", "Start", "Koniec", "Netto", "+/-", "Info", "Uwagi"],
@@ -143,6 +148,7 @@ es: {
   totalsHours: "Horas totales",
   totalsOverThis: "Horas extra en este período",
   makePdf: "Crear PDF",
+  all: "Todos",
   cancel: "Cancelar",
   pdfPrompt: "¿Qué mes(es) y/o fechas quieres exportar?",
   month: "Mes",
@@ -168,6 +174,7 @@ hu: {
   cancel: "Megse",
   pdfPrompt: "Mely honapokat es/vagy datumokat szeretned exportalni?",
   month: "Honap",
+  all: "Összes",
   dates: "Datumok",
   from: "Ettol",
   to: "Eddig",
@@ -187,6 +194,7 @@ it: {
   totalsHours: "Ore totali",
   totalsOverThis: "Straordinari in questo periodo",
   makePdf: "Crea PDF",
+  all: "Tutti",
   cancel: "Annulla",
   pdfPrompt: "Quali mesi e/o date vuoi esportare?",
   month: "Mese",
@@ -346,7 +354,7 @@ it: {
 
     const allOpt = document.createElement("option");
     allOpt.value = "__all__";
-    allOpt.textContent = "Alles";
+   allOpt.textContent = (I18N[getLang(state)]?.all || "All");
     employerSelect.appendChild(allOpt);
 
     employers
@@ -372,7 +380,7 @@ it: {
 
     const allOpt = document.createElement("option");
     allOpt.value = "__all__";
-    allOpt.textContent = "Alles";
+   allOpt.textContent = (I18N[getLang(state)]?.all || "All");
     employerSelect.appendChild(allOpt);
 
     employers.forEach((emp, index) => {
