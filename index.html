@@ -1171,7 +1171,7 @@ button:active,
 
           <div class="app-header-actions">
             <button id="btnHome" class="btnIcon" aria-label="Home">🏠</button>
-<button id="btnNavCalendar" class="btnIcon" aria-label="Kalender">📅</button>
+<button id="btnNavCalendar" class="btnIcon" data-i18n-aria="calendar" aria-label="Kalender">📅</button>
             <button id="btnOpenHistory" class="btnIcon" aria-label="Historiek">📜</button>
             <button id="btnOpenSettings" class="btnIcon" aria-label="Instellingen">⚙️</button>
           </div>
@@ -1190,7 +1190,7 @@ button:active,
             type="button"
             style="width:auto; min-width:180px; display:flex; justify-content:space-between; align-items:center;"
           >
-            <span id="homeEmployerViewLabel">Alles</span>
+           <span id="homeEmployerViewLabel" data-i18n="all">Alles</span>
             <span aria-hidden="true">▾</span>
           </button>
 
@@ -1238,7 +1238,7 @@ button:active,
 
  <label for="verrekenEmployer" data-i18n="employer_fallback">Werkgever</label>
  <select id="verrekenEmployer">
-   <option value="">Kies werkgever</option>
+  <option value="" data-i18n="choose_employer">Kies werkgever</option>
  </select>
 
  <label data-i18n="hours_amount_hhmm">Aantal uren (HH:MM)</label>
@@ -1326,7 +1326,7 @@ button:active,
     type="button"
     style="width:auto; min-width:140px; display:flex; justify-content:space-between; align-items:center;"
   >
-    <span id="historyEmployerViewLabel">Alles</span>
+    <span id="historyEmployerViewLabel" data-i18n="all">Alles</span>
     <span aria-hidden="true">▾</span>
   </button>
 </div>
@@ -1381,7 +1381,7 @@ button:active,
     type="button"
     style="width:100%; min-height:44px; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box;"
   >
-    <span id="calendarEmployerViewLabel">Alles</span>
+   <span id="calendarEmployerViewLabel" data-i18n="all">Alles</span>
     <span aria-hidden="true">▾</span>
   </button>
 
@@ -1778,7 +1778,7 @@ button:active,
 
     <div class="h2Row" style="align-items:center; gap:10px;">
       <div>
-        <h3 id="employerViewModalTitle" style="margin:0;">Werkgever kiezen</h3>
+      <h3 id="employerViewModalTitle" data-i18n="choose_employer" style="margin:0;">Werkgever kiezen</h3>
       </div>
     </div>
 
@@ -4183,7 +4183,7 @@ const defaultState = () => ({
   employers: [
     {
       id: "emp_1",
-      label: "Werkgever 1",
+      label: "Employer 1",
       employeeName: "",
       employerName: "",
       startSaldoMin: 0,
@@ -4474,7 +4474,7 @@ function syncLegacySettingsToActiveEmployer(){
     label:
       (typeof current.label === "string" && current.label.trim())
         ? current.label.trim()
-        : `Werkgever ${targetIndex + 1}`,
+       : `Employer ${targetIndex + 1}`,
     employeeName:
       typeof state.settings.employeeName === "string" ? state.settings.employeeName : "",
     employerName:
@@ -5429,7 +5429,7 @@ function openDayDetail(ymdStr){
                   class="btnSmall btnDanger"
                   type="button"
                   onclick="undoVerrekeningByIndex(${v._idx}, '${ymdStr}')"
-                  aria-label="Undo verrekening"
+                  aria-label="${t("undo_reconciliation")}"
                 >↩</button>
               </div>
             </div>
@@ -6526,10 +6526,10 @@ function renderHistory(){
     const weekKey = lockEl.closest(".weekLock").dataset.week;
     const locked = isWeekLocked(weekKey);
 
-    openConfirm(
-      locked ? "Week ontgrendelen?" : "Week vergrendelen?",
-      () => toggleWeekLock(weekKey)
-    );
+  openConfirm(
+  locked ? t("week_unlock_confirm") : t("week_lock_confirm"),
+  () => toggleWeekLock(weekKey)
+);
     return;
   }
 
@@ -7984,7 +7984,7 @@ if (window.ShiftTapNotifications) {
 
     <label for="pdfEmployerSelect" data-i18n="employer_fallback">Werkgever</label>
     <select id="pdfEmployerSelect">
-      <option value="__all__">Alles</option>
+    <option value="__all__" data-i18n="all">Alles</option>
     </select>
 
     <div class="sp"></div>
