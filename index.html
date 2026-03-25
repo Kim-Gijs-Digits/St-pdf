@@ -5015,10 +5015,12 @@ function setLang(code){
     }
   } catch(e){}
 
-  if (typeof applyLang === "function") applyLang();
+if (typeof renderAll === "function") renderAll();
+else if (typeof renderAll === "function") renderAll();
+else if (typeof applyLang === "function") applyLang();
 
-  const lbl = document.getElementById("langCurrentLabel");
-  if (lbl) lbl.textContent = getLangName(code);
+const lbl = document.getElementById("langCurrentLabel");
+if (lbl) lbl.textContent = getLangName(code);
 }
 
 function openLangModal(){
