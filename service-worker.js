@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'shift-tap-v2.0.1';
+const CACHE_VERSION = 'shift-tap-v2.1.1';
 const APP_SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
 
@@ -55,7 +55,16 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Zelfde origin bestanden: cache first
+  // pdf-export en jsPDF altijd network first
+  if (
+    url.origin === self.location.origin &&
+    (url.pathname.endsWith('/pdf-export.js') || url.pathname.endsWith('/jspdf.umd.min.js'))
+  ) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Andere zelfde-origin bestanden: cache first
   if (url.origin === self.location.origin) {
     event.respondWith(cacheFirst(request));
     return;
