@@ -42,7 +42,7 @@
       dates: "Datums",
       from: "Van",
       to: "Tot",
-      cols: ["Datum", "Starttijd", "Eindtijd", "Netto", "+/‑", "Info", "Opmerkingen"],
+    cols: ["Datum", "Starttijd", "Eindtijd", "Netto", "+/-", "Info", "Opmerkingen"],
       types: { Werk:"Werk", Vakantie:"Vakantie", Ziekte:"Ziekte", Recup:"Recup", Feestdag:"Feestdag" },
       infoByType: { Werk:"", Vakantie:"Vakantiedag", Ziekte:"Ziekte", Recup:"Recupdag", Feestdag:"Feestdag" },
       unitsH: "u",
@@ -63,7 +63,7 @@
       dates: "Dates",
       from: "From",
       to: "To",
-      cols: ["Date", "Start", "End", "Net", "+/‑", "Info", "Remarks"],
+     cols: ["Date", "Start", "End", "Net", "+/-", "Info", "Remarks"],
       types: { Werk:"Work", Vakantie:"Vacation", Ziekte:"Sick", Recup:"Recup", Feestdag:"Holiday" },
       infoByType: { Werk:"", Vakantie:"Vacation day", Ziekte:"Sick day", Recup:"Recup day", Feestdag:"Holiday" },
       unitsH: "h",
@@ -84,7 +84,7 @@
       dates: "Dates",
       from: "De",
       to: "À",
-      cols: ["Date", "Début", "Fin", "H nettes", "+/‑", "Info", "Remarques"],
+     cols: ["Date", "Début", "Fin", "H nettes", "+/-", "Info", "Remarques"],
       types: { Werk:"Travail", Vakantie:"Congé", Ziekte:"Maladie", Recup:"Récup", Feestdag:"Férié" },
       infoByType: { Werk:"", Vakantie:"Jour de congé", Ziekte:"Jour maladie", Recup:"Jour récup", Feestdag:"Jour férié" },
       unitsH: "h",
@@ -116,20 +116,20 @@ pl: {
   employer: "Pracodawca",
   employee: "Pracownik",
   normDay: "Norma dnia",
-  prevSaldo: "Saldo nadgodzin z poprzedniego miesiąca",
+  prevSaldo: "Saldo nadgodzin z poprzedniego miesiaca",
   saldoOveruren: "Saldo nadgodzin",
-  totalsHours: "Łączne godziny",
+  totalsHours: "Laczne godziny",
   totalsOverThis: "Nadgodziny w tym okresie",
-  makePdf: "Utwórz PDF",
+  makePdf: "Utworz PDF",
   cancel: "Anuluj",
-  pdfPrompt: "Które miesiące i/lub daty chcesz wyeksportować?",
-  month: "Miesiąc",
+  pdfPrompt: "Ktore miesiace i/lub daty chcesz wyeksportowac?",
+  month: "Miesiac",
   dates: "Daty",
   from: "Od",
   to: "Do",
   cols: ["Data", "Start", "Koniec", "Netto", "+/-", "Info", "Uwagi"],
-  types: { Werk:"Praca", Vakantie:"Urlop", Ziekte:"Chorobowe", Recup:"Odbiór", Feestdag:"Święto" },
-  infoByType: { Werk:"", Vakantie:"Dzień urlopu", Ziekte:"Dzień chorobowy", Recup:"Dzień odbioru", Feestdag:"Święto" },
+  types: { Werk:"Praca", Vakantie:"Urlop", Ziekte:"Chorobowe", Recup:"Odbior", Feestdag:"Swieto" },
+  infoByType: { Werk:"", Vakantie:"Dzien urlopu", Ziekte:"Dzien chorobowy", Recup:"Dzien odbioru", Feestdag:"Swieto" },
   unitsH: "g",
 },
 
@@ -156,25 +156,25 @@ es: {
 },
 
 hu: {
-  title: (period) => `Shift-Tap - Munkaidő nyilvántartás - ${period}`,
-  employer: "Munkáltató",
-  employee: "Munkavállaló",
-  normDay: "Normál nap",
-  prevSaldo: "Túlóra egyenleg előző hónap",
-  saldoOveruren: "Túlóra egyenleg",
-  totalsHours: "Összes óra",
-  totalsOverThis: "Túlóra ebben az időszakban",
-  makePdf: "PDF készítése",
-  cancel: "Mégse",
-  pdfPrompt: "Mely hónapokat és/vagy dátumokat szeretnéd exportálni?",
-  month: "Hónap",
-  dates: "Dátumok",
-  from: "Ettől",
+  title: (period) => `Shift-Tap - Munkaido nyilvantartas - ${period}`,
+  employer: "Munkaltato",
+  employee: "Munkavallalo",
+  normDay: "Normal nap",
+  prevSaldo: "Tulora egyenleg elozo honap",
+  saldoOveruren: "Tulora egyenleg",
+  totalsHours: "Osszes ora",
+  totalsOverThis: "Tulora ebben az idoszakban",
+  makePdf: "PDF keszitese",
+  cancel: "Megse",
+  pdfPrompt: "Mely honapokat es/vagy datumokat szeretned exportalni?",
+  month: "Honap",
+  dates: "Datumok",
+  from: "Ettol",
   to: "Eddig",
-  cols: ["Dátum", "Kezdés", "Vége", "Nettó", "+/-", "Infó", "Megjegyzések"],
-  types: { Werk:"Munka", Vakantie:"Szabadság", Ziekte:"Betegség", Recup:"Szabadnap", Feestdag:"Ünnepnap" },
-  infoByType: { Werk:"", Vakantie:"Szabadság nap", Ziekte:"Betegnap", Recup:"Szabadnap", Feestdag:"Ünnepnap" },
-  unitsH: "ó",
+  cols: ["Datum", "Kezdes", "Vege", "Netto", "+/-", "Info", "Megjegyzesek"],
+  types: { Werk:"Munka", Vakantie:"Szabadsag", Ziekte:"Betegseg", Recup:"Szabadnap", Feestdag:"Unnepnap" },
+  infoByType: { Werk:"", Vakantie:"Szabadsag nap", Ziekte:"Betegnap", Recup:"Szabadnap", Feestdag:"Unnepnap" },
+  unitsH: "o",
 },
 
 it: {
@@ -442,63 +442,106 @@ it: {
     doc.setFillColor(217,212,207); // #D9D4CF
   }
 
-  function drawTable(doc, x, y, colW, rowH, headers, rows){
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
+ function drawTable(doc, x, y, colW, rowH, headers, rows){
+  const pageH = doc.internal.pageSize.getHeight();
+  const tableW = colW.reduce((a,b)=>a+b,0);
+  let cursorY = y;
 
-    const tableW = colW.reduce((a,b)=>a+b,0);
-    let cursorY = y;
+  const headerH = rowH;
+  const lineH = 4;
+  const vPad = 2;
 
-    const drawHeader = () => {
-      headerFillColor(doc);
-      doc.rect(x, cursorY, tableW, rowH, "F");
-      doc.setDrawColor(60);
-      doc.setLineWidth(0.2);
-      doc.rect(x, cursorY, tableW, rowH, "S");
+  const drawHeader = () => {
+    headerFillColor(doc);
+    doc.rect(x, cursorY, tableW, headerH, "F");
+    doc.setDrawColor(60);
+    doc.setLineWidth(0.2);
+    doc.rect(x, cursorY, tableW, headerH, "S");
 
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      let cx = x;
-      for(let i=0;i<headers.length;i++){
-        doc.rect(cx, cursorY, colW[i], rowH, "S");
-        doc.text(String(headers[i]||""), cx+2, cursorY + rowH*0.7, {maxWidth: colW[i]-4});
-        cx += colW[i];
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+
+    let cx = x;
+    for(let i=0;i<headers.length;i++){
+      doc.rect(cx, cursorY, colW[i], headerH, "S");
+      doc.text(String(headers[i]||""), cx + 2, cursorY + headerH * 0.7, { maxWidth: colW[i] - 4 });
+      cx += colW[i];
+    }
+    cursorY += headerH;
+  };
+
+  const prepareCellLines = (cells) => {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+
+    return cells.map((cell, i) => {
+      const txt = (cell ?? "").toString();
+      const maxWidth = Math.max(1, colW[i] - 4);
+      return doc.splitTextToSize(txt, maxWidth);
+    });
+  };
+
+  const getRowHeight = (cellLines) => {
+    const maxLines = Math.max(1, ...cellLines.map(lines => Array.isArray(lines) ? lines.length : 1));
+    return Math.max(rowH, (maxLines * lineH) + (vPad * 2));
+  };
+
+  const drawRow = (cells) => {
+    const cellLines = prepareCellLines(cells);
+    const currentRowH = getRowHeight(cellLines);
+
+    let cx = x;
+    for(let i=0;i<cells.length;i++){
+      doc.rect(cx, cursorY, colW[i], currentRowH, "S");
+
+      const lines = cellLines[i];
+      const textY = cursorY + vPad + lineH - 1;
+
+      if(i === 3 || i === 4){
+        doc.text(lines, cx + colW[i] - 2, textY, { align:"right" });
+      }else{
+        doc.text(lines, cx + 2, textY);
       }
-      cursorY += rowH;
-    };
 
-    const drawRow = (cells) => {
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      let cx = x;
-      for(let i=0;i<cells.length;i++){
-        doc.rect(cx, cursorY, colW[i], rowH, "S");
-
-        const txt = (cells[i] ?? "").toString();
-        // Right align numeric-ish columns 3 & 4 (Netto, +/-)
-        if(i === 3 || i === 4){
-          doc.text(txt, cx + colW[i] - 2, cursorY + rowH*0.7, {align:"right", maxWidth: colW[i]-4});
-        }else{
-          doc.text(txt, cx+2, cursorY + rowH*0.7, {maxWidth: colW[i]-4});
-        }
-        cx += colW[i];
-      }
-      cursorY += rowH;
-    };
-
-    drawHeader();
-
-    for(const r of rows){
-      if(cursorY + rowH > pageH - 18){
-        doc.addPage();
-        cursorY = 18;
-        drawHeader();
-      }
-      drawRow(r);
+      cx += colW[i];
     }
 
-    return cursorY;
+    cursorY += currentRowH;
+  };
+
+  drawHeader();
+
+  for(const r of rows){
+    const cellLines = prepareCellLines(r);
+    const currentRowH = getRowHeight(cellLines);
+
+    if(cursorY + currentRowH > pageH - 18){
+      doc.addPage();
+      cursorY = 18;
+      drawHeader();
+    }
+
+    let cx = x;
+    for(let i=0;i<r.length;i++){
+      doc.rect(cx, cursorY, colW[i], currentRowH, "S");
+
+      const lines = cellLines[i];
+      const textY = cursorY + vPad + lineH - 1;
+
+      if(i === 3 || i === 4){
+        doc.text(lines, cx + colW[i] - 2, textY, { align:"right" });
+      }else{
+        doc.text(lines, cx + 2, textY);
+      }
+
+      cx += colW[i];
+    }
+
+    cursorY += currentRowH;
   }
+
+  return cursorY;
+}
 
   function formatPlusMinus(min, unitH){
     const v = Math.round(min||0);
@@ -538,25 +581,27 @@ it: {
         ? (employers.find(emp => emp && emp.id === selectedEmployerId) || null)
         : null;
 
+    const rawNormDayMin = selectedEmployer
+      ? Number(selectedEmployer.normDayMin ?? 0)
+      : Number(state?.settings?.normDayMin ?? 0);
+
+    const rawStartSaldoMin = selectedEmployer
+      ? Number(selectedEmployer.startSaldoMin ?? 0)
+      : Number(state?.settings?.startSaldoMin ?? 0);
+
     const countHoursOnly = selectedEmployer
       ? (
           !!selectedEmployer.countHoursOnly ||
-          (
-            (selectedEmployer.normDayMin ?? 0) === 0 &&
-            (selectedEmployer.startSaldoMin ?? 0) === 0
-          )
+          (rawNormDayMin === 0 && rawStartSaldoMin === 0)
         )
       : (
           !!state?.settings?.countHoursOnly ||
-          (
-            (state?.settings?.normDayMin ?? 0) === 0 &&
-            (state?.settings?.startSaldoMin ?? 0) === 0
-          )
+          (rawNormDayMin === 0 && rawStartSaldoMin === 0)
         );
-        
-    const normDayMin = selectedEmployer
-      ? (selectedEmployer.normDayMin ?? 450)
-      : (state?.settings?.normDayMin ?? 450); // 7u30
+
+    const showPlusMinus = !countHoursOnly && rawNormDayMin > 0;
+
+    const normDayMin = rawNormDayMin > 0 ? rawNormDayMin : 450; // 7u30 fallback enkel voor berekening
 
     const employer = selectedEmployer
       ? (
@@ -678,7 +723,7 @@ rows.push([
           start,
           end,
           (type === "Werk") ? minutesToHM(netMin, L.unitsH) : "—",
-          countHoursOnly ? "" : formatPlusMinus(delta, L.unitsH),
+           showPlusMinus ? formatPlusMinus(delta, L.unitsH) : "",
           info,
           remarks
         ]);
@@ -743,15 +788,25 @@ if(!countHoursOnly){
     doc.setFont("helvetica","normal");
     doc.setFontSize(9);
 
-    const headers = L.cols;
-
-    // BETERE widths: meer ruimte voor Netto en +/-
-    // Datum  | Start | Eind | Netto | +/- | Info | Opmerkingen
     const availW = pageW - margin*2;
-    const colW = [24, 18, 18, 24, 22, 28, Math.max(24, availW - (24+18+18+24+22+28))];
+    const showInfo = showPlusMinus;
+
+    const headers = showPlusMinus
+      ? L.cols
+      : [L.cols[0], L.cols[1], L.cols[2], L.cols[3], L.cols[6]];
+
+    // Datum | Start | Eind | Netto | (optioneel +/-) | (optioneel Info) | Opmerkingen
+    const colW = showPlusMinus
+      ? [24, 18, 18, 24, 22, 28, Math.max(24, availW - (24+18+18+24+22+28))]
+      : [24, 18, 18, 24, Math.max(24, availW - (24+18+18+24))];
+
     const rowH = 7;
 
-    y = drawTable(doc, margin, y, colW, rowH, headers, rows);
+    const tableRows = showPlusMinus
+      ? rows
+      : rows.map(r => [r[0], r[1], r[2], r[3], r[6]]);
+
+    y = drawTable(doc, margin, y, colW, rowH, headers, tableRows);
 
     // Bottom totals
     const bottomY = Math.min(y + 10, doc.internal.pageSize.getHeight() - 30);
