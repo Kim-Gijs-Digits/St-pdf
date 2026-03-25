@@ -2148,7 +2148,6 @@ function setLoginUi(user){
   }
 if(loggedIn && !isSetupDone() && setupLoginOverlay && setupLoginOverlay.style.display !== "none"){
   setupLoginOverlay.style.display = "none";
-  document.getElementById("setupOverlay")?.style.setProperty("display", "flex");
 }
 }
 
@@ -2378,6 +2377,7 @@ setup_continue_without_login: "Verder zonder login",
   cloud_to_device_success: "Cloud → toestel gelukt",
 
   download_running: "Download bezig...",
+   cloud_auto_backup_confirm: "Cloud-back-up maken?",
   upload_running: "Upload bezig..."
 
 },
@@ -2598,7 +2598,8 @@ setup_continue_without_login: "Continua senza accesso",
   cloud_to_device_success: "Cloud → dispositivo completato",
 
   download_running: "Download in corso...",
-  upload_running: "Caricamento in corso..."
+  upload_running: "Caricamento in corso...",
+  cloud_auto_backup_confirm: "Creare un backup cloud?"
 },
 
 en: {
@@ -2824,7 +2825,8 @@ setup_continue_without_login: "Continue without login",
   cloud_to_device_success: "Cloud → device successful",
 confirm_delete_entry: "Delete this entry?",
   download_running: "Downloading...",
-  upload_running: "Uploading..."
+  upload_running: "Uploading...",
+  cloud_auto_backup_confirm: "Create cloud backup?"
  
 },
 
@@ -3044,7 +3046,8 @@ week_lock_info: "Zöld = nyitva.<br>Piros = zárolva.<br>Törlés és szerkeszt�
   cloud_to_device_success: "Felhő → eszköz sikeres",
 
   download_running: "Letöltés folyamatban...",
-  upload_running: "Feltöltés folyamatban..."
+  upload_running: "Feltöltés folyamatban...",
+  cloud_auto_backup_confirm: "Készüljön felhőmentés?"
 
 },
 
@@ -3252,7 +3255,8 @@ week_lock_info: "Grün = offen.<br>Rot = gesperrt.<br>Löschen und Bearbeiten si
   cloud_to_device_success: "Cloud → Gerät erfolgreich",
 
   download_running: "Download läuft...",
-  upload_running: "Upload läuft..."
+  upload_running: "Upload läuft...",
+    cloud_auto_backup_confirm: "Cloud-Backup erstellen?"
 
 },
 
@@ -3472,7 +3476,8 @@ week_lock_info: "Zielony = otwarte.<br>Czerwony = zablokowane.<br>Usuwanie i edy
   cloud_to_device_success: "Chmura → urządzenie zakończone sukcesem",
 
   download_running: "Trwa pobieranie...",
-  upload_running: "Trwa przesyłanie..."
+  upload_running: "Trwa przesyłanie...",
+  cloud_auto_backup_confirm: "Utworzyć kopię zapasową w chmurze?"
 },
 
 es: {
@@ -3691,7 +3696,8 @@ week_lock_info: "Verde = abierto.<br>Rojo = bloqueado.<br>Eliminar y editar est�
   cloud_to_device_success: "Nube → dispositivo completado",
 
   download_running: "Descargando...",
-  upload_running: "Subiendo..."
+  upload_running: "Subiendo...",
+    cloud_auto_backup_confirm: "¿Crear copia de seguridad en la nube?"
 },
 
 fr: {
@@ -3914,7 +3920,9 @@ confirm_delete_entry: "Supprimer cette entrée ?",
   cloud_to_device_success: "Cloud → appareil réussi",
 
   download_running: "Téléchargement en cours...",
-  upload_running: "Envoi en cours..."
+  upload_running: "Envoi en cours...",
+  cloud_auto_backup_confirm: "Créer une sauvegarde cloud ?"
+
 
 }
   };
@@ -6738,6 +6746,11 @@ async function loginGoogle(){
     showToast(t("cloud_not_configured"), "warn");
     return;
   }
+
+  const setupLoginActive =
+    !!setupLoginOverlay &&
+    getComputedStyle(setupLoginOverlay).display !== "none";
+
   try{
     const provider = new firebase.auth.GoogleAuthProvider();
     await fbAuth.signInWithPopup(provider);
@@ -6749,6 +6762,19 @@ async function loginGoogle(){
     }
     console.error("loginGoogle:", e);
     showToast("❌ " + t("login_failed"), "warn");
+    return;
+  }
+
+  if(setupLoginActive){
+    try{
+      const restored = await restoreCloudAfterFreshLogin();
+      if(!restored){
+        openSetupSettingsStep();
+      }
+    }catch(err){
+      console.error("restoreCloudAfterFreshLogin:", err);
+      openSetupSettingsStep();
+    }
   }
 }
 
@@ -6832,11 +6858,43 @@ if(!payload?.state){
       setCloudStatus(`⬇️ ${t("cloud_loaded")} (${u.email || "Google"})`);
       showToast("✅ " + t("cloud_to_device_success"), "ok");
     });
-  }catch(err){
-    console.error(err);
-    showToast("❌ " + t("cloud_download_failed"), "warn");
+}catch(err){
+  console.error(err);
+  showToast("❌ " + t("cloud_download_failed"), "warn");
   }
 }
+
+async function restoreCloudAfterFreshLogin(){
+  if(!(await ensureFirebase())) return false;
+
+  const u = currentUser();
+  if(!u) return false;
+
+  try{
+    const snap = await cloudDocRef(u.uid).get();
+    if(!snap.exists) return false;
+
+    const payload = snap.data()?.payload || null;
+    if(!payload?.state) return false;
+
+    state = normalizeState(payload.state);
+    meta  = payload.meta || meta;
+
+    if(!meta) meta = { lastBackupAt:null, lastBackupName:null, lastAutoBackupAt:null };
+    if(!("lastAutoBackupAt" in meta)) meta.lastAutoBackupAt = null;
+    if(!meta.weekLocks) meta.weekLocks = {};
+
+    saveState();
+    saveMeta();
+    markSetupDone();
+    location.reload();
+    return true;
+  }catch(err){
+    console.error("restoreCloudAfterFreshLogin failed:", err);
+    return false;
+  }
+}
+
 async function maybeAutoBackupOnOpen(){
   try{
     if(!(await ensureFirebase())) return;
@@ -6850,14 +6908,18 @@ async function maybeAutoBackupOnOpen(){
 
     if(last && (now - last) < DAY) return;
 
+openConfirm(t("cloud_auto_backup_confirm"), async ()=>{
+  try{
     await cloudPush();
-
-    meta.lastAutoBackupAt = now;
+    meta.lastAutoBackupAt = Date.now();
     saveMeta();
-
-    console.log("Auto backup uitgevoerd");
+    console.log("Auto backup bevestigd en uitgevoerd");
   }catch(err){
-    console.error("Auto backup mislukt", err);
+    console.error("Bevestigde auto backup mislukt", err);
+  }
+});
+  }catch(err){
+    console.error("Auto backup vraag mislukt", err);
   }
 }
 /* ---------- UI wiring ---------- */
@@ -7718,7 +7780,7 @@ if(!isSetupDone()){
   }
   renderAll();
 applyLang();
-maybeAutoBackupOnOpen(); 
+maybeAutoBackupOnOpen();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7829,7 +7891,13 @@ if(setupLoginOverlay) setupLoginOverlay.style.display = "flex";
 setLoginUi(currentUser());
 
 if(currentUser()){
-  openSetupSettingsStep();
+  restoreCloudAfterFreshLogin().then((restored) => {
+    if(!restored){
+      openSetupSettingsStep();
+    }
+  }).catch(() => {
+    openSetupSettingsStep();
+  });
 }
 }
 function openSetupSettingsStep(){
